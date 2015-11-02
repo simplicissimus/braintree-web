@@ -819,7 +819,7 @@ function bnpDivRemTo(m,q,r) {
   }
   if(r == null) r = nbi();
   var y = nbi(), ts = this.s, ms = m.s;
-  var nsh = this.DB-nbits(pm[pm.t-1]);  // normalize modulus
+  var nsh = this.DB-nbits(pm[pm.t-1]);	// normalize modulus
   if(nsh > 0) { pm.lShiftTo(nsh,y); pt.lShiftTo(nsh,r); }
   else { pm.copyTo(y); pt.copyTo(r); }
   var ys = y.t;
@@ -834,12 +834,12 @@ function bnpDivRemTo(m,q,r) {
     r.subTo(t,r);
   }
   BigInteger.ONE.dlShiftTo(ys,t);
-  t.subTo(y,y); // "negative" y so we can replace sub with am later
+  t.subTo(y,y);	// "negative" y so we can replace sub with am later
   while(y.t < ys) y[y.t++] = 0;
   while(--j >= 0) {
     // Estimate quotient digit
     var qd = (r[--i]==y0)?this.DM:Math.floor(r[i]*d1+(r[i-1]+e)*d2);
-    if((r[i]+=y.am(0,qd,r,j,0,ys)) < qd) {  // Try it out
+    if((r[i]+=y.am(0,qd,r,j,0,ys)) < qd) {	// Try it out
       y.dlShiftTo(j,t);
       r.subTo(t,r);
       while(r[i] < --qd) r.subTo(t,r);
@@ -851,7 +851,7 @@ function bnpDivRemTo(m,q,r) {
   }
   r.t = ys;
   r.clamp();
-  if(nsh > 0) r.rShiftTo(nsh,r);    // Denormalize remainder
+  if(nsh > 0) r.rShiftTo(nsh,r);	// Denormalize remainder
   if(ts < 0) BigInteger.ZERO.subTo(r,r);
 }
 
@@ -894,13 +894,13 @@ function bnpInvDigit() {
   if(this.t < 1) return 0;
   var x = this[0];
   if((x&1) == 0) return 0;
-  var y = x&3;      // y == 1/x mod 2^2
-  y = (y*(2-(x&0xf)*y))&0xf;    // y == 1/x mod 2^4
-  y = (y*(2-(x&0xff)*y))&0xff;  // y == 1/x mod 2^8
-  y = (y*(2-(((x&0xffff)*y)&0xffff)))&0xffff;   // y == 1/x mod 2^16
+  var y = x&3;		// y == 1/x mod 2^2
+  y = (y*(2-(x&0xf)*y))&0xf;	// y == 1/x mod 2^4
+  y = (y*(2-(x&0xff)*y))&0xff;	// y == 1/x mod 2^8
+  y = (y*(2-(((x&0xffff)*y)&0xffff)))&0xffff;	// y == 1/x mod 2^16
   // last step - calculate inverse mod DV directly;
   // assumes 16 < DB <= 32 and assumes ability to handle 48-bit ints
-  y = (y*(2-x*y%this.DV))%this.DV;      // y == 1/x mod 2^dbits
+  y = (y*(2-x*y%this.DV))%this.DV;		// y == 1/x mod 2^dbits
   // we really want the negative inverse, and -DV < y < DV
   return (y>0)?this.DV-y:-y;
 }
@@ -934,7 +934,7 @@ function montRevert(x) {
 
 // x = x/R mod m (HAC 14.32)
 function montReduce(x) {
-  while(x.t <= this.mt2)    // pad x so am has enough room later
+  while(x.t <= this.mt2)	// pad x so am has enough room later
     x[x.t++] = 0;
   for(var i = 0; i < this.m.t; ++i) {
     // faster way of calculating u0 = x[i]*mp mod DV
@@ -2361,7 +2361,7 @@ sjcl.random = {
      */
   
     for (j in cbs) {
-    if (cbs.hasOwnProperty(j) && cbs[j] === cb) {
+	if (cbs.hasOwnProperty(j) && cbs[j] === cb) {
         jsTemp.push(j);
       }
     }
@@ -2740,39 +2740,94 @@ window.Braintree = Braintree;
 
 })();
 
-!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.braintree=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-'use strict';
-
-require('./src/rpc-dispatcher')();
-
-module.exports = require('./src/setup.js');
-
-},{"./src/rpc-dispatcher":304,"./src/setup.js":305}],2:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.braintree = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (global){
 'use strict';
 
-var braintreeUtils = require('braintree-utilities');
-var braintree3ds = require('braintree-3ds');
-var parseClientToken = require('./parse-client-token');
-var JSONPDriver = require('./jsonp-driver');
-var util = require('./util');
-var SEPAMandate = require('./sepa-mandate');
-var SEPABankAccount = require('./sepa-bank-account');
-var CreditCard = require('./credit-card');
-var CoinbaseAccount = require('./coinbase-account');
-var rootData = require('./root-data');
-var normalizeCreditCardFields = require('./normalize-api-fields').normalizeCreditCardFields;
+var VERSION = "2.15.2";
+var api = require(15);
+var paypal = require(210);
+var dropin = require(196);
+var integrations = require(173);
+var constants = require(168);
+var fallbackErrorHandler = require(175);
+var lookupCallbackFor = require(177);
+var uuid = require(82).uuid;
 
-function deserialize(response, mapper) {
-  if (response.status >= 400) {
-    return [response, null];
-  } else {
-    return [null, mapper(response)];
+function setup(clientToken, integrationType, merchantConfiguration) {
+  if (!integrations.hasOwnProperty(integrationType)) {
+    throw new Error(integrationType + ' is an unsupported integration');
   }
+
+  merchantConfiguration = merchantConfiguration || {};
+
+  api._getConfiguration({
+    enableCORS: merchantConfiguration.enableCORS || false,
+    clientToken: clientToken
+  }, function (err, gatewayConfiguration) {
+    var errorFallback;
+
+    if (err) {
+      errorFallback = lookupCallbackFor(merchantConfiguration)(constants.ROOT_ERROR_CALLBACK, fallbackErrorHandler);
+      errorFallback({message: err.errors});
+      return;
+    }
+
+    new integrations[integrationType]({ // eslint-disable-line no-new
+      channel: uuid(),
+      gatewayConfiguration: gatewayConfiguration,
+      integrationType: integrationType,
+      merchantConfiguration: merchantConfiguration,
+      analyticsConfiguration: {
+        sdkVersion: 'braintree/web/' + VERSION,
+        merchantAppId: global.location.host
+      }
+    });
+  });
+}
+
+module.exports = {
+  api: api,
+  cse: global.Braintree,
+  paypal: paypal,
+  dropin: dropin,
+  hostedFields: {VERSION: require(204).VERSION},
+  setup: setup,
+  VERSION: VERSION
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"15":15,"168":168,"173":173,"175":175,"177":177,"196":196,"204":204,"210":210,"82":82}],2:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var bind = require(96);
+var braintree3ds = require(27);
+var parseClientToken = require(9);
+var util = require(14);
+var SEPAMandate = require(12);
+var EuropeBankAccount = require(6);
+var CreditCard = require(5);
+var CoinbaseAccount = require(3);
+var PayPalAccount = require(10);
+var normalizeCreditCardFields = require(8).normalizeCreditCardFields;
+var chooseRequestDriver = require(41).chooseDriver;
+var shouldEnableCORS = require(13);
+var constants = require(4);
+
+function getAnalyticsConfiguration(options) {
+  var analyticsConfiguration = options.analyticsConfiguration || {};
+  var globalBraintreeVersion = global.braintree ? global.braintree.VERSION : null;
+  var defaultSdkVersion = globalBraintreeVersion ? 'braintree/web/' + globalBraintreeVersion : '';
+
+  return {
+    sdkVersion: analyticsConfiguration.sdkVersion || defaultSdkVersion,
+    merchantAppId: analyticsConfiguration.merchantAppId || global.location.host
+  };
 }
 
 function Client(options) {
-  var parsedClientToken;
+  var parsedClientToken, secure3d, analyticsConfiguration;
 
   this.attrs = {};
 
@@ -2781,29 +2836,36 @@ function Client(options) {
   }
 
   parsedClientToken = parseClientToken(options.clientToken);
+  analyticsConfiguration = getAnalyticsConfiguration(options);
 
-  this.driver = options.driver || JSONPDriver;
-  this.authUrl = parsedClientToken.authUrl;
-  this.analyticsUrl = parsedClientToken.analytics ? parsedClientToken.analytics.url : undefined;
+  this.driver = options.driver || chooseRequestDriver({enableCORS: shouldEnableCORS(options)});
+  this.analyticsUrl = parsedClientToken.analytics ? parsedClientToken.analytics.url : null;
   this.clientApiUrl = parsedClientToken.clientApiUrl;
   this.customerId = options.customerId;
   this.challenges = parsedClientToken.challenges;
   this.integration = options.integration || '';
+  this.sdkVersion = analyticsConfiguration.sdkVersion;
+  this.merchantAppId = analyticsConfiguration.merchantAppId;
 
-  var secure3d = braintree3ds.create(this, {
+  secure3d = braintree3ds.create(this, {
     container: options.container,
     clientToken: parsedClientToken
   });
-  this.verify3DS = braintreeUtils.bind(secure3d.verify, secure3d);
+  this.verify3DS = bind(secure3d.verify, secure3d);
 
-  this.attrs.authorizationFingerprint = parsedClientToken.authorizationFingerprint;
   this.attrs.sharedCustomerIdentifierType = options.sharedCustomerIdentifierType;
+  this.attrs.braintreeLibraryVersion = this.sdkVersion;
 
   if (parsedClientToken.merchantAccountId) {
     this.attrs.merchantAccountId = parsedClientToken.merchantAccountId;
   }
 
-  this.timeoutWatchers = [];
+  if (options.clientKey) {
+    this.attrs.clientKey = options.clientKey;
+  } else if (parsedClientToken.authorizationFingerprint) {
+    this.attrs.authorizationFingerprint = parsedClientToken.authorizationFingerprint;
+  }
+
   if (options.hasOwnProperty('timeout')) {
     this.requestTimeout = options.timeout;
   } else {
@@ -2811,73 +2873,8 @@ function Client(options) {
   }
 }
 
-function noop () {}
-
-function mergeOptions(obj1, obj2) {
-  var obj3 = {};
-  var attrname;
-  for (attrname in obj1) {
-    if (obj1.hasOwnProperty(attrname)) {
-      obj3[attrname] = obj1[attrname];
-    }
-  }
-  for (attrname in obj2) {
-    if (obj2.hasOwnProperty(attrname)) {
-      obj3[attrname] = obj2[attrname];
-    }
-  }
-  return obj3;
-}
-
-Client.prototype.requestWithTimeout = function (url, attrs, deserializer, method, callback) {
-  callback = callback || noop;
-
-  var uniqueName, version;
-  var client = this;
-
-  rootData.get(function (payload) {
-    version = 'braintree/web/' + payload.sdkVersion;
-
-    attrs.braintreeLibraryVersion = version;
-
-    if (attrs.hasOwnProperty('analytics') && attrs.hasOwnProperty('_meta')) {
-      attrs._meta.sdkVersion = version;
-      attrs._meta.merchantAppId = payload.merchantAppId;
-    }
-
-    uniqueName = method(url, attrs, function (data, uniqueName) {
-      if (client.timeoutWatchers[uniqueName]) {
-        clearTimeout(client.timeoutWatchers[uniqueName]);
-        var args = deserialize(data, function (d) { return deserializer(d);});
-        callback.apply(null, args);
-      }
-    });
-
-    if (client.requestTimeout > 0) {
-      this.timeoutWatchers[uniqueName] = setTimeout(function () {
-        client.timeoutWatchers[uniqueName] = null;
-        callback.apply(null, [{'errors': 'Unknown error'}, null]);
-      }, client.requestTimeout);
-    } else {
-      callback.apply(null, [{'errors': 'Unknown error'}, null]);
-    }
-  }, this);
-};
-
-Client.prototype.post = function (url, attrs, deserializer, callback) {
-  this.requestWithTimeout(url, attrs, deserializer, this.driver.post, callback);
-};
-
-Client.prototype.get = function (url, attrs, deserializer, callback) {
-  this.requestWithTimeout(url, attrs, deserializer, this.driver.get, callback);
-};
-
-Client.prototype.put = function (url, attrs, deserializer, callback) {
-  this.requestWithTimeout(url, attrs, deserializer, this.driver.put, callback);
-};
-
 Client.prototype.getCreditCards = function (callback) {
-  this.get(
+  this.driver.get(
     util.joinUrlFragments([this.clientApiUrl, 'v1', 'payment_methods']),
     this.attrs,
     function (d) {
@@ -2891,12 +2888,13 @@ Client.prototype.getCreditCards = function (callback) {
 
       return creditCards;
     },
-    callback
+    callback,
+    this.requestTimeout
   );
 };
 
 Client.prototype.tokenizeCoinbase = function (attrs, callback) {
-  attrs.options = { validate: false };
+  attrs.options = {validate: false};
   this.addCoinbase(attrs, function (err, result) {
     if (err) {
       callback(err, null);
@@ -2908,8 +2906,21 @@ Client.prototype.tokenizeCoinbase = function (attrs, callback) {
   });
 };
 
+Client.prototype.tokenizePayPalAccount = function (attrs, callback) {
+  attrs.options = {validate: false};
+  this.addPayPalAccount(attrs, function (err, result) {
+    if (err) {
+      callback(err, null);
+    } else if (result && result.nonce) {
+      callback(null, result);
+    } else {
+      callback('Unable to tokenize paypal account.', null);
+    }
+  });
+};
+
 Client.prototype.tokenizeCard = function (attrs, callback) {
-  attrs.options = { validate: false };
+  attrs.options = {validate: false};
   this.addCreditCard(attrs, function (err, result) {
     if (result && result.nonce) {
       callback(err, result.nonce, {type: result.type, details: result.details});
@@ -2921,45 +2932,32 @@ Client.prototype.tokenizeCard = function (attrs, callback) {
 
 Client.prototype.lookup3DS = function (attrs, callback) {
   var url = util.joinUrlFragments([this.clientApiUrl, 'v1/payment_methods', attrs.nonce, 'three_d_secure/lookup']);
-  var mergedAttrs = mergeOptions(this.attrs, {amount: attrs.amount});
-  this.post(url, mergedAttrs, function (d) {
-      return d;
-    },
-    callback
+  var mergedAttrs = util.mergeOptions(this.attrs, {amount: attrs.amount});
+  this.driver.post(url, mergedAttrs, function (d) {return d;},
+    callback,
+    this.requestTimeout
   );
 };
 
-Client.prototype.addSEPAMandate = function (attrs, callback) {
-  var mergedAttrs = mergeOptions(this.attrs, {sepaMandate: attrs});
-  this.post(
+Client.prototype.createSEPAMandate = function (attrs, callback) {
+  var mergedAttrs = util.mergeOptions(this.attrs, {sepaMandate: attrs});
+  this.driver.post(
     util.joinUrlFragments([this.clientApiUrl, 'v1', 'sepa_mandates.json']),
     mergedAttrs,
-    function (d) { return new SEPAMandate(d.sepaMandates[0]); },
-    callback
+    function (d) { return {sepaMandate: new SEPAMandate(d.europeBankAccounts[0].sepaMandates[0]), sepaBankAccount: new EuropeBankAccount(d.europeBankAccounts[0])}; },
+    callback,
+    this.requestTimeout
   );
 };
 
-Client.prototype.acceptSEPAMandate = function (mandateReferenceNumber, callback) {
-  this.put(
-    util.joinUrlFragments([this.clientApiUrl, 'v1', 'sepa_mandates', mandateReferenceNumber, 'accept']),
-    this.attrs,
-    function (d) { return new SEPABankAccount(d.sepaBankAccounts[0]); },
-    callback
-  );
-};
-
-Client.prototype.getSEPAMandate = function (mandateIdentifier, callback) {
-  var mergedAttrs;
-  if (mandateIdentifier.paymentMethodToken) {
-    mergedAttrs = mergeOptions(this.attrs, {paymentMethodToken: mandateIdentifier.paymentMethodToken});
-  } else {
-    mergedAttrs = this.attrs;
-  }
-  this.get(
-    util.joinUrlFragments([this.clientApiUrl, 'v1', 'sepa_mandates', mandateIdentifier.mandateReferenceNumber || '']),
+Client.prototype.getSEPAMandate = function (attrs, callback) {
+  var mergedAttrs = util.mergeOptions(this.attrs, attrs);
+  this.driver.get(
+    util.joinUrlFragments([this.clientApiUrl, 'v1', 'sepa_mandates.json']),
     mergedAttrs,
-    function (d) { return new SEPAMandate(d.sepaMandates[0]); },
-    callback
+    function (d) { return {sepaMandate: new SEPAMandate(d.sepaMandates[0])}; },
+    callback,
+    this.requestTimeout
   );
 };
 
@@ -2967,7 +2965,7 @@ Client.prototype.addCoinbase = function (attrs, callback) {
   var mergedAttrs;
   delete attrs.share;
 
-  mergedAttrs = mergeOptions(this.attrs, {
+  mergedAttrs = util.mergeOptions(this.attrs, {
     coinbaseAccount: attrs,
     _meta: {
       integration: this.integration || 'custom',
@@ -2975,24 +2973,48 @@ Client.prototype.addCoinbase = function (attrs, callback) {
     }
   });
 
-  this.post(
+  this.driver.post(
     util.joinUrlFragments([this.clientApiUrl, 'v1', 'payment_methods/coinbase_accounts']),
     mergedAttrs,
     function (d) {
       return new CoinbaseAccount(d.coinbaseAccounts[0]);
     },
-    callback
+    callback,
+    this.requestTimeout
+  );
+};
+
+Client.prototype.addPayPalAccount = function (attrs, callback) {
+  var mergedAttrs;
+  delete attrs.share;
+
+  mergedAttrs = util.mergeOptions(this.attrs, {
+    paypalAccount: attrs,
+    _meta: {
+      integration: this.integration || 'paypal',
+      source: 'paypal'
+    }
+  });
+
+  this.driver.post(
+    util.joinUrlFragments([this.clientApiUrl, 'v1', 'payment_methods', 'paypal_accounts']),
+    mergedAttrs,
+    function (d) {
+      return new PayPalAccount(d.paypalAccounts[0]);
+    },
+    callback,
+    this.requestTimeout
   );
 };
 
 Client.prototype.addCreditCard = function (attrs, callback) {
-  var mergedAttrs;
+  var mergedAttrs, creditCard;
   var share = attrs.share;
   delete attrs.share;
 
-  var creditCard = normalizeCreditCardFields(attrs);
+  creditCard = normalizeCreditCardFields(attrs);
 
-  mergedAttrs = mergeOptions(this.attrs, {
+  mergedAttrs = util.mergeOptions(this.attrs, {
     share: share,
     creditCard: creditCard,
     _meta: {
@@ -3001,61 +3023,128 @@ Client.prototype.addCreditCard = function (attrs, callback) {
     }
   });
 
-  this.post(
+  this.driver.post(
     util.joinUrlFragments([this.clientApiUrl, 'v1', 'payment_methods/credit_cards']),
     mergedAttrs,
     function (d) {
       return new CreditCard(d.creditCards[0]);
     },
-    callback
-  );
-};
-
-Client.prototype.unlockCreditCard = function (creditCard, params, callback) {
-  var attrs = mergeOptions(this.attrs, {challengeResponses: params});
-  this.put(
-    util.joinUrlFragments([this.clientApiUrl, 'v1', 'payment_methods/', creditCard.nonce]),
-    attrs,
-    function (d) { return new CreditCard(d.paymentMethods[0]); },
-    callback
+    callback,
+    this.requestTimeout
   );
 };
 
 Client.prototype.sendAnalyticsEvents = function (events, callback) {
-  var attrs;
+  var attrs, event;
   var url = this.analyticsUrl;
   var eventObjects = [];
   events = util.isArray(events) ? events : [events];
 
   if (!url) {
     if (callback) {
-      callback.apply(null, [null, {}]);
+      callback(null, {});
     }
     return;
   }
 
-  for (var event in events) {
+  for (event in events) {
     if (events.hasOwnProperty(event)) {
-      eventObjects.push({ kind: events[event] });
+      eventObjects.push({kind: events[event]});
     }
   }
 
-  attrs = mergeOptions(this.attrs, {
+  attrs = util.mergeOptions(this.attrs, {
     analytics: eventObjects,
     _meta: {
+      merchantAppId: this.merchantAppId,
       platform: 'web',
       platformVersion: global.navigator.userAgent,
-      integrationType: this.integration
+      integrationType: this.integration,
+      sdkVersion: this.sdkVersion
     }
   });
 
-  this.post(url, attrs, function (d) { return d; }, callback);
+  this.driver.post(url, attrs, function (d) { return d; }, callback, constants.ANALYTICS_TIMEOUT_MS);
+};
+
+Client.prototype.decryptBrowserswitchPayload = function (encryptedPayload, callback) {
+  var attrs = util.mergeOptions(this.attrs, {asymmetric_encrypted_payload: encryptedPayload});
+  var url = util.joinUrlFragments([this.clientApiUrl, '/v1/paypal_browser_switch/decrypt']);
+  this.driver.post(
+    url,
+    attrs,
+    function (d) { return d; },
+    callback,
+    this.requestTimeout
+  );
+};
+
+Client.prototype.encryptBrowserswitchReturnPayload = function(payload, aesKey, callback) {
+  var attrs = util.mergeOptions(this.attrs, {
+    payload: payload,
+    aesKey: aesKey
+  });
+  var url = util.joinUrlFragments([this.clientApiUrl, '/v1/paypal_browser_switch/encrypt']);
+  this.driver.post(
+    url,
+    attrs,
+    function (d) { return d; },
+    callback,
+    this.requestTimeout
+  );
+};
+
+Client.prototype.exchangePaypalTokenForConsentCode = function (tokensObj, callback) {
+  var attrs = util.mergeOptions(this.attrs, tokensObj);
+  if (this.attrs.merchantAccountId) {
+    attrs.merchant_account_id = this.attrs.merchantAccountId;
+  }
+  var url = util.joinUrlFragments([this.clientApiUrl, '/v1/paypal_account_service/merchant_consent']);
+  this.driver.post(
+    url,
+    attrs,
+    function (d) { return d; },
+    callback,
+    this.requestTimeout
+  );
+};
+
+Client.prototype.getAmexRewardsBalance = function (attrs, callback) {
+  var mergedAttrs = util.mergeOptions(this.attrs, attrs);
+  if (mergedAttrs.nonce) {
+    mergedAttrs.payment_method_nonce = mergedAttrs.nonce;
+    delete mergedAttrs.nonce;
+  }
+
+  this.driver.get(
+    util.joinUrlFragments([this.clientApiUrl, 'v1/payment_methods/amex_rewards_balance']),
+    mergedAttrs,
+    function (d) { return d; },
+    callback,
+    this.requestTimeout
+  );
+};
+
+Client.prototype.getAmexExpressCheckoutNonceProfile = function (attrs, callback) {
+  var mergedAttrs = util.mergeOptions(this.attrs, attrs);
+  if (mergedAttrs.nonce) {
+    mergedAttrs.payment_method_nonce = mergedAttrs.nonce;
+    delete mergedAttrs.nonce;
+  }
+
+  this.driver.get(
+    util.joinUrlFragments([this.clientApiUrl, 'v1/payment_methods/amex_express_checkout_cards', mergedAttrs.payment_method_nonce]),
+    mergedAttrs,
+    function (d) { return d; },
+    callback,
+    this.requestTimeout
+  );
 };
 
 module.exports = Client;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./coinbase-account":3,"./credit-card":4,"./jsonp-driver":5,"./normalize-api-fields":7,"./parse-client-token":8,"./root-data":10,"./sepa-bank-account":11,"./sepa-mandate":12,"./util":13,"braintree-3ds":22,"braintree-utilities":41}],3:[function(require,module,exports){
+},{"10":10,"12":12,"13":13,"14":14,"27":27,"3":3,"4":4,"41":41,"5":5,"6":6,"8":8,"9":9,"96":96}],3:[function(require,module,exports){
 'use strict';
 
 var ATTRIBUTES = [
@@ -3066,8 +3155,10 @@ var ATTRIBUTES = [
 ];
 
 function CoinbaseAccount(attributes) {
-  for (var i = 0; i < ATTRIBUTES.length; i++) {
-    var attribute = ATTRIBUTES[i];
+  var i, attribute;
+
+  for (i = 0; i < ATTRIBUTES.length; i++) {
+    attribute = ATTRIBUTES[i];
     this[attribute] = attributes[attribute];
   }
 }
@@ -3075,6 +3166,19 @@ function CoinbaseAccount(attributes) {
 module.exports = CoinbaseAccount;
 
 },{}],4:[function(require,module,exports){
+module.exports={
+  "apiUrls": {
+    "production": "https://api.braintreegateway.com:443",
+    "sandbox": "https://api.sandbox.braintreegateway.com:443"
+  },
+  "errors": {
+    "UNKNOWN_ERROR": "Unknown error",
+    "INVALID_TIMEOUT": "Timeout must be a number"
+  },
+  "ANALYTICS_TIMEOUT_MS": 4000
+};
+
+},{}],5:[function(require,module,exports){
 'use strict';
 
 var ATTRIBUTES = [
@@ -3095,156 +3199,102 @@ var ATTRIBUTES = [
 ];
 
 function CreditCard(attributes) {
-  for (var i = 0; i < ATTRIBUTES.length; i++) {
-    var attribute = ATTRIBUTES[i];
+  var i, attribute;
+
+  for (i = 0; i < ATTRIBUTES.length; i++) {
+    attribute = ATTRIBUTES[i];
     this[attribute] = attributes[attribute];
   }
 }
 
 module.exports = CreditCard;
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
-var JSONP = require('./jsonp');
+function EuropeBankAccount(attributes) {
+  var allAttributes = [
+    'bic',
+    'maskedIBAN',
+    'nonce',
+    'accountHolderName'
+  ];
+  var attribute;
+  var i = 0;
 
-function get(path, params, callback) {
-  return JSONP.get(path, params, callback);
+  for (i = 0; i < allAttributes.length; i++) {
+    attribute = allAttributes[i];
+    this[attribute] = attributes[attribute];
+  }
 }
 
-function post(path, params, callback) {
-  params._method = 'POST';
-  return JSONP.get(path, params, callback);
-}
+module.exports = EuropeBankAccount;
 
-function put(path, params, callback) {
-  params._method = 'PUT';
-  return JSONP.get(path, params, callback);
-}
-
-module.exports = {
-  get: get,
-  post: post,
-  put: put
-};
-
-},{"./jsonp":6}],6:[function(require,module,exports){
-(function (global){
+},{}],7:[function(require,module,exports){
 'use strict';
 
-var util = require('./util');
+var parseClientToken = require(9);
+var util = require(14);
+var chooseRequestDriver = require(41).chooseDriver;
+var shouldEnableCORS = require(13);
+var constants = require(4);
 
-/*
-* Lightweight JSONP fetcher
-* Copyright 2010-2012 Erik Karlsson. All rights reserved.
-* BSD licensed
-*/
-var head,
-    window = global,
-    config = {};
+function _tokenizeClientKey(clientKey) {
+  var tokens = clientKey.split('_');
+  var environment = tokens[0];
+  var merchantId = tokens.slice(2).join('_');
 
-function load(url, pfnError) {
-  var script = document.createElement('script'),
-  done = false;
-  script.src = url;
-  script.async = true;
-
-  var errorHandler = pfnError || config.error;
-  if ( typeof errorHandler === 'function' ) {
-    script.onerror = function (ex){
-      errorHandler({url: url, event: ex});
-    };
-  }
-
-  script.onload = script.onreadystatechange = function () {
-    if ( !done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") ) {
-      done = true;
-      script.onload = script.onreadystatechange = null;
-      if ( script && script.parentNode ) {
-        script.parentNode.removeChild( script );
-      }
-    }
+  return {
+    merchantId: merchantId,
+    environment: environment
   };
-
-  if ( !head ) {
-    head = document.getElementsByTagName('head')[0];
-  }
-  head.appendChild( script );
 }
 
-function encode(str) {
-  return encodeURIComponent(str);
-}
+function getConfiguration(options, callback) {
+  var configUrl, clientKeyParts, parsedClientToken;
+  var driver = chooseRequestDriver({enableCORS: shouldEnableCORS(options)});
+  var clientKey = options.clientKey;
+  var attrs = {};
 
-function stringify(params, namespace) {
-  var query = [], k, v, p;
-  for(var p in params) {
-    if (!params.hasOwnProperty(p)) {
-      continue;
-    }
+  if (clientKey) {
+    attrs.clientKey = clientKey;
+    clientKeyParts = _tokenizeClientKey(clientKey);
+    configUrl = constants.apiUrls[clientKeyParts.environment] + '/merchants/' + clientKeyParts.merchantId + '/client_api/v1/configuration';
+  } else {
+    parsedClientToken = parseClientToken(options.clientToken);
 
-    v = params[p];
-    if (namespace) {
-      if (util.isArray(params)) {
-        k = namespace + "[]";
-      } else {
-        k = namespace + "[" + p + "]";
-      }
-    } else {
-      k = p;
-    }
-    if (typeof v == "object") {
-      query.push(stringify(v, k));
-    } else {
-      query.push(encodeURIComponent(k) + "=" + encodeURIComponent(v));
+    if (parsedClientToken.authorizationFingerprint) {
+      attrs.authorizationFingerprint = parsedClientToken.authorizationFingerprint;
+      configUrl = parsedClientToken.configUrl;
     }
   }
-  return query.join("&");
+
+  driver.get(
+    configUrl,
+    attrs,
+    function (d) {
+      return util.mergeOptions(parsedClientToken, d);
+    },
+    callback,
+    options.timeout
+  );
 }
 
-function jsonp(url, params, callback, callbackName) {
-  var query = (url||'').indexOf('?') === -1 ? '?' : '&', key;
+module.exports = getConfiguration;
 
-  callbackName = (callbackName||config['callbackName']||'callback');
-  var uniqueName = callbackName + "_json" + util.generateUUID();
-
-  query += stringify(params);
-
-  window[ uniqueName ] = function (data){
-    callback(data, uniqueName);
-    try {
-      delete window[ uniqueName ];
-    } catch (e) {}
-    window[ uniqueName ] = null;
-  };
-
-  load(url + query + '&' + callbackName + '=' + uniqueName);
-  return uniqueName;
-}
-
-function setDefaults(obj){
-  config = obj;
-}
-
-module.exports = {
-  get: jsonp,
-  init: setDefaults,
-  stringify: stringify
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./util":13}],7:[function(require,module,exports){
+},{"13":13,"14":14,"4":4,"41":41,"9":9}],8:[function(require,module,exports){
 'use strict';
 
 function normalizeCreditCardFields(attrs) {
+  var key;
   var creditCard = {
     billingAddress: attrs.billingAddress || {}
   };
 
-  for (var key in attrs) {
+  for (key in attrs) {
     if (!attrs.hasOwnProperty(key)) { continue; }
 
-    switch (key.replace(/_/,'').toLowerCase()) {
+    switch (key.replace(/_/g, '').toLowerCase()) {
       case 'postalcode':
       case 'countryname':
       case 'countrycodenumeric':
@@ -3271,10 +3321,11 @@ module.exports = {
   normalizeCreditCardFields: normalizeCreditCardFields
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
-require('./polyfill');
+var braintreeUtils = require(58);
+require(11);
 
 function parseClientToken(rawClientToken) {
   var clientToken;
@@ -3288,34 +3339,56 @@ function parseClientToken(rawClientToken) {
   } else {
     try {
       rawClientToken = window.atob(rawClientToken);
-    } catch (b64Error) {}
+    } catch (b64Error) { /* ignored */ }
 
     try {
       clientToken = JSON.parse(rawClientToken);
     } catch (jsonError) {
-      throw new Error('Braintree API Client Misconfigured: clientToken is invalid.');
+      throw new Error('Braintree API Client Misconfigured: clientToken is not valid JSON.');
     }
   }
 
-  if (!clientToken.hasOwnProperty('authUrl') || !clientToken.hasOwnProperty('clientApiUrl')) {
-    throw new Error('Braintree API Client Misconfigured: clientToken is invalid.');
+  if (!clientToken.hasOwnProperty('clientApiUrl') || !braintreeUtils.isWhitelistedDomain(clientToken.clientApiUrl)) {
+    throw new Error('Braintree API Client Misconfigured: the clientApiUrl provided in the clientToken is invalid.');
   }
+
   return clientToken;
 }
 
 module.exports = parseClientToken;
 
-},{"./polyfill":9}],9:[function(require,module,exports){
+},{"11":11,"58":58}],10:[function(require,module,exports){
+'use strict';
+
+var ATTRIBUTES = [
+  'nonce',
+  'type',
+  'description',
+  'details'
+];
+
+function PayPalAccount(attributes) {
+  var i, attribute;
+
+  for (i = 0; i < ATTRIBUTES.length; i++) {
+    attribute = ATTRIBUTES[i];
+    this[attribute] = attributes[attribute];
+  }
+}
+
+module.exports = PayPalAccount;
+
+},{}],11:[function(require,module,exports){
 (function (global){
 'use strict';
 
-global.atob = global.atob || function (base64String) {
+var atobPolyfill = function (base64String) {
   var base64Matcher = new RegExp("^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})([=]{1,2})?$");
   var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
   var result = "";
 
   if (!base64Matcher.test(base64String)) {
-    throw new Error("Braintree API Client Misconfigured: clientToken is invalid.");
+    throw new Error("Non base64 encoded input passed to window.atob polyfill");
   }
 
   var i = 0;
@@ -3336,102 +3409,30 @@ global.atob = global.atob || function (base64String) {
   return result;
 };
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],10:[function(require,module,exports){
-(function (global){
-'use strict';
-
-var rootData, timeout;
-var rpc = require('braintree-rpc');
-var bus = new rpc.MessageBus(window);
-var rpcClient = new rpc.RPCClient(bus, window.parent);
-var dispatched = false;
-var queuedListeners = [];
-var fallbackRootData = {
-  sdkVersion: getFallbackVersion(),
-  merchantAppId: global.location.href
-};
-
-function getFallbackVersion() {
-  var globalBraintree = global.braintree;
-  return (globalBraintree && globalBraintree.hasOwnProperty('VERSION')) ? globalBraintree.VERSION : undefined;
-}
-
-function get(callback, context) {
-  if (rootData == null) {
-    queuedListeners.push({
-      callback: callback,
-      context: context
-    });
-
-    if (dispatched === false) {
-      timeout = setTimeout(function () {
-        resolve(fallbackRootData);
-      }, 200);
-      rpcClient.invoke('getExternalData', [], resolve);
-      dispatched = true;
-    }
-  } else {
-    callback.call(context, rootData);
-  }
-}
-
-function resolve(payload) {
-  clearTimeout(timeout);
-
-  rootData = {
-    sdkVersion: payload.sdkVersion,
-    merchantAppId: payload.merchantAppId
-  };
-
-  for (var i = 0; i < queuedListeners.length; i++) {
-    var listener = queuedListeners[i];
-
-    listener.callback.call(listener.context, rootData);
-  }
-
-  queuedListeners = [];
-}
+global.atob = global.atob || atobPolyfill;
 
 module.exports = {
-  get: get
+  atobPolyfill: atobPolyfill
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"braintree-rpc":30}],11:[function(require,module,exports){
-'use strict';
-
-var ATTRIBUTES = [
-  'bic',
-  'maskedIBAN',
-  'nonce',
-  'accountHolderName'
-];
-
-function SEPABankAccount(attributes) {
-  for (var i = 0; i < ATTRIBUTES.length; i++) {
-    var attribute = ATTRIBUTES[i];
-    this[attribute] = attributes[attribute];
-  }
-}
-
-module.exports = SEPABankAccount;
-
 },{}],12:[function(require,module,exports){
 'use strict';
 
-var ATTRIBUTES = [
-  'accountHolderName',
-  'bic',
-  'longFormURL',
-  'mandateReferenceNumber',
-  'maskedIBAN',
-  'shortForm'
-];
-
 function SEPAMandate(attributes) {
-  for (var i = 0; i < ATTRIBUTES.length; i++) {
-    var attribute = ATTRIBUTES[i];
+  var i = 0;
+  var attribute;
+  var allAttributes = [
+    'accountHolderName',
+    'bic',
+    'longFormURL',
+    'mandateReferenceNumber',
+    'maskedIBAN',
+    'shortForm'
+  ];
+
+  for (i = 0; i < allAttributes.length; i++) {
+    attribute = allAttributes[i];
     this[attribute] = attributes[attribute];
   }
 }
@@ -3441,10 +3442,24 @@ module.exports = SEPAMandate;
 },{}],13:[function(require,module,exports){
 'use strict';
 
+module.exports = function (options) {
+  if (options.enableCORS != null) {
+    return options.enableCORS;
+  }
+
+  if (options.merchantConfiguration) {
+    return options.merchantConfiguration.enableCORS;
+  }
+
+  return false;
+};
+
+},{}],14:[function(require,module,exports){
+'use strict';
+
 function joinUrlFragments(fragments) {
-  var strippedFragments = [],
-  strippedFragment,
-  i;
+  var strippedFragment, i;
+  var strippedFragments = [];
 
   for (i = 0; i < fragments.length; i++) {
     strippedFragment = fragments[i];
@@ -3466,28 +3481,35 @@ function isArray(value) {
     Object.prototype.toString.call(value) === '[object Array]' || false;
 }
 
-function generateUUID() { // RFC 4122 v4 (pseudo-random) UUID without hyphens
-  return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (xORy) {
-    var randomHex = Math.floor(Math.random() * 16);
-    var uuidHex = xORy === 'x' ? randomHex : randomHex & 0x3 | 0x8; // jshint ignore:line
-    return uuidHex.toString(16);
-  });
+function mergeOptions(obj1, obj2) {
+  var obj3 = {};
+  var attrname;
+  for (attrname in obj1) {
+    if (obj1.hasOwnProperty(attrname)) {
+      obj3[attrname] = obj1[attrname];
+    }
+  }
+  for (attrname in obj2) {
+    if (obj2.hasOwnProperty(attrname)) {
+      obj3[attrname] = obj2[attrname];
+    }
+  }
+  return obj3;
 }
 
 module.exports = {
   joinUrlFragments: joinUrlFragments,
   isArray: isArray,
-  generateUUID: generateUUID
+  mergeOptions: mergeOptions
 };
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
-var Client = require('./lib/client');
-var JSONP = require('./lib/jsonp');
-var JSONPDriver = require('./lib/jsonp-driver');
-var util = require('./lib/util');
-var parseClientToken = require('./lib/parse-client-token');
+var Client = require(2);
+var util = require(14);
+var parseClientToken = require(9);
+var getConfiguration = require(7);
 
 function configure(options) {
   return new Client(options);
@@ -3497,12 +3519,65 @@ module.exports = {
   Client: Client,
   configure: configure,
   util: util,
-  JSONP: JSONP,
-  JSONPDriver: JSONPDriver,
-  parseClientToken: parseClientToken
+  parseClientToken: parseClientToken,
+  _getConfiguration: getConfiguration
 };
 
-},{"./lib/client":2,"./lib/jsonp":6,"./lib/jsonp-driver":5,"./lib/parse-client-token":8,"./lib/util":13}],15:[function(require,module,exports){
+},{"14":14,"2":2,"7":7,"9":9}],16:[function(require,module,exports){
+'use strict';
+
+var nativeIndexOf = Array.prototype.indexOf;
+
+var indexOf;
+if (nativeIndexOf) {
+  indexOf = function (haystack, needle) {
+    return haystack.indexOf(needle);
+  };
+} else {
+  indexOf = function indexOf(haystack, needle) {
+    for (var i = 0, len = haystack.length; i < len; i++) {
+      if (haystack[i] === needle) {
+        return i;
+      }
+    }
+    return -1;
+  };
+}
+
+module.exports = {
+  indexOf: indexOf
+};
+
+},{}],17:[function(require,module,exports){
+'use strict';
+
+function _escape(string) {
+  var i, hex;
+  var escaped = '';
+
+  for (i = 0; i < string.length; i++) {
+    escaped += '%';
+    hex = string[i].charCodeAt(0).toString(16).toUpperCase();
+
+    if (hex.length < 2) {
+      escaped += '0';
+    }
+
+    escaped += hex;
+  }
+
+  return escaped;
+}
+
+function decodeUtf8(b64) {
+  return decodeURIComponent(_escape(atob(b64)));
+}
+
+module.exports = {
+  decodeUtf8: decodeUtf8
+};
+
+},{}],18:[function(require,module,exports){
 'use strict';
 
 function normalizeElement (element, errorMessage) {
@@ -3526,12 +3601,12 @@ module.exports = {
   normalizeElement: normalizeElement
 };
 
-},{}],16:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 'use strict';
 
 function addEventListener(element, type, listener, useCapture) {
   if (element.addEventListener) {
-    element.addEventListener(type, listener, useCapture);
+    element.addEventListener(type, listener, useCapture || false);
   } else if (element.attachEvent) {
     element.attachEvent('on' + type, listener);
   }
@@ -3539,18 +3614,27 @@ function addEventListener(element, type, listener, useCapture) {
 
 function removeEventListener(element, type, listener, useCapture) {
   if (element.removeEventListener) {
-    element.removeEventListener(type, listener, useCapture);
+    element.removeEventListener(type, listener, useCapture || false);
   } else if (element.detachEvent) {
     element.detachEvent('on' + type, listener);
   }
 }
 
+function preventDefault(event) {
+  if (event.preventDefault) {
+    event.preventDefault();
+  } else {
+    event.returnValue = false;
+  }
+}
+
 module.exports = {
   addEventListener: addEventListener,
-  removeEventListener: removeEventListener
+  removeEventListener: removeEventListener,
+  preventDefault: preventDefault
 };
 
-},{}],17:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 var toString = Object.prototype.toString;
@@ -3561,7 +3645,7 @@ function isFunction(func) {
 
 function bind(func, context) {
   return function () {
-    func.apply(context, arguments);
+    return func.apply(context, arguments);
   };
 }
 
@@ -3570,8 +3654,63 @@ module.exports = {
   isFunction: isFunction
 };
 
-},{}],18:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 'use strict';
+
+function getMaxCharLength(width) {
+  var max, i, range, len;
+  var ranges = [
+    { min: 0, max: 180, chars: 7 },
+    { min: 181, max: 620, chars: 14 },
+    { min: 621, max: 960, chars: 22 }
+  ];
+
+  len = ranges.length;
+
+  width = width || window.innerWidth;
+
+  for (i = 0; i < len; i++) {
+    range = ranges[i];
+
+    if (width >= range.min && width <= range.max) {
+      max = range.chars;
+    }
+  }
+
+  return max || 60;
+}
+
+function truncateEmail(email, maxLength) {
+  var address, domain;
+
+  if (email.indexOf('@') === -1) {
+    return email;
+  }
+
+  email = email.split('@');
+  address = email[0];
+  domain = email[1];
+
+  if (address.length > maxLength) {
+    address = address.slice(0, maxLength) + '...';
+  }
+
+  if (domain.length > maxLength) {
+    domain = '...' + domain.slice(-maxLength);
+  }
+
+  return address + '@' + domain;
+}
+
+module.exports = {
+  truncateEmail: truncateEmail,
+  getMaxCharLength: getMaxCharLength
+};
+
+},{}],22:[function(require,module,exports){
+'use strict';
+
+var array = require(16);
 
 function isBrowserHttps() {
   return window.location.protocol === 'https:';
@@ -3635,37 +3774,89 @@ function getParams(url) {
   return decodeQueryString(urlSegments[1]);
 }
 
+var parser = document.createElement('a');
+var legalHosts = [
+  'paypal.com',
+  'braintreepayments.com',
+  'braintreegateway.com',
+  'localhost'
+];
+
+function isWhitelistedDomain(url) {
+  url = url.toLowerCase();
+
+  if (!/^http/.test(url)) {
+    return false;
+  }
+
+  parser.href = url;
+
+  var pieces = parser.hostname.split('.');
+  var topLevelDomain = pieces.slice(-2).join('.');
+
+  if (array.indexOf(legalHosts, topLevelDomain) === -1) {
+    return false;
+  }
+
+  return true;
+}
+
 module.exports = {
   isBrowserHttps: isBrowserHttps,
   makeQueryString: makeQueryString,
   decodeQueryString: decodeQueryString,
-  getParams: getParams
+  getParams: getParams,
+  isWhitelistedDomain: isWhitelistedDomain
 };
 
-},{}],19:[function(require,module,exports){
-var dom = require('./lib/dom');
-var url = require('./lib/url');
-var fn = require('./lib/fn');
-var events = require('./lib/events');
+},{"16":16}],23:[function(require,module,exports){
+'use strict';
+
+// RFC 4122 v4 (pseudo-random) UUID
+function generate() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16 | 0;
+    var v = c === 'x' ? r : r & 0x3 | 0x8;
+    return v.toString(16);
+  });
+}
+
+module.exports = generate;
+
+},{}],24:[function(require,module,exports){
+var dom = require(18);
+var url = require(22);
+var fn = require(20);
+var events = require(19);
+var string = require(21);
+var array = require(16);
+var base64 = require(17);
+var uuid = require(23);
 
 module.exports = {
+  string: string,
+  array: array,
   normalizeElement: dom.normalizeElement,
   isBrowserHttps: url.isBrowserHttps,
   makeQueryString: url.makeQueryString,
   decodeQueryString: url.decodeQueryString,
   getParams: url.getParams,
+  isWhitelistedDomain: url.isWhitelistedDomain,
   removeEventListener: events.removeEventListener,
   addEventListener: events.addEventListener,
+  preventDefault: events.preventDefault,
   bind: fn.bind,
-  isFunction: fn.isFunction
+  isFunction: fn.isFunction,
+  base64ToUtf8: base64.decodeUtf8,
+  uuid: uuid
 };
 
-},{"./lib/dom":15,"./lib/events":16,"./lib/fn":17,"./lib/url":18}],20:[function(require,module,exports){
+},{"16":16,"17":17,"18":18,"19":19,"20":20,"21":21,"22":22,"23":23}],25:[function(require,module,exports){
 'use strict';
 
-var utils = require('braintree-utilities');
-var Receiver = require('../shared/receiver');
-var version = "1.2.0";
+var utils = require(24);
+var Receiver = require(32);
+var version = "1.3.1";
 
 var htmlNode, bodyNode;
 
@@ -3795,11 +3986,12 @@ AuthenticationService.prototype.constructAuthorizationURL = function (response) 
 
 module.exports = AuthenticationService;
 
-},{"../shared/receiver":24,"braintree-utilities":19}],21:[function(require,module,exports){
+},{"24":24,"32":32}],26:[function(require,module,exports){
 'use strict';
 
-var utils = require('braintree-utilities');
-var AuthenticationService = require('./authorization_service');
+var utils = require(24);
+var AuthenticationService = require(25);
+var Loader = require(28);
 
 function noop() {}
 
@@ -3810,6 +4002,7 @@ function Client(api, options) {
   this.api = api;
   this.nonce = null;
 
+  this._loader = null;
   this._boundHandleUserClose = utils.bind(this._handleUserClose, this);
 }
 
@@ -3820,6 +4013,12 @@ Client.prototype.verify = function (data, callback) {
   }
   if (utils.isFunction(data.onUserClose)) {
     this._onUserClose = data.onUserClose;
+  }
+  if (utils.isFunction(data.onLookupComplete)) {
+    this._onLookupComplete = data.onLookupComplete;
+  }
+  if (data.useDefaultLoader === undefined || data.useDefaultLoader === true) {
+    this._createDefaultLoader();
   }
 
   var dataRecord = {nonce: '', amount: data.amount};
@@ -3833,6 +4032,8 @@ Client.prototype.verify = function (data, callback) {
     var self = this;
     var boundHandleTokenizeCard = function (err, nonce) {
       if (err) {
+        self._removeDefaultLoader();
+
         return callback(err);
       }
       dataRecord.nonce = nonce;
@@ -3851,6 +4052,9 @@ Client.prototype.handleLookupResponse = function (merchantCallback) {
   var self = this;
   return function (errorResponse, lookupResponse) {
     var authenticationService;
+
+    this._onLookupComplete();
+
     if (errorResponse) {
       merchantCallback(errorResponse.error);
     } else if (lookupResponse.lookup && lookupResponse.lookup.acsUrl && lookupResponse.lookup.acsUrl.length > 0) {
@@ -3905,6 +4109,28 @@ Client.prototype._detachListeners = function () {
   utils.removeEventListener(window, 'message', this._boundHandleUserClose);
 };
 
+Client.prototype._createDefaultLoader = function () {
+  this._loader = new Loader();
+
+  document.body.appendChild(this._loader.getElement());
+};
+
+Client.prototype._removeDefaultLoader = function () {
+  if (!this._loader) {
+    return;
+  }
+
+  var loaderElement = this._loader.getElement();
+  var parentElement = loaderElement.parentNode;
+
+  if (parentElement) {
+    parentElement.removeChild(loaderElement);
+  }
+
+  this._loader.dispose();
+  this._loader = null;
+};
+
 Client.prototype._handleUserClose = function (event) {
   if (event.data === 'user_closed=true') {
     this._onUserClose();
@@ -3913,13 +4139,16 @@ Client.prototype._handleUserClose = function (event) {
 
 Client.prototype._onUserClose = noop;
 
+Client.prototype._onLookupComplete = function () {
+  this._removeDefaultLoader();
+};
+
 module.exports = Client;
 
-},{"./authorization_service":20,"braintree-utilities":19}],22:[function(require,module,exports){
+},{"24":24,"25":25,"28":28}],27:[function(require,module,exports){
 'use strict';
 
-var Client = require('./client');
-require('./vendor/json2');
+var Client = require(26);
 
 module.exports = {
   create: function (clientToken, options) {
@@ -3928,498 +4157,169 @@ module.exports = {
   }
 };
 
-},{"./client":21,"./vendor/json2":23}],23:[function(require,module,exports){
-/*
-    json2.js
-    2013-05-26
-
-    Public Domain.
-
-    NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
-
-    See http://www.JSON.org/js.html
-
-
-    This code should be minified before deployment.
-    See http://javascript.crockford.com/jsmin.html
-
-    USE YOUR OWN COPY. IT IS EXTREMELY UNWISE TO LOAD CODE FROM SERVERS YOU DO
-    NOT CONTROL.
-
-
-    This file creates a global JSON object containing two methods: stringify
-    and parse.
-
-        JSON.stringify(value, replacer, space)
-            value       any JavaScript value, usually an object or array.
-
-            replacer    an optional parameter that determines how object
-                        values are stringified for objects. It can be a
-                        function or an array of strings.
-
-            space       an optional parameter that specifies the indentation
-                        of nested structures. If it is omitted, the text will
-                        be packed without extra whitespace. If it is a number,
-                        it will specify the number of spaces to indent at each
-                        level. If it is a string (such as '\t' or '&nbsp;'),
-                        it contains the characters used to indent at each level.
-
-            This method produces a JSON text from a JavaScript value.
-
-            When an object value is found, if the object contains a toJSON
-            method, its toJSON method will be called and the result will be
-            stringified. A toJSON method does not serialize: it returns the
-            value represented by the name/value pair that should be serialized,
-            or undefined if nothing should be serialized. The toJSON method
-            will be passed the key associated with the value, and this will be
-            bound to the value
-
-            For example, this would serialize Dates as ISO strings.
-
-                Date.prototype.toJSON = function (key) {
-                    function f(n) {
-                        // Format integers to have at least two digits.
-                        return n < 10 ? '0' + n : n;
-                    }
-
-                    return this.getUTCFullYear()   + '-' +
-                         f(this.getUTCMonth() + 1) + '-' +
-                         f(this.getUTCDate())      + 'T' +
-                         f(this.getUTCHours())     + ':' +
-                         f(this.getUTCMinutes())   + ':' +
-                         f(this.getUTCSeconds())   + 'Z';
-                };
-
-            You can provide an optional replacer method. It will be passed the
-            key and value of each member, with this bound to the containing
-            object. The value that is returned from your method will be
-            serialized. If your method returns undefined, then the member will
-            be excluded from the serialization.
-
-            If the replacer parameter is an array of strings, then it will be
-            used to select the members to be serialized. It filters the results
-            such that only members with keys listed in the replacer array are
-            stringified.
-
-            Values that do not have JSON representations, such as undefined or
-            functions, will not be serialized. Such values in objects will be
-            dropped; in arrays they will be replaced with null. You can use
-            a replacer function to replace those with JSON values.
-            JSON.stringify(undefined) returns undefined.
-
-            The optional space parameter produces a stringification of the
-            value that is filled with line breaks and indentation to make it
-            easier to read.
-
-            If the space parameter is a non-empty string, then that string will
-            be used for indentation. If the space parameter is a number, then
-            the indentation will be that many spaces.
-
-            Example:
-
-            text = JSON.stringify(['e', {pluribus: 'unum'}]);
-            // text is '["e",{"pluribus":"unum"}]'
-
-
-            text = JSON.stringify(['e', {pluribus: 'unum'}], null, '\t');
-            // text is '[\n\t"e",\n\t{\n\t\t"pluribus": "unum"\n\t}\n]'
-
-            text = JSON.stringify([new Date()], function (key, value) {
-                return this[key] instanceof Date ?
-                    'Date(' + this[key] + ')' : value;
-            });
-            // text is '["Date(---current time---)"]'
-
-
-        JSON.parse(text, reviver)
-            This method parses a JSON text to produce an object or array.
-            It can throw a SyntaxError exception.
-
-            The optional reviver parameter is a function that can filter and
-            transform the results. It receives each of the keys and values,
-            and its return value is used instead of the original value.
-            If it returns what it received, then the structure is not modified.
-            If it returns undefined then the member is deleted.
-
-            Example:
-
-            // Parse the text. Values that look like ISO date strings will
-            // be converted to Date objects.
-
-            myData = JSON.parse(text, function (key, value) {
-                var a;
-                if (typeof value === 'string') {
-                    a =
-/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/.exec(value);
-                    if (a) {
-                        return new Date(Date.UTC(+a[1], +a[2] - 1, +a[3], +a[4],
-                            +a[5], +a[6]));
-                    }
-                }
-                return value;
-            });
-
-            myData = JSON.parse('["Date(09/09/2001)"]', function (key, value) {
-                var d;
-                if (typeof value === 'string' &&
-                        value.slice(0, 5) === 'Date(' &&
-                        value.slice(-1) === ')') {
-                    d = new Date(value.slice(5, -1));
-                    if (d) {
-                        return d;
-                    }
-                }
-                return value;
-            });
-
-
-    This is a reference implementation. You are free to copy, modify, or
-    redistribute.
-*/
-
-/*jslint evil: true, regexp: true */
-
-/*members "", "\b", "\t", "\n", "\f", "\r", "\"", JSON, "\\", apply,
-    call, charCodeAt, getUTCDate, getUTCFullYear, getUTCHours,
-    getUTCMinutes, getUTCMonth, getUTCSeconds, hasOwnProperty, join,
-    lastIndex, length, parse, prototype, push, replace, slice, stringify,
-    test, toJSON, toString, valueOf
-*/
-
-
-// Create a JSON object only if one does not already exist. We create the
-// methods in a closure to avoid creating global variables.
-
-if (typeof JSON !== 'object') {
-    JSON = {};
-}
-
-(function () {
-    'use strict';
-
-    function f(n) {
-        // Format integers to have at least two digits.
-        return n < 10 ? '0' + n : n;
-    }
-
-    if (typeof Date.prototype.toJSON !== 'function') {
-
-        Date.prototype.toJSON = function () {
-
-            return isFinite(this.valueOf())
-                ? this.getUTCFullYear()     + '-' +
-                    f(this.getUTCMonth() + 1) + '-' +
-                    f(this.getUTCDate())      + 'T' +
-                    f(this.getUTCHours())     + ':' +
-                    f(this.getUTCMinutes())   + ':' +
-                    f(this.getUTCSeconds())   + 'Z'
-                : null;
-        };
-
-        String.prototype.toJSON      =
-            Number.prototype.toJSON  =
-            Boolean.prototype.toJSON = function () {
-                return this.valueOf();
-            };
-    }
-
-    var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
-        escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
-        gap,
-        indent,
-        meta = {    // table of character substitutions
-            '\b': '\\b',
-            '\t': '\\t',
-            '\n': '\\n',
-            '\f': '\\f',
-            '\r': '\\r',
-            '"' : '\\"',
-            '\\': '\\\\'
-        },
-        rep;
-
-
-    function quote(string) {
-
-// If the string contains no control characters, no quote characters, and no
-// backslash characters, then we can safely slap some quotes around it.
-// Otherwise we must also replace the offending characters with safe escape
-// sequences.
-
-        escapable.lastIndex = 0;
-        return escapable.test(string) ? '"' + string.replace(escapable, function (a) {
-            var c = meta[a];
-            return typeof c === 'string'
-                ? c
-                : '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
-        }) + '"' : '"' + string + '"';
-    }
-
-
-    function str(key, holder) {
-
-// Produce a string from holder[key].
-
-        var i,          // The loop counter.
-            k,          // The member key.
-            v,          // The member value.
-            length,
-            mind = gap,
-            partial,
-            value = holder[key];
-
-// If the value has a toJSON method, call it to obtain a replacement value.
-
-        if (value && typeof value === 'object' &&
-                typeof value.toJSON === 'function') {
-            value = value.toJSON(key);
-        }
-
-// If we were called with a replacer function, then call the replacer to
-// obtain a replacement value.
-
-        if (typeof rep === 'function') {
-            value = rep.call(holder, key, value);
-        }
-
-// What happens next depends on the value's type.
-
-        switch (typeof value) {
-        case 'string':
-            return quote(value);
-
-        case 'number':
-
-// JSON numbers must be finite. Encode non-finite numbers as null.
-
-            return isFinite(value) ? String(value) : 'null';
-
-        case 'boolean':
-        case 'null':
-
-// If the value is a boolean or null, convert it to a string. Note:
-// typeof null does not produce 'null'. The case is included here in
-// the remote chance that this gets fixed someday.
-
-            return String(value);
-
-// If the type is 'object', we might be dealing with an object or an array or
-// null.
-
-        case 'object':
-
-// Due to a specification blunder in ECMAScript, typeof null is 'object',
-// so watch out for that case.
-
-            if (!value) {
-                return 'null';
-            }
-
-// Make an array to hold the partial results of stringifying this object value.
-
-            gap += indent;
-            partial = [];
-
-// Is the value an array?
-
-            if (Object.prototype.toString.apply(value) === '[object Array]') {
-
-// The value is an array. Stringify every element. Use null as a placeholder
-// for non-JSON values.
-
-                length = value.length;
-                for (i = 0; i < length; i += 1) {
-                    partial[i] = str(i, value) || 'null';
-                }
-
-// Join all of the elements together, separated with commas, and wrap them in
-// brackets.
-
-                v = partial.length === 0
-                    ? '[]'
-                    : gap
-                    ? '[\n' + gap + partial.join(',\n' + gap) + '\n' + mind + ']'
-                    : '[' + partial.join(',') + ']';
-                gap = mind;
-                return v;
-            }
-
-// If the replacer is an array, use it to select the members to be stringified.
-
-            if (rep && typeof rep === 'object') {
-                length = rep.length;
-                for (i = 0; i < length; i += 1) {
-                    if (typeof rep[i] === 'string') {
-                        k = rep[i];
-                        v = str(k, value);
-                        if (v) {
-                            partial.push(quote(k) + (gap ? ': ' : ':') + v);
-                        }
-                    }
-                }
-            } else {
-
-// Otherwise, iterate through all of the keys in the object.
-
-                for (k in value) {
-                    if (Object.prototype.hasOwnProperty.call(value, k)) {
-                        v = str(k, value);
-                        if (v) {
-                            partial.push(quote(k) + (gap ? ': ' : ':') + v);
-                        }
-                    }
-                }
-            }
-
-// Join all of the member texts together, separated with commas,
-// and wrap them in braces.
-
-            v = partial.length === 0
-                ? '{}'
-                : gap
-                ? '{\n' + gap + partial.join(',\n' + gap) + '\n' + mind + '}'
-                : '{' + partial.join(',') + '}';
-            gap = mind;
-            return v;
-        }
-    }
-
-// If the JSON object does not yet have a stringify method, give it one.
-
-    if (typeof JSON.stringify !== 'function') {
-        JSON.stringify = function (value, replacer, space) {
-
-// The stringify method takes a value and an optional replacer, and an optional
-// space parameter, and returns a JSON text. The replacer can be a function
-// that can replace values, or an array of strings that will select the keys.
-// A default replacer method can be provided. Use of the space parameter can
-// produce text that is more easily readable.
-
-            var i;
-            gap = '';
-            indent = '';
-
-// If the space parameter is a number, make an indent string containing that
-// many spaces.
-
-            if (typeof space === 'number') {
-                for (i = 0; i < space; i += 1) {
-                    indent += ' ';
-                }
-
-// If the space parameter is a string, it will be used as the indent string.
-
-            } else if (typeof space === 'string') {
-                indent = space;
-            }
-
-// If there is a replacer, it must be a function or an array.
-// Otherwise, throw an error.
-
-            rep = replacer;
-            if (replacer && typeof replacer !== 'function' &&
-                    (typeof replacer !== 'object' ||
-                    typeof replacer.length !== 'number')) {
-                throw new Error('JSON.stringify');
-            }
-
-// Make a fake root object containing our value under the key of ''.
-// Return the result of stringifying the value.
-
-            return str('', {'': value});
-        };
-    }
-
-
-// If the JSON object does not yet have a parse method, give it one.
-
-    if (typeof JSON.parse !== 'function') {
-        JSON.parse = function (text, reviver) {
-
-// The parse method takes a text and an optional reviver function, and returns
-// a JavaScript value if the text is a valid JSON text.
-
-            var j;
-
-            function walk(holder, key) {
-
-// The walk method is used to recursively walk the resulting structure so
-// that modifications can be made.
-
-                var k, v, value = holder[key];
-                if (value && typeof value === 'object') {
-                    for (k in value) {
-                        if (Object.prototype.hasOwnProperty.call(value, k)) {
-                            v = walk(value, k);
-                            if (v !== undefined) {
-                                value[k] = v;
-                            } else {
-                                delete value[k];
-                            }
-                        }
-                    }
-                }
-                return reviver.call(holder, key, value);
-            }
-
-
-// Parsing happens in four stages. In the first stage, we replace certain
-// Unicode characters with escape sequences. JavaScript handles many characters
-// incorrectly, either silently deleting them, or treating them as line endings.
-
-            text = String(text);
-            cx.lastIndex = 0;
-            if (cx.test(text)) {
-                text = text.replace(cx, function (a) {
-                    return '\\u' +
-                        ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
-                });
-            }
-
-// In the second stage, we run the text against regular expressions that look
-// for non-JSON patterns. We are especially concerned with '()' and 'new'
-// because they can cause invocation, and '=' because it can cause mutation.
-// But just to be safe, we want to reject all unexpected forms.
-
-// We split the second stage into 4 regexp operations in order to work around
-// crippling inefficiencies in IE's and Safari's regexp engines. First we
-// replace the JSON backslash pairs with '@' (a non-JSON character). Second, we
-// replace all simple value tokens with ']' characters. Third, we delete all
-// open brackets that follow a colon or comma or that begin the text. Finally,
-// we look to see that the remaining characters are only whitespace or ']' or
-// ',' or ':' or '{' or '}'. If that is so, then the text is safe for eval.
-
-            if (/^[\],:{}\s]*$/
-                    .test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@')
-                        .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']')
-                        .replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-
-// In the third stage we use the eval function to compile the text into a
-// JavaScript structure. The '{' operator is subject to a syntactic ambiguity
-// in JavaScript: it can begin a block or an object literal. We wrap the text
-// in parens to eliminate the ambiguity.
-
-                j = eval('(' + text + ')');
-
-// In the optional fourth stage, we recursively walk the new structure, passing
-// each name/value pair to a reviver function for possible transformation.
-
-                return typeof reviver === 'function'
-                    ? walk({'': j}, '')
-                    : j;
-            }
-
-// If the text is not JSON parseable, then a SyntaxError is thrown.
-
-            throw new SyntaxError('JSON.parse');
-        };
-    }
-}());
-
-},{}],24:[function(require,module,exports){
+},{"26":26}],28:[function(require,module,exports){
 'use strict';
 
-var utils = require('braintree-utilities');
+var LoaderDisplay = require(29);
+var LoaderMessage = require(30);
+var LoaderSpinner = require(31);
+
+function Loader() {
+  this._element = document.createElement('div');
+  this._element.style.cssText = this._cssDeclarations;
+
+  this._display = null;
+
+  this._initialize();
+}
+
+Loader.prototype._cssDeclarations = [
+  'filter:progid:DXImageTransform.Microsoft.Gradient(StartColorStr=#7F000000, EndColorStr=#7F000000)',
+  'background-color: rgba(0, 0, 0, 0.5)',
+  'display: table',
+  'height: 100%',
+  'left: 0',
+  'position: fixed',
+  'right: 0',
+  'top: 0',
+  'width: 100%',
+  'z-index: 99999'
+].join(';');
+
+Loader.prototype.getElement = function () {
+  return this._element;
+};
+
+Loader.prototype.dispose = function () {
+  this._display.dispose();
+  this._display = null;
+
+  this._element = null;
+};
+
+Loader.prototype._initialize = function () {
+  var displayObject = new LoaderSpinner();
+  var supportsSvgAnimations = (window.SVGElement && window.SVGAnimateElement &&
+                               window.SVGAnimateTransformElement);
+
+  if (!(supportsSvgAnimations)) {
+    displayObject = new LoaderMessage('Loading...');
+  }
+
+  this._display = new LoaderDisplay(displayObject);
+  this.getElement().appendChild(this._display.getElement());
+};
+
+module.exports = Loader;
+
+},{"29":29,"30":30,"31":31}],29:[function(require,module,exports){
+'use strict';
+
+function LoaderDisplay(displayObject) {
+  this._element = document.createElement('div');
+  this._element.style.cssText = this._cssDeclarations;
+
+  this._displayObject = displayObject;
+
+  this._initialize();
+}
+
+LoaderDisplay.prototype._cssDeclarations = [
+  'display: table-cell',
+  'vertical-align: middle'
+].join(';');
+
+LoaderDisplay.prototype.getElement = function () {
+  return this._element;
+};
+
+LoaderDisplay.prototype.dispose = function () {
+  this._displayObject.dispose();
+  this._displayObject = null;
+
+  this._element = null;
+};
+
+LoaderDisplay.prototype._initialize = function () {
+  this.getElement().appendChild(this._displayObject.getElement());
+};
+
+module.exports = LoaderDisplay;
+
+},{}],30:[function(require,module,exports){
+'use strict';
+
+function LoaderMessage(text) {
+  this._element = document.createElement('div');
+  this._element.style.cssText = this._cssDeclarations;
+  this._element.innerHTML = text;
+}
+
+LoaderMessage.prototype._cssDeclarations = [
+  'color: #fff',
+  'font-family: Helvetica, sans-serif',
+  'font-size: 12px',
+  'text-align: center'
+].join(';');
+
+LoaderMessage.prototype.getElement = function () {
+  return this._element;
+};
+
+LoaderMessage.prototype.dispose = function () {
+  this._element = null;
+};
+
+module.exports = LoaderMessage;
+
+},{}],31:[function(require,module,exports){
+'use strict';
+
+function LoaderSpinner() {
+  this._element = document.createElement('div');
+  this._element.style.cssText = this._cssDeclarations;
+  this._element.innerHTML = this._markup;
+}
+
+LoaderSpinner.prototype._cssDeclarations = [
+  'height: 36px',
+  'margin-left: auto',
+  'margin-right: auto',
+  'width: 36px'
+].join(';');
+
+LoaderSpinner.prototype._markup = [
+  '<svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"',
+  'width="100%" height="100%" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">',
+  '  <path fill="#FFF" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">',
+  '    <animateTransform attributeType="xml"',
+  '    attributeName="transform"',
+  '    type="rotate"',
+  '    from="0 25 25"',
+  '    to="360 25 25"',
+  '    dur="780ms"',
+  '    repeatCount="indefinite"',
+  '    calcMode="spline"',
+  '    keySplines="0.44, 0.22, 0, 1"',
+  '    keyTimes="0;1"/>',
+  '  </path>',
+  '</svg>'
+].join('');
+
+LoaderSpinner.prototype.getElement = function () {
+  return this._element;
+};
+
+LoaderSpinner.prototype.dispose = function () {
+  this._element = null;
+};
+
+module.exports = LoaderSpinner;
+
+},{}],32:[function(require,module,exports){
+'use strict';
+
+var utils = require(24);
 
 function Receiver (callback) {
   this.postMessageReceiver(callback);
@@ -4472,13 +4372,1348 @@ Receiver.prototype.stopListening = function () {
 
 module.exports = Receiver;
 
-},{"braintree-utilities":19}],25:[function(require,module,exports){
+},{"24":24}],33:[function(require,module,exports){
+(function (global){
 'use strict';
 
-var utils = require('braintree-utilities');
+var util = require(40);
+var prepBody = require(39);
+var parseBody = require(38);
+var constants = require(35);
+var isXHRAvailable = global.XMLHttpRequest && 'withCredentials' in new global.XMLHttpRequest();
 
-function MessageBus(host) {
+function getRequestObject() {
+  return isXHRAvailable ? new XMLHttpRequest() : new XDomainRequest();
+}
+
+function get(url, attrs, deserializer, callback, timeout) {
+  var urlParams = util.createURLParams(url, attrs);
+  makeRequest('GET', urlParams, null, deserializer, callback, timeout);
+}
+
+function post(url, attrs, deserializer, callback, timeout) {
+  makeRequest('POST', url, attrs, deserializer, callback, timeout);
+}
+
+function makeRequest(method, url, body, deserializer, callback, timeout) {
+  var status, resBody;
+  var req = getRequestObject();
+
+  callback = callback || function () {};
+
+  if (isXHRAvailable) {
+    req.onreadystatechange = function () {
+      if (req.readyState !== 4) { return; }
+
+      status = req.status;
+      resBody = parseBody(req.responseText);
+
+      if (status >= 400 || status === 0) {
+        callback.call(null, resBody || {errors: constants.errors.UNKNOWN_ERROR}, null);
+      } else if (status > 0) {
+        callback.call(null, null, deserializer(resBody));
+      }
+    };
+  } else {
+    req.onload = function () {
+      callback.call(null, null, deserializer(parseBody(req.responseText)));
+    };
+
+    req.onerror = function () {
+      callback.call(null, req.responseText, null);
+    };
+
+    // This must remain for IE9 to work
+    req.onprogress = function() {};
+
+    req.ontimeout = function () {
+      callback.call(null, {errors: constants.errors.UNKNOWN_ERROR}, null);
+    };
+  }
+
+  req.open(method, url, true);
+  req.timeout = timeout == null ? 60000 : timeout;
+
+  if (isXHRAvailable && method === 'POST') {
+    req.setRequestHeader('Content-Type', 'application/json');
+  }
+
+  setTimeout(function () {
+    req.send(prepBody(method, body));
+  }, 0);
+}
+
+module.exports = {
+  get: get,
+  post: post
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"35":35,"38":38,"39":39,"40":40}],34:[function(require,module,exports){
+'use strict';
+
+var JSONPDriver = require(36);
+var AJAXDriver = require(33);
+var util = require(40);
+
+function chooseRequestDriver(options) {
+  var ua = util.getUserAgent();
+  var isAJAXAvailable = !(util.isHTTP() && /(MSIE\s(8|9))|(Phantom)/.test(ua));
+
+  options = options || {};
+
+  if (options.enableCORS && isAJAXAvailable) {
+    return AJAXDriver;
+  } else {
+    return JSONPDriver;
+  }
+}
+
+module.exports = chooseRequestDriver;
+
+},{"33":33,"36":36,"40":40}],35:[function(require,module,exports){
+module.exports={
+  "errors": {
+    "UNKNOWN_ERROR": "Unknown error",
+    "INVALID_TIMEOUT": "Timeout must be a number"
+  }
+};
+
+},{}],36:[function(require,module,exports){
+'use strict';
+
+var JSONP = require(37);
+var constants = require(35);
+var timeoutWatchers = [];
+
+function deserialize(response, mapper) {
+  if (response.status >= 400) {
+    return [response, null];
+  } else {
+    return [null, mapper(response)];
+  }
+}
+
+function noop() {}
+
+function requestWithTimeout(url, attrs, deserializer, method, callback, timeout) {
+  var uniqueName;
+
+  callback = callback || noop;
+
+  if (timeout == null) {
+    timeout = 60000;
+  }
+
+  uniqueName = method(url, attrs, function (data, name) {
+    if (timeoutWatchers[name]) {
+      clearTimeout(timeoutWatchers[name]);
+      callback.apply(null, deserialize(data, function (d) { return deserializer(d); }));
+    }
+  });
+
+  if (typeof timeout === 'number') {
+    timeoutWatchers[uniqueName] = setTimeout(function () {
+      timeoutWatchers[uniqueName] = null;
+      callback.apply(null, [{errors: constants.errors.UNKNOWN_ERROR}, null]);
+    }, timeout);
+  } else {
+    callback.apply(null, [{errors: constants.errors.INVALID_TIMEOUT}, null]);
+  }
+}
+
+function post(url, attrs, deserializer, callback, timeout) {
+  attrs._method = 'POST';
+  requestWithTimeout(url, attrs, deserializer, JSONP.get, callback, timeout);
+}
+
+function get(url, attrs, deserializer, callback, timeout) {
+  requestWithTimeout(url, attrs, deserializer, JSONP.get, callback, timeout);
+}
+
+module.exports = {
+  get: get,
+  post: post
+};
+
+},{"35":35,"37":37}],37:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var util = require(40);
+
+/*
+* Lightweight JSONP fetcher
+* Copyright 2010-2012 Erik Karlsson. All rights reserved.
+* BSD licensed
+*/
+var head,
+    window = global,
+    config = {};
+
+function load(url, pfnError) {
+  var script = document.createElement('script'),
+  done = false;
+  script.src = url;
+  script.async = true;
+
+  var errorHandler = pfnError || config.error;
+  if ( typeof errorHandler === 'function' ) {
+    script.onerror = function (ex){
+      errorHandler({url: url, event: ex});
+    };
+  }
+
+  script.onload = script.onreadystatechange = function () {
+    if ( !done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") ) {
+      done = true;
+      script.onload = script.onreadystatechange = null;
+      if ( script && script.parentNode ) {
+        script.parentNode.removeChild( script );
+      }
+    }
+  };
+
+  if ( !head ) {
+    head = document.getElementsByTagName('head')[0];
+  }
+  head.appendChild( script );
+}
+
+function jsonp(url, params, callback, callbackName) {
+  var urlParams, key, uniqueName;
+
+  callbackName = (callbackName||config['callbackName']||'callback');
+  uniqueName = callbackName + "_json" + util.generateUUID();
+  params[callbackName] = uniqueName;
+  urlParams = util.createURLParams(url, params)
+
+  window[ uniqueName ] = function (data){
+    callback(data, uniqueName);
+    try {
+      delete window[ uniqueName ];
+    } catch (e) {}
+    window[ uniqueName ] = null;
+  };
+
+  load(urlParams);
+  return uniqueName;
+}
+
+function setDefaults(obj){
+  config = obj;
+}
+
+module.exports = {
+  get: jsonp,
+  init: setDefaults
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"40":40}],38:[function(require,module,exports){
+'use strict';
+
+module.exports = function (body) {
+  try {
+    body = JSON.parse(body);
+  } catch (e) {}
+
+  return body;
+};
+
+},{}],39:[function(require,module,exports){
+'use strict';
+
+var isString = require(49);
+
+module.exports = function (method, body) {
+  if (!isString(method)) {
+    throw new Error('Method must be a string');
+  }
+
+  if (method.toLowerCase() !== 'get' && body != null) {
+    body = isString(body) ? body : JSON.stringify(body);
+  }
+
+  return body;
+};
+
+},{"49":49}],40:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var isEmpty = require(42);
+var isObject = require(48);
+
+function isArray(value) {
+  return value && typeof value === 'object' && typeof value.length === 'number' &&
+    Object.prototype.toString.call(value) === '[object Array]' || false;
+}
+
+function stringify(params, namespace) {
+  var query = [], k, v, p;
+
+  for (p in params) {
+    if (!params.hasOwnProperty(p)) {
+      continue;
+    }
+
+    v = params[p];
+
+    if (namespace) {
+      if (isArray(params)) {
+        k = namespace + '[]';
+      } else {
+        k = namespace + '[' + p + ']';
+      }
+    } else {
+      k = p;
+    }
+    if (typeof v === 'object') {
+      query.push(stringify(v, k));
+    } else {
+      query.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
+    }
+  }
+
+  return query.join('&');
+}
+
+function generateUUID() { // RFC 4122 v4 (pseudo-random) UUID without hyphens
+  return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (xORy) {
+    var randomHex = Math.floor(Math.random() * 16);
+    var uuidHex = xORy === 'x' ? randomHex : randomHex & 0x3 | 0x8; // jshint ignore:line
+    return uuidHex.toString(16);
+  });
+}
+
+function createURLParams(url, params) {
+  url = url || '';
+
+  if (!isEmpty(params) && isObject(params)) {
+    url += url.indexOf('?') === -1 ? '?' : '';
+    url += url.indexOf('=') !== -1 ? '&' : '';
+    url += stringify(params);
+  }
+
+  return url;
+}
+
+function getUserAgent() {
+  return global.navigator.userAgent;
+}
+
+function isHTTP() {
+  return global.location.protocol === 'http:';
+}
+
+module.exports = {
+  isArray: isArray,
+  generateUUID: generateUUID,
+  stringify: stringify,
+  createURLParams: createURLParams,
+  getUserAgent: getUserAgent,
+  isHTTP: isHTTP
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"42":42,"48":48}],41:[function(require,module,exports){
+'use strict';
+
+var AJAXDriver = require(33);
+var JSONPDriver = require(36);
+var chooseDriver = require(34);
+var util = require(40);
+
+module.exports = {
+  AJAXDriver: AJAXDriver,
+  JSONPDriver: JSONPDriver,
+  chooseDriver: chooseDriver,
+  util: util
+};
+
+},{"33":33,"34":34,"36":36,"40":40}],42:[function(require,module,exports){
+/**
+ * lodash 3.0.4 (Custom Build) <https://lodash.com/>
+ * Build: `lodash modern modularize exports="npm" -o ./`
+ * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ * Available under MIT license <https://lodash.com/license>
+ */
+var isArguments = require(43),
+    isArray = require(44),
+    isFunction = require(45),
+    isString = require(49),
+    keys = require(46);
+
+/**
+ * Checks if `value` is object-like.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ */
+function isObjectLike(value) {
+  return !!value && typeof value == 'object';
+}
+
+/**
+ * Used as the [maximum length](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-number.max_safe_integer)
+ * of an array-like value.
+ */
+var MAX_SAFE_INTEGER = 9007199254740991;
+
+/**
+ * The base implementation of `_.property` without support for deep paths.
+ *
+ * @private
+ * @param {string} key The key of the property to get.
+ * @returns {Function} Returns the new function.
+ */
+function baseProperty(key) {
+  return function(object) {
+    return object == null ? undefined : object[key];
+  };
+}
+
+/**
+ * Gets the "length" property value of `object`.
+ *
+ * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
+ * that affects Safari on at least iOS 8.1-8.3 ARM64.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @returns {*} Returns the "length" value.
+ */
+var getLength = baseProperty('length');
+
+/**
+ * Checks if `value` is array-like.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+ */
+function isArrayLike(value) {
+  return value != null && isLength(getLength(value));
+}
+
+/**
+ * Checks if `value` is a valid array-like length.
+ *
+ * **Note:** This function is based on [`ToLength`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength).
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+ */
+function isLength(value) {
+  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+}
+
+/**
+ * Checks if `value` is empty. A value is considered empty unless it is an
+ * `arguments` object, array, string, or jQuery-like collection with a length
+ * greater than `0` or an object with own enumerable properties.
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {Array|Object|string} value The value to inspect.
+ * @returns {boolean} Returns `true` if `value` is empty, else `false`.
+ * @example
+ *
+ * _.isEmpty(null);
+ * // => true
+ *
+ * _.isEmpty(true);
+ * // => true
+ *
+ * _.isEmpty(1);
+ * // => true
+ *
+ * _.isEmpty([1, 2, 3]);
+ * // => false
+ *
+ * _.isEmpty({ 'a': 1 });
+ * // => false
+ */
+function isEmpty(value) {
+  if (value == null) {
+    return true;
+  }
+  if (isArrayLike(value) && (isArray(value) || isString(value) || isArguments(value) ||
+      (isObjectLike(value) && isFunction(value.splice)))) {
+    return !value.length;
+  }
+  return !keys(value).length;
+}
+
+module.exports = isEmpty;
+
+},{"43":43,"44":44,"45":45,"46":46,"49":49}],43:[function(require,module,exports){
+/**
+ * lodash 3.0.4 (Custom Build) <https://lodash.com/>
+ * Build: `lodash modern modularize exports="npm" -o ./`
+ * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ * Available under MIT license <https://lodash.com/license>
+ */
+
+/**
+ * Checks if `value` is object-like.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ */
+function isObjectLike(value) {
+  return !!value && typeof value == 'object';
+}
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/** Native method references. */
+var propertyIsEnumerable = objectProto.propertyIsEnumerable;
+
+/**
+ * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
+ * of an array-like value.
+ */
+var MAX_SAFE_INTEGER = 9007199254740991;
+
+/**
+ * The base implementation of `_.property` without support for deep paths.
+ *
+ * @private
+ * @param {string} key The key of the property to get.
+ * @returns {Function} Returns the new function.
+ */
+function baseProperty(key) {
+  return function(object) {
+    return object == null ? undefined : object[key];
+  };
+}
+
+/**
+ * Gets the "length" property value of `object`.
+ *
+ * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
+ * that affects Safari on at least iOS 8.1-8.3 ARM64.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @returns {*} Returns the "length" value.
+ */
+var getLength = baseProperty('length');
+
+/**
+ * Checks if `value` is array-like.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+ */
+function isArrayLike(value) {
+  return value != null && isLength(getLength(value));
+}
+
+/**
+ * Checks if `value` is a valid array-like length.
+ *
+ * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+ */
+function isLength(value) {
+  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+}
+
+/**
+ * Checks if `value` is classified as an `arguments` object.
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+ * @example
+ *
+ * _.isArguments(function() { return arguments; }());
+ * // => true
+ *
+ * _.isArguments([1, 2, 3]);
+ * // => false
+ */
+function isArguments(value) {
+  return isObjectLike(value) && isArrayLike(value) &&
+    hasOwnProperty.call(value, 'callee') && !propertyIsEnumerable.call(value, 'callee');
+}
+
+module.exports = isArguments;
+
+},{}],44:[function(require,module,exports){
+/**
+ * lodash 3.0.4 (Custom Build) <https://lodash.com/>
+ * Build: `lodash modern modularize exports="npm" -o ./`
+ * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ * Available under MIT license <https://lodash.com/license>
+ */
+
+/** `Object#toString` result references. */
+var arrayTag = '[object Array]',
+    funcTag = '[object Function]';
+
+/** Used to detect host constructors (Safari > 5). */
+var reIsHostCtor = /^\[object .+?Constructor\]$/;
+
+/**
+ * Checks if `value` is object-like.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ */
+function isObjectLike(value) {
+  return !!value && typeof value == 'object';
+}
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/** Used to resolve the decompiled source of functions. */
+var fnToString = Function.prototype.toString;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var objToString = objectProto.toString;
+
+/** Used to detect if a method is native. */
+var reIsNative = RegExp('^' +
+  fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
+  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+);
+
+/* Native method references for those with the same name as other `lodash` methods. */
+var nativeIsArray = getNative(Array, 'isArray');
+
+/**
+ * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
+ * of an array-like value.
+ */
+var MAX_SAFE_INTEGER = 9007199254740991;
+
+/**
+ * Gets the native function at `key` of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @param {string} key The key of the method to get.
+ * @returns {*} Returns the function if it's native, else `undefined`.
+ */
+function getNative(object, key) {
+  var value = object == null ? undefined : object[key];
+  return isNative(value) ? value : undefined;
+}
+
+/**
+ * Checks if `value` is a valid array-like length.
+ *
+ * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+ */
+function isLength(value) {
+  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+}
+
+/**
+ * Checks if `value` is classified as an `Array` object.
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+ * @example
+ *
+ * _.isArray([1, 2, 3]);
+ * // => true
+ *
+ * _.isArray(function() { return arguments; }());
+ * // => false
+ */
+var isArray = nativeIsArray || function(value) {
+  return isObjectLike(value) && isLength(value.length) && objToString.call(value) == arrayTag;
+};
+
+/**
+ * Checks if `value` is classified as a `Function` object.
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+ * @example
+ *
+ * _.isFunction(_);
+ * // => true
+ *
+ * _.isFunction(/abc/);
+ * // => false
+ */
+function isFunction(value) {
+  // The use of `Object#toString` avoids issues with the `typeof` operator
+  // in older versions of Chrome and Safari which return 'function' for regexes
+  // and Safari 8 equivalents which return 'object' for typed array constructors.
+  return isObject(value) && objToString.call(value) == funcTag;
+}
+
+/**
+ * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+ * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(1);
+ * // => false
+ */
+function isObject(value) {
+  // Avoid a V8 JIT bug in Chrome 19-20.
+  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+  var type = typeof value;
+  return !!value && (type == 'object' || type == 'function');
+}
+
+/**
+ * Checks if `value` is a native function.
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
+ * @example
+ *
+ * _.isNative(Array.prototype.push);
+ * // => true
+ *
+ * _.isNative(_);
+ * // => false
+ */
+function isNative(value) {
+  if (value == null) {
+    return false;
+  }
+  if (isFunction(value)) {
+    return reIsNative.test(fnToString.call(value));
+  }
+  return isObjectLike(value) && reIsHostCtor.test(value);
+}
+
+module.exports = isArray;
+
+},{}],45:[function(require,module,exports){
+/**
+ * lodash 3.0.6 (Custom Build) <https://lodash.com/>
+ * Build: `lodash modern modularize exports="npm" -o ./`
+ * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ * Available under MIT license <https://lodash.com/license>
+ */
+
+/** `Object#toString` result references. */
+var funcTag = '[object Function]';
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/**
+ * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var objToString = objectProto.toString;
+
+/**
+ * Checks if `value` is classified as a `Function` object.
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+ * @example
+ *
+ * _.isFunction(_);
+ * // => true
+ *
+ * _.isFunction(/abc/);
+ * // => false
+ */
+function isFunction(value) {
+  // The use of `Object#toString` avoids issues with the `typeof` operator
+  // in older versions of Chrome and Safari which return 'function' for regexes
+  // and Safari 8 equivalents which return 'object' for typed array constructors.
+  return isObject(value) && objToString.call(value) == funcTag;
+}
+
+/**
+ * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+ * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(1);
+ * // => false
+ */
+function isObject(value) {
+  // Avoid a V8 JIT bug in Chrome 19-20.
+  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+  var type = typeof value;
+  return !!value && (type == 'object' || type == 'function');
+}
+
+module.exports = isFunction;
+
+},{}],46:[function(require,module,exports){
+/**
+ * lodash 3.1.2 (Custom Build) <https://lodash.com/>
+ * Build: `lodash modern modularize exports="npm" -o ./`
+ * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ * Available under MIT license <https://lodash.com/license>
+ */
+var getNative = require(47),
+    isArguments = require(43),
+    isArray = require(44);
+
+/** Used to detect unsigned integer values. */
+var reIsUint = /^\d+$/;
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/* Native method references for those with the same name as other `lodash` methods. */
+var nativeKeys = getNative(Object, 'keys');
+
+/**
+ * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
+ * of an array-like value.
+ */
+var MAX_SAFE_INTEGER = 9007199254740991;
+
+/**
+ * The base implementation of `_.property` without support for deep paths.
+ *
+ * @private
+ * @param {string} key The key of the property to get.
+ * @returns {Function} Returns the new function.
+ */
+function baseProperty(key) {
+  return function(object) {
+    return object == null ? undefined : object[key];
+  };
+}
+
+/**
+ * Gets the "length" property value of `object`.
+ *
+ * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
+ * that affects Safari on at least iOS 8.1-8.3 ARM64.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @returns {*} Returns the "length" value.
+ */
+var getLength = baseProperty('length');
+
+/**
+ * Checks if `value` is array-like.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+ */
+function isArrayLike(value) {
+  return value != null && isLength(getLength(value));
+}
+
+/**
+ * Checks if `value` is a valid array-like index.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
+ * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
+ */
+function isIndex(value, length) {
+  value = (typeof value == 'number' || reIsUint.test(value)) ? +value : -1;
+  length = length == null ? MAX_SAFE_INTEGER : length;
+  return value > -1 && value % 1 == 0 && value < length;
+}
+
+/**
+ * Checks if `value` is a valid array-like length.
+ *
+ * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+ */
+function isLength(value) {
+  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+}
+
+/**
+ * A fallback implementation of `Object.keys` which creates an array of the
+ * own enumerable property names of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @returns {Array} Returns the array of property names.
+ */
+function shimKeys(object) {
+  var props = keysIn(object),
+      propsLength = props.length,
+      length = propsLength && object.length;
+
+  var allowIndexes = !!length && isLength(length) &&
+    (isArray(object) || isArguments(object));
+
+  var index = -1,
+      result = [];
+
+  while (++index < propsLength) {
+    var key = props[index];
+    if ((allowIndexes && isIndex(key, length)) || hasOwnProperty.call(object, key)) {
+      result.push(key);
+    }
+  }
+  return result;
+}
+
+/**
+ * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+ * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(1);
+ * // => false
+ */
+function isObject(value) {
+  // Avoid a V8 JIT bug in Chrome 19-20.
+  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+  var type = typeof value;
+  return !!value && (type == 'object' || type == 'function');
+}
+
+/**
+ * Creates an array of the own enumerable property names of `object`.
+ *
+ * **Note:** Non-object values are coerced to objects. See the
+ * [ES spec](http://ecma-international.org/ecma-262/6.0/#sec-object.keys)
+ * for more details.
+ *
+ * @static
+ * @memberOf _
+ * @category Object
+ * @param {Object} object The object to query.
+ * @returns {Array} Returns the array of property names.
+ * @example
+ *
+ * function Foo() {
+ *   this.a = 1;
+ *   this.b = 2;
+ * }
+ *
+ * Foo.prototype.c = 3;
+ *
+ * _.keys(new Foo);
+ * // => ['a', 'b'] (iteration order is not guaranteed)
+ *
+ * _.keys('hi');
+ * // => ['0', '1']
+ */
+var keys = !nativeKeys ? shimKeys : function(object) {
+  var Ctor = object == null ? undefined : object.constructor;
+  if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
+      (typeof object != 'function' && isArrayLike(object))) {
+    return shimKeys(object);
+  }
+  return isObject(object) ? nativeKeys(object) : [];
+};
+
+/**
+ * Creates an array of the own and inherited enumerable property names of `object`.
+ *
+ * **Note:** Non-object values are coerced to objects.
+ *
+ * @static
+ * @memberOf _
+ * @category Object
+ * @param {Object} object The object to query.
+ * @returns {Array} Returns the array of property names.
+ * @example
+ *
+ * function Foo() {
+ *   this.a = 1;
+ *   this.b = 2;
+ * }
+ *
+ * Foo.prototype.c = 3;
+ *
+ * _.keysIn(new Foo);
+ * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
+ */
+function keysIn(object) {
+  if (object == null) {
+    return [];
+  }
+  if (!isObject(object)) {
+    object = Object(object);
+  }
+  var length = object.length;
+  length = (length && isLength(length) &&
+    (isArray(object) || isArguments(object)) && length) || 0;
+
+  var Ctor = object.constructor,
+      index = -1,
+      isProto = typeof Ctor == 'function' && Ctor.prototype === object,
+      result = Array(length),
+      skipIndexes = length > 0;
+
+  while (++index < length) {
+    result[index] = (index + '');
+  }
+  for (var key in object) {
+    if (!(skipIndexes && isIndex(key, length)) &&
+        !(key == 'constructor' && (isProto || !hasOwnProperty.call(object, key)))) {
+      result.push(key);
+    }
+  }
+  return result;
+}
+
+module.exports = keys;
+
+},{"43":43,"44":44,"47":47}],47:[function(require,module,exports){
+/**
+ * lodash 3.9.1 (Custom Build) <https://lodash.com/>
+ * Build: `lodash modern modularize exports="npm" -o ./`
+ * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ * Available under MIT license <https://lodash.com/license>
+ */
+
+/** `Object#toString` result references. */
+var funcTag = '[object Function]';
+
+/** Used to detect host constructors (Safari > 5). */
+var reIsHostCtor = /^\[object .+?Constructor\]$/;
+
+/**
+ * Checks if `value` is object-like.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ */
+function isObjectLike(value) {
+  return !!value && typeof value == 'object';
+}
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/** Used to resolve the decompiled source of functions. */
+var fnToString = Function.prototype.toString;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var objToString = objectProto.toString;
+
+/** Used to detect if a method is native. */
+var reIsNative = RegExp('^' +
+  fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
+  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+);
+
+/**
+ * Gets the native function at `key` of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @param {string} key The key of the method to get.
+ * @returns {*} Returns the function if it's native, else `undefined`.
+ */
+function getNative(object, key) {
+  var value = object == null ? undefined : object[key];
+  return isNative(value) ? value : undefined;
+}
+
+/**
+ * Checks if `value` is classified as a `Function` object.
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+ * @example
+ *
+ * _.isFunction(_);
+ * // => true
+ *
+ * _.isFunction(/abc/);
+ * // => false
+ */
+function isFunction(value) {
+  // The use of `Object#toString` avoids issues with the `typeof` operator
+  // in older versions of Chrome and Safari which return 'function' for regexes
+  // and Safari 8 equivalents which return 'object' for typed array constructors.
+  return isObject(value) && objToString.call(value) == funcTag;
+}
+
+/**
+ * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+ * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(1);
+ * // => false
+ */
+function isObject(value) {
+  // Avoid a V8 JIT bug in Chrome 19-20.
+  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+  var type = typeof value;
+  return !!value && (type == 'object' || type == 'function');
+}
+
+/**
+ * Checks if `value` is a native function.
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
+ * @example
+ *
+ * _.isNative(Array.prototype.push);
+ * // => true
+ *
+ * _.isNative(_);
+ * // => false
+ */
+function isNative(value) {
+  if (value == null) {
+    return false;
+  }
+  if (isFunction(value)) {
+    return reIsNative.test(fnToString.call(value));
+  }
+  return isObjectLike(value) && reIsHostCtor.test(value);
+}
+
+module.exports = getNative;
+
+},{}],48:[function(require,module,exports){
+/**
+ * lodash 3.0.2 (Custom Build) <https://lodash.com/>
+ * Build: `lodash modern modularize exports="npm" -o ./`
+ * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ * Available under MIT license <https://lodash.com/license>
+ */
+
+/**
+ * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+ * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(1);
+ * // => false
+ */
+function isObject(value) {
+  // Avoid a V8 JIT bug in Chrome 19-20.
+  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+  var type = typeof value;
+  return !!value && (type == 'object' || type == 'function');
+}
+
+module.exports = isObject;
+
+},{}],49:[function(require,module,exports){
+/**
+ * lodash 3.0.1 (Custom Build) <https://lodash.com/>
+ * Build: `lodash modern modularize exports="npm" -o ./`
+ * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+ * Based on Underscore.js 1.8.2 <http://underscorejs.org/LICENSE>
+ * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ * Available under MIT license <https://lodash.com/license>
+ */
+
+/** `Object#toString` result references. */
+var stringTag = '[object String]';
+
+/**
+ * Checks if `value` is object-like.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ */
+function isObjectLike(value) {
+  return !!value && typeof value == 'object';
+}
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/**
+ * Used to resolve the [`toStringTag`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+ * of values.
+ */
+var objToString = objectProto.toString;
+
+/**
+ * Checks if `value` is classified as a `String` primitive or object.
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+ * @example
+ *
+ * _.isString('abc');
+ * // => true
+ *
+ * _.isString(1);
+ * // => false
+ */
+function isString(value) {
+  return typeof value == 'string' || (isObjectLike(value) && objToString.call(value) == stringTag);
+}
+
+module.exports = isString;
+
+},{}],50:[function(require,module,exports){
+arguments[4][16][0].apply(exports,arguments)
+},{"16":16}],51:[function(require,module,exports){
+arguments[4][17][0].apply(exports,arguments)
+},{"17":17}],52:[function(require,module,exports){
+arguments[4][18][0].apply(exports,arguments)
+},{"18":18}],53:[function(require,module,exports){
+arguments[4][19][0].apply(exports,arguments)
+},{"19":19}],54:[function(require,module,exports){
+arguments[4][20][0].apply(exports,arguments)
+},{"20":20}],55:[function(require,module,exports){
+arguments[4][21][0].apply(exports,arguments)
+},{"21":21}],56:[function(require,module,exports){
+arguments[4][22][0].apply(exports,arguments)
+},{"22":22,"50":50}],57:[function(require,module,exports){
+arguments[4][23][0].apply(exports,arguments)
+},{"23":23}],58:[function(require,module,exports){
+arguments[4][24][0].apply(exports,arguments)
+},{"24":24,"50":50,"51":51,"52":52,"53":53,"54":54,"55":55,"56":56,"57":57}],59:[function(require,module,exports){
+'use strict';
+
+var utils = require(73);
+
+function MessageBus(host, channel) {
   this.host = host || window;
+  this.channel = channel || null;
   this.handlers = [];
 
   utils.addEventListener(this.host, 'message', utils.bind(this.receive, this));
@@ -4505,14 +5740,14 @@ MessageBus.prototype.receive = function (event) {
 
 MessageBus.prototype.send = function (source, type, data) {
   source.postMessage(JSON.stringify({
-    type: type,
+    type: this._namespaceEvent(type),
     data: data
   }), '*');
 };
 
 MessageBus.prototype.register = function (type, handler) {
   this.handlers.push({
-    type: type,
+    type: this._namespaceEvent(type),
     handler: handler
   });
 };
@@ -4523,6 +5758,10 @@ MessageBus.prototype.unregister = function (type, handler) {
       return this.handlers.splice(i, 1);
     }
   }
+};
+
+MessageBus.prototype._namespaceEvent = function (eventName) {
+  return this.channel ? ['braintree', this.channel, eventName].join(':') : eventName;
 };
 
 MessageBus.Message = function (bus, source, content) {
@@ -4537,10 +5776,10 @@ MessageBus.Message.prototype.reply = function (type, data) {
 
 module.exports = MessageBus;
 
-},{"braintree-utilities":35}],26:[function(require,module,exports){
+},{"73":73}],60:[function(require,module,exports){
 'use strict';
 
-var utils = require('braintree-utilities');
+var utils = require(73);
 
 function PubsubClient(bus, target) {
   this.bus = bus;
@@ -4586,7 +5825,7 @@ PubsubClient.prototype.unsubscribe = function (channel, handler) {
 
 module.exports = PubsubClient;
 
-},{"braintree-utilities":35}],27:[function(require,module,exports){
+},{"73":73}],61:[function(require,module,exports){
 'use strict';
 
 function PubsubServer(bus) {
@@ -4645,10 +5884,10 @@ PubsubServer.prototype.unsubscribe = function (channel, handler) {
 
 module.exports = PubsubServer;
 
-},{}],28:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 'use strict';
 
-var utils = require('braintree-utilities');
+var utils = require(73);
 
 function RPCClient(bus, target) {
   this.bus = bus;
@@ -4678,10 +5917,10 @@ RPCClient.prototype.invoke = function (method, args, callback) {
 
 module.exports = RPCClient;
 
-},{"braintree-utilities":35}],29:[function(require,module,exports){
+},{"73":73}],63:[function(require,module,exports){
 'use strict';
 
-var utils = require('braintree-utilities');
+var utils = require(73);
 
 function RPCServer(bus) {
   this.bus = bus;
@@ -4710,18 +5949,22 @@ RPCServer.prototype._handleRequest = function (message) {
   }
 };
 
+RPCServer.prototype.reset = function () {
+  this.methods = {};
+};
+
 RPCServer.prototype.define = function (method, handler) {
   this.methods[method] = handler;
 };
 
 module.exports = RPCServer;
 
-},{"braintree-utilities":35}],30:[function(require,module,exports){
-var MessageBus = require('./lib/message-bus');
-var PubsubClient = require('./lib/pubsub-client');
-var PubsubServer = require('./lib/pubsub-server');
-var RPCClient = require('./lib/rpc-client');
-var RPCServer = require('./lib/rpc-server');
+},{"73":73}],64:[function(require,module,exports){
+var MessageBus = require(59);
+var PubsubClient = require(60);
+var PubsubServer = require(61);
+var RPCClient = require(62);
+var RPCServer = require(63);
 
 module.exports = {
   MessageBus: MessageBus,
@@ -4731,216 +5974,402 @@ module.exports = {
   RPCServer: RPCServer
 };
 
-},{"./lib/message-bus":25,"./lib/pubsub-client":26,"./lib/pubsub-server":27,"./lib/rpc-client":28,"./lib/rpc-server":29}],31:[function(require,module,exports){
+},{"59":59,"60":60,"61":61,"62":62,"63":63}],65:[function(require,module,exports){
+arguments[4][16][0].apply(exports,arguments)
+},{"16":16}],66:[function(require,module,exports){
+arguments[4][17][0].apply(exports,arguments)
+},{"17":17}],67:[function(require,module,exports){
+arguments[4][18][0].apply(exports,arguments)
+},{"18":18}],68:[function(require,module,exports){
+arguments[4][19][0].apply(exports,arguments)
+},{"19":19}],69:[function(require,module,exports){
+arguments[4][20][0].apply(exports,arguments)
+},{"20":20}],70:[function(require,module,exports){
+arguments[4][21][0].apply(exports,arguments)
+},{"21":21}],71:[function(require,module,exports){
+arguments[4][22][0].apply(exports,arguments)
+},{"22":22,"65":65}],72:[function(require,module,exports){
+arguments[4][23][0].apply(exports,arguments)
+},{"23":23}],73:[function(require,module,exports){
+arguments[4][24][0].apply(exports,arguments)
+},{"24":24,"65":65,"66":66,"67":67,"68":68,"69":69,"70":70,"71":71,"72":72}],74:[function(require,module,exports){
+arguments[4][16][0].apply(exports,arguments)
+},{"16":16}],75:[function(require,module,exports){
+arguments[4][17][0].apply(exports,arguments)
+},{"17":17}],76:[function(require,module,exports){
+arguments[4][18][0].apply(exports,arguments)
+},{"18":18}],77:[function(require,module,exports){
+arguments[4][19][0].apply(exports,arguments)
+},{"19":19}],78:[function(require,module,exports){
+arguments[4][20][0].apply(exports,arguments)
+},{"20":20}],79:[function(require,module,exports){
+arguments[4][21][0].apply(exports,arguments)
+},{"21":21}],80:[function(require,module,exports){
+arguments[4][22][0].apply(exports,arguments)
+},{"22":22,"74":74}],81:[function(require,module,exports){
+arguments[4][23][0].apply(exports,arguments)
+},{"23":23}],82:[function(require,module,exports){
+arguments[4][24][0].apply(exports,arguments)
+},{"24":24,"74":74,"75":75,"76":76,"77":77,"78":78,"79":79,"80":80,"81":81}],83:[function(require,module,exports){
 'use strict';
 
-function normalizeElement (element, errorMessage) {
-  errorMessage = errorMessage || '[' + element + '] is not a valid DOM Element';
+module.exports = ClassList
 
-  if (element && element.nodeType && element.nodeType === 1) {
-    return element;
-  }
-  if (element && window.jQuery && element instanceof jQuery && element.length !== 0) {
-    return element[0];
-  }
+var indexOf = require(84),
+    trim = require(85),
+    arr = Array.prototype
 
-  if (typeof element === 'string' && document.getElementById(element)) {
-    return document.getElementById(element);
-  }
+/**
+ * ClassList(elem) is kind of like Element#classList.
+ *
+ * @param {Element} elem
+ * @return {ClassList}
+ */
+function ClassList (elem) {
+  if (!(this instanceof ClassList))
+    return new ClassList(elem)
 
-  throw new Error(errorMessage);
+  var classes = trim(elem.className).split(/\s+/),
+      i
+
+  this._elem = elem
+
+  this.length = 0
+
+  for (i = 0; i < classes.length; i += 1) {
+    if (classes[i])
+      arr.push.call(this, classes[i])
+  }
 }
 
-module.exports = {
-  normalizeElement: normalizeElement
+/**
+ * add(class1 [, class2 [, ...]]) adds the given class(es) to the
+ * element.
+ *
+ * @param {String} ...
+ * @return {Context}
+ */
+ClassList.prototype.add = function () {
+  var name,
+      i
+
+  for (i = 0; i < arguments.length; i += 1) {
+    name = '' + arguments[i]
+
+    if (indexOf(this, name) >= 0)
+      continue
+
+    arr.push.call(this, name)
+  }
+
+  this._elem.className = this.toString()
+
+  return this
+}
+
+/**
+ * remove(class1 [, class2 [, ...]]) removes the given class(es) from
+ * the element.
+ *
+ * @param {String} ...
+ * @return {Context}
+ */
+ClassList.prototype.remove = function () {
+  var index,
+      name,
+      i
+
+  for (i = 0; i < arguments.length; i += 1) {
+    name = '' + arguments[i]
+    index = indexOf(this, name)
+
+    if (index < 0) continue
+
+    arr.splice.call(this, index, 1)
+  }
+
+  this._elem.className = this.toString()
+
+  return this
+}
+
+/**
+ * contains(name) determines if the element has a given class.
+ *
+ * @param {String} name
+ * @return {Boolean}
+ */
+ClassList.prototype.contains = function (name) {
+  name += ''
+  return indexOf(this, name) >= 0
+}
+
+/**
+ * toggle(name [, force]) toggles a class. If force is a boolean,
+ * this method is basically just an alias for add/remove.
+ *
+ * @param {String} name
+ * @param {Boolean} force
+ * @return {Context}
+ */
+ClassList.prototype.toggle = function (name, force) {
+  name += ''
+
+  if (force === true) return this.add(name)
+  if (force === false) return this.remove(name)
+
+  return this[this.contains(name) ? 'remove' : 'add'](name)
+}
+
+/**
+ * toString() returns the className of the element.
+ *
+ * @return {String}
+ */
+ClassList.prototype.toString = function () {
+  return arr.join.call(this, ' ')
+}
+
+},{"84":84,"85":85}],84:[function(require,module,exports){
+module.exports = function(arr, obj){
+  if (arr.indexOf) return arr.indexOf(obj);
+  for (var i = 0; i < arr.length; ++i) {
+    if (arr[i] === obj) return i;
+  }
+  return -1;
+};
+},{}],85:[function(require,module,exports){
+
+exports = module.exports = trim;
+
+function trim(str){
+  return str.replace(/^\s*|\s*$/g, '');
+}
+
+exports.left = function(str){
+  return str.replace(/^\s*/, '');
 };
 
-},{}],32:[function(require,module,exports){
-'use strict';
-
-function addEventListener(context, event, handler) {
-  if (context.addEventListener) {
-    context.addEventListener(event, handler, false);
-  } else if (context.attachEvent)  {
-    context.attachEvent('on' + event, handler);
-  }
-}
-
-function removeEventListener(context, event, handler) {
-  if (context.removeEventListener) {
-    context.removeEventListener(event, handler, false);
-  } else if (context.detachEvent)  {
-    context.detachEvent('on' + event, handler);
-  }
-}
-
-module.exports = {
-  removeEventListener: removeEventListener,
-  addEventListener: addEventListener
+exports.right = function(str){
+  return str.replace(/\s*$/, '');
 };
 
-},{}],33:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 'use strict';
 
-function isFunction(func) {
-  return Object.prototype.toString.call(func) === '[object Function]';
+var batchExecuteFunctions = require(87);
+// Reach into lib for isFunction. This lib requires a DOM and cannot be
+// tested otherwise
+var fnUtil = require(88);
+
+function Destructor() {
+  this._teardownRegistry = [];
 }
 
-function bind(func, context) {
+Destructor.prototype.registerFunctionForTeardown = function (fn) {
+  if (fnUtil.isFunction(fn)) {
+    this._teardownRegistry.push(fn);
+  }
+};
+
+Destructor.prototype.teardown = function (callback) {
+  batchExecuteFunctions(this._teardownRegistry, fnUtil.bind(function (err) {
+    this._teardownRegistry = [];
+
+    if (fnUtil.isFunction(callback)) {
+      callback(err);
+    }
+  }, this));
+};
+
+module.exports = Destructor;
+
+},{"87":87,"88":88}],87:[function(require,module,exports){
+'use strict';
+
+function call(fn, callback) {
+  var isSync = fn.length === 0;
+  var wrappedCallback;
+
+  if (isSync) {
+    fn();
+    callback(null);
+  } else {
+    wrappedCallback = once(callback);
+    fn(wrappedCallback);
+  }
+}
+
+function once(fn) {
+  var called = false;
   return function () {
-    func.apply(context, arguments);
+    if (!called) {
+      called = true;
+      fn.apply(this, arguments);
+    }
   };
 }
 
-module.exports = {
-  bind: bind,
-  isFunction: isFunction
+module.exports = function (functions, callback) {
+  var length = functions.length;
+  var remaining = length;
+
+  if (length === 0) {
+    callback(null);
+    return;
+  }
+
+  for (var i = 0; i < length; i++) {
+    call(functions[i], function (err) {
+      if (err) {
+        callback(err);
+        return;
+      }
+
+      remaining -= 1;
+      if (remaining === 0) {
+        callback(null);
+      }
+    });
+  }
 };
 
-},{}],34:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],35:[function(require,module,exports){
-arguments[4][19][0].apply(exports,arguments)
-},{"./lib/dom":31,"./lib/events":32,"./lib/fn":33,"./lib/url":34,"dup":19}],36:[function(require,module,exports){
-arguments[4][15][0].apply(exports,arguments)
-},{"dup":15}],37:[function(require,module,exports){
-arguments[4][16][0].apply(exports,arguments)
-},{"dup":16}],38:[function(require,module,exports){
-arguments[4][17][0].apply(exports,arguments)
-},{"dup":17}],39:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
+arguments[4][20][0].apply(exports,arguments)
+},{"20":20}],89:[function(require,module,exports){
+(function (global){
 'use strict';
 
-function getMaxCharLength(width) {
-  var max, i, range, len;
-  var ranges = [
-    { min: 0, max: 180, chars: 7 },
-    { min: 181, max: 620, chars: 14 },
-    { min: 621, max: 960, chars: 22 }
-  ];
+function FormNapper(form) {
+  if (typeof form === 'string' || form instanceof String) {
+    form = document.getElementById(form);
+  }
 
-  len = ranges.length;
+  if (form instanceof HTMLFormElement) {
+    this.htmlForm = form;
+  } else {
+    throw new TypeError('FormNapper requires an HTMLFormElement element or the id string of one.');
+  }
+}
 
-  width = width || window.innerWidth;
+FormNapper.prototype.hijack = function (onsubmit) {
+  if (this.submitHandler) { return; }
 
-  for (i = 0; i < len; i++) {
-    range = ranges[i];
-
-    if (width >= range.min && width <= range.max) {
-      max = range.chars;
+  this.submitHandler = function (event) {
+    if (event.preventDefault) {
+      event.preventDefault();
+    } else {
+      event.returnValue = false;
     }
+
+    onsubmit(event);
+  };
+
+  if (global.addEventListener != null) {
+    this.htmlForm.addEventListener('submit', this.submitHandler, false);
+  } else if (global.attachEvent != null) {
+    this.htmlForm.attachEvent('onsubmit', this.submitHandler);
+  } else {
+    this.htmlForm.onsubmit = this.submitHandler;
   }
-
-  return max || 60;
-}
-
-function truncateEmail(email, maxLength) {
-  var address, domain;
-
-  if (email.indexOf('@') === -1) {
-    return email;
-  }
-
-  email = email.split('@');
-  address = email[0];
-  domain = email[1];
-
-  if (address.length > maxLength) {
-    address = address.slice(0, maxLength) + '...';
-  }
-
-  if (domain.length > maxLength) {
-    domain = '...' + domain.slice(-maxLength);
-  }
-
-  return address + '@' + domain;
-}
-
-module.exports = {
-  truncateEmail: truncateEmail,
-  getMaxCharLength: getMaxCharLength
 };
 
-},{}],40:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],41:[function(require,module,exports){
-var dom = require('./lib/dom');
-var url = require('./lib/url');
-var fn = require('./lib/fn');
-var events = require('./lib/events');
-var string = require('./lib/string');
+FormNapper.prototype.inject = function (name, value) {
+  var input = this.htmlForm.querySelector('input[name="' + name + '"]');
 
-module.exports = {
-  string: string,
-  normalizeElement: dom.normalizeElement,
-  isBrowserHttps: url.isBrowserHttps,
-  makeQueryString: url.makeQueryString,
-  decodeQueryString: url.decodeQueryString,
-  getParams: url.getParams,
-  removeEventListener: events.removeEventListener,
-  addEventListener: events.addEventListener,
-  bind: fn.bind,
-  isFunction: fn.isFunction
+  if (input == null) {
+    input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = name;
+    this.htmlForm.appendChild(input);
+  }
+
+  input.value = value;
+
+  return input;
 };
 
-},{"./lib/dom":36,"./lib/events":37,"./lib/fn":38,"./lib/string":39,"./lib/url":40}],42:[function(require,module,exports){
-'use strict';
+FormNapper.prototype.submit = function () {
+  HTMLFormElement.prototype.submit.call(this.htmlForm);
+};
 
-var bus = require('framebus');
-bus.events = require('./lib/events');
+FormNapper.prototype.detach = function () {
+  if (!this.submitHandler) { return; }
 
-module.exports = bus;
+  if (global.removeEventListener != null) {
+    this.htmlForm.removeEventListener('submit', this.submitHandler, false);
+  } else if (global.detachEvent != null) {
+    this.htmlForm.detachEvent('onsubmit', this.submitHandler);
+  } else {
+    this.htmlForm.onsubmit = null;
+  }
 
-},{"./lib/events":43,"framebus":44}],43:[function(require,module,exports){
-'use strict';
+  delete this.submitHandler;
+};
 
-var eventList = [
-  'PAYMENT_METHOD_REQUEST',
-  'PAYMENT_METHOD_RECEIVED',
-  'PAYMENT_METHOD_GENERATED',
-  'PAYMENT_METHOD_CANCELLED',
-  'PAYMENT_METHOD_ERROR',
-  'CONFIGURATION_REQUEST',
-  'ERROR',
-  'WARNING',
-  'ONLOAD'
-];
-var eventEnum = {};
+module.exports = FormNapper;
 
-for (var i = 0; i < eventList.length; i++) {
-  var evnt = eventList[i];
-  eventEnum[evnt] = evnt;
-}
-
-module.exports = eventEnum;
-
-},{}],44:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],90:[function(require,module,exports){
 'use strict';
 (function (root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    define([], factory);
-  } else if (typeof exports === 'object') {
+  if (typeof exports === 'object' && typeof module !== 'undefined') {
     module.exports = factory();
+  } else if (typeof define === 'function' && define.amd) {
+    define([], factory);
   } else {
     root.framebus = factory();
   }
 })(this, function () {
-  var win;
+  var win, framebus;
+  var popups = [];
   var subscribers = {};
+  var prefix = '/*framebus*/';
 
-  function publish(event, data, origin) {
-    var payload;
-    origin = origin || '*';
-    if (typeof event !== 'string') { return false; }
-    if (typeof origin !== 'string') { return false; }
+  function include(popup) {
+    if (popup == null) { return false; }
+    if (popup.Window == null) { return false; }
+    if (popup.constructor !== popup.Window) { return false; }
 
-    payload = _packagePayload(event, data, origin);
+    popups.push(popup);
+    return true;
+  }
+
+  function target(origin) {
+    var key;
+    var targetedFramebus = {};
+
+    for (key in framebus) {
+      if (!framebus.hasOwnProperty(key)) { continue; }
+
+      targetedFramebus[key] = framebus[key];
+    }
+
+    targetedFramebus._origin = origin || '*';
+
+    return targetedFramebus;
+  }
+
+  function publish(event) {
+    var payload, args;
+    var origin = _getOrigin(this);
+
+    if (_isntString(event)) { return false; }
+    if (_isntString(origin)) { return false; }
+
+    args = Array.prototype.slice.call(arguments, 1);
+
+    payload = _packagePayload(event, args, origin);
+    if (payload === false) { return false; }
+
     _broadcast(win.top, payload, origin);
 
     return true;
   }
 
-  function subscribe(event, fn, origin) {
-    origin = origin || '*';
+  function subscribe(event, fn) {
+    var origin = _getOrigin(this);
+
     if (_subscriptionArgsInvalid(event, fn, origin)) { return false; }
 
     subscribers[origin] = subscribers[origin] || {};
@@ -4950,9 +6379,9 @@ module.exports = eventEnum;
     return true;
   }
 
-  function unsubscribe(event, fn, origin) {
+  function unsubscribe(event, fn) {
     var i, subscriberList;
-    origin = origin || '*';
+    var origin = _getOrigin(this);
 
     if (_subscriptionArgsInvalid(event, fn, origin)) { return false; }
 
@@ -4969,34 +6398,61 @@ module.exports = eventEnum;
     return false;
   }
 
-  function _packagePayload(event, data, origin) {
-    var payload = { event: event };
+  function _getOrigin(scope) {
+    return scope && scope._origin || '*';
+  }
 
-    if (typeof data === 'function') {
-      payload.reply = _subscribeReplier(data, origin);
-    } else {
-      payload.data = data;
+  function _isntString(string) {
+    return typeof string !== 'string';
+  }
+
+  function _packagePayload(event, args, origin) {
+    var packaged = false;
+    var payload = {
+      event:  event,
+      origin: origin
+    };
+    var reply = args[args.length - 1];
+
+    if (typeof reply === 'function') {
+      payload.reply = _subscribeReplier(reply, origin);
+      args = args.slice(0, -1);
     }
 
-    return JSON.stringify(payload);
+    payload.args = args;
+
+    try {
+      packaged = prefix + JSON.stringify(payload);
+    } catch (e) {
+      throw new Error('Could not stringify event: ' + e.message);
+    }
+    return packaged;
   }
 
   function _unpackPayload(e) {
-    var payload;
+    var payload, replyOrigin, replySource, replyEvent;
+
+    if (e.data.slice(0, prefix.length) !== prefix) { return false; }
 
     try {
-      payload = JSON.parse(e.data);
+      payload = JSON.parse(e.data.slice(prefix.length));
     } catch (err) {
       return false;
     }
 
-    if (payload.event == null) { return false; }
-
     if (payload.reply != null) {
-      payload.data = function reply(data) {
-        var replyPayload = _packagePayload(payload.reply, data, e.origin);
-        e.source.postMessage(replyPayload, e.origin);
+      replyOrigin = e.origin;
+      replySource = e.source;
+      replyEvent = payload.reply;
+
+      payload.reply = function reply(data) {
+        var replyPayload = _packagePayload(replyEvent, [data], replyOrigin);
+        if (replyPayload === false) { return false; }
+
+        replySource.postMessage(replyPayload, replyOrigin);
       };
+
+      payload.args.push(payload.reply);
     }
 
     return payload;
@@ -5004,7 +6460,7 @@ module.exports = eventEnum;
 
   function _attach(w) {
     if (win) { return; }
-    win = w;
+    win = w || window;
 
     if (win.addEventListener) {
       win.addEventListener('message', _onmessage, false);
@@ -5027,31 +6483,53 @@ module.exports = eventEnum;
 
   function _onmessage(e) {
     var payload;
-    if (typeof e.data !== 'string') { return; }
+    if (_isntString(e.data)) { return; }
 
     payload = _unpackPayload(e);
     if (!payload) { return; }
 
-    _dispatch('*', payload.event, payload.data, e.origin);
-    _dispatch(e.origin, payload.event, payload.data, e.origin);
+    _dispatch('*', payload.event, payload.args, e);
+    _dispatch(e.origin, payload.event, payload.args, e);
+    _broadcastPopups(e.data, payload.origin, e.source);
   }
 
-  function _dispatch(origin, event, data, eventOrigin) {
+  function _dispatch(origin, event, args, e) {
     var i;
     if (!subscribers[origin]) { return; }
     if (!subscribers[origin][event]) { return; }
 
     for (i = 0; i < subscribers[origin][event].length; i++) {
-      subscribers[origin][event][i](data, eventOrigin);
+      subscribers[origin][event][i].apply(e, args);
     }
   }
 
   function _broadcast(frame, payload, origin) {
     var i;
-    frame.postMessage(payload, origin);
+
+    try {
+      frame.postMessage(payload, origin);
+    } catch (_) { return; }
+
+    if (frame.opener && frame.opener !== frame && !frame.opener.closed && frame.opener !== win) {
+      _broadcast(frame.opener.top, payload, origin);
+    }
 
     for (i = 0; i < frame.frames.length; i++) {
       _broadcast(frame.frames[i], payload, origin);
+    }
+  }
+
+  function _broadcastPopups(payload, origin, source) {
+    var i, popup;
+
+    for (i = popups.length - 1; i >= 0; i--) {
+      popup = popups[i];
+
+      if (popup.closed === true) {
+        popups = popups.slice(i, 1);
+      } else if (source !== popup) {
+        _broadcast(popup.top, payload, origin);
+      }
     }
   }
 
@@ -5060,182 +6538,3716 @@ module.exports = eventEnum;
 
     function replier(d, o) {
       fn(d, o);
-      unsubscribe(uuid, replier, origin);
+      framebus.target(origin).unsubscribe(uuid, replier);
     }
 
-    subscribe(uuid, replier, origin);
+    framebus.target(origin).subscribe(uuid, replier);
     return uuid;
   }
 
   function _subscriptionArgsInvalid(event, fn, origin) {
-    if (typeof event !== 'string') { return true; }
+    if (_isntString(event)) { return true; }
     if (typeof fn !== 'function') { return true; }
-    if (typeof origin !== 'string') { return true; }
+    if (_isntString(origin)) { return true; }
 
     return false;
   }
 
-  _attach(window);
+  _attach();
 
-  return {
+  framebus = {
+    target:                   target,
+    include:                  include,
     publish:                  publish,
     pub:                      publish,
     trigger:                  publish,
     emit:                     publish,
-
     subscribe:                subscribe,
     sub:                      subscribe,
     on:                       subscribe,
-
     unsubscribe:              unsubscribe,
     unsub:                    unsubscribe,
     off:                      unsubscribe
   };
+
+  return framebus;
 });
 
-},{}],45:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 'use strict';
 
-var Coinbase = require('./lib/coinbase');
-var browser = require('./lib/browser');
-var bus = require('braintree-bus');
-var CONFIG_ERROR = 'CONFIGURATION';
+var assign = require(156);
+var isString = require(155);
+var setAttributes = require(93);
+var defaultAttributes = require(92);
 
-function error(message, type) {
-  bus.emit(bus.events.ERROR, { type: type, message: message });
+module.exports = function createFrame(options) {
+  var iframe = document.createElement('iframe');
+  var config = assign({}, defaultAttributes, options);
+
+  if (config.style && !isString(config.style)) {
+    assign(iframe.style, config.style);
+    delete config.style;
+  }
+
+  setAttributes(iframe, config);
+
+  if (!iframe.getAttribute('id')) {
+    iframe.id = iframe.name;
+  }
+
+  return iframe;
+};
+
+},{"155":155,"156":156,"92":92,"93":93}],92:[function(require,module,exports){
+module.exports={
+  "src": "about:blank",
+  "frameBorder": 0,
+  "allowtransparency": true,
+  "scrolling": "no"
 }
 
-function isIE8() {
-  var ie = browser.isIE();
-  return ie && ie.version === 8;
+},{}],93:[function(require,module,exports){
+module.exports = function setAttributes(element, attributes) {
+  var value;
+
+  for (var key in attributes) {
+    if (attributes.hasOwnProperty(key)) {
+      value = attributes[key];
+
+      if (value == null) {
+        element.removeAttribute(key);
+      } else {
+        element.setAttribute(key, value);
+      }
+    }
+  }
+};
+
+},{}],94:[function(require,module,exports){
+var LazyWrapper = require(99),
+    LodashWrapper = require(100),
+    baseLodash = require(113),
+    isArray = require(151),
+    isObjectLike = require(139),
+    wrapperClone = require(148);
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * Creates a `lodash` object which wraps `value` to enable implicit chaining.
+ * Methods that operate on and return arrays, collections, and functions can
+ * be chained together. Methods that retrieve a single value or may return a
+ * primitive value will automatically end the chain returning the unwrapped
+ * value. Explicit chaining may be enabled using `_.chain`. The execution of
+ * chained methods is lazy, that is, execution is deferred until `_#value`
+ * is implicitly or explicitly called.
+ *
+ * Lazy evaluation allows several methods to support shortcut fusion. Shortcut
+ * fusion is an optimization strategy which merge iteratee calls; this can help
+ * to avoid the creation of intermediate data structures and greatly reduce the
+ * number of iteratee executions.
+ *
+ * Chaining is supported in custom builds as long as the `_#value` method is
+ * directly or indirectly included in the build.
+ *
+ * In addition to lodash methods, wrappers have `Array` and `String` methods.
+ *
+ * The wrapper `Array` methods are:
+ * `concat`, `join`, `pop`, `push`, `reverse`, `shift`, `slice`, `sort`,
+ * `splice`, and `unshift`
+ *
+ * The wrapper `String` methods are:
+ * `replace` and `split`
+ *
+ * The wrapper methods that support shortcut fusion are:
+ * `compact`, `drop`, `dropRight`, `dropRightWhile`, `dropWhile`, `filter`,
+ * `first`, `initial`, `last`, `map`, `pluck`, `reject`, `rest`, `reverse`,
+ * `slice`, `take`, `takeRight`, `takeRightWhile`, `takeWhile`, `toArray`,
+ * and `where`
+ *
+ * The chainable wrapper methods are:
+ * `after`, `ary`, `assign`, `at`, `before`, `bind`, `bindAll`, `bindKey`,
+ * `callback`, `chain`, `chunk`, `commit`, `compact`, `concat`, `constant`,
+ * `countBy`, `create`, `curry`, `debounce`, `defaults`, `defaultsDeep`,
+ * `defer`, `delay`, `difference`, `drop`, `dropRight`, `dropRightWhile`,
+ * `dropWhile`, `fill`, `filter`, `flatten`, `flattenDeep`, `flow`, `flowRight`,
+ * `forEach`, `forEachRight`, `forIn`, `forInRight`, `forOwn`, `forOwnRight`,
+ * `functions`, `groupBy`, `indexBy`, `initial`, `intersection`, `invert`,
+ * `invoke`, `keys`, `keysIn`, `map`, `mapKeys`, `mapValues`, `matches`,
+ * `matchesProperty`, `memoize`, `merge`, `method`, `methodOf`, `mixin`,
+ * `modArgs`, `negate`, `omit`, `once`, `pairs`, `partial`, `partialRight`,
+ * `partition`, `pick`, `plant`, `pluck`, `property`, `propertyOf`, `pull`,
+ * `pullAt`, `push`, `range`, `rearg`, `reject`, `remove`, `rest`, `restParam`,
+ * `reverse`, `set`, `shuffle`, `slice`, `sort`, `sortBy`, `sortByAll`,
+ * `sortByOrder`, `splice`, `spread`, `take`, `takeRight`, `takeRightWhile`,
+ * `takeWhile`, `tap`, `throttle`, `thru`, `times`, `toArray`, `toPlainObject`,
+ * `transform`, `union`, `uniq`, `unshift`, `unzip`, `unzipWith`, `values`,
+ * `valuesIn`, `where`, `without`, `wrap`, `xor`, `zip`, `zipObject`, `zipWith`
+ *
+ * The wrapper methods that are **not** chainable by default are:
+ * `add`, `attempt`, `camelCase`, `capitalize`, `ceil`, `clone`, `cloneDeep`,
+ * `deburr`, `endsWith`, `escape`, `escapeRegExp`, `every`, `find`, `findIndex`,
+ * `findKey`, `findLast`, `findLastIndex`, `findLastKey`, `findWhere`, `first`,
+ * `floor`, `get`, `gt`, `gte`, `has`, `identity`, `includes`, `indexOf`,
+ * `inRange`, `isArguments`, `isArray`, `isBoolean`, `isDate`, `isElement`,
+ * `isEmpty`, `isEqual`, `isError`, `isFinite` `isFunction`, `isMatch`,
+ * `isNative`, `isNaN`, `isNull`, `isNumber`, `isObject`, `isPlainObject`,
+ * `isRegExp`, `isString`, `isUndefined`, `isTypedArray`, `join`, `kebabCase`,
+ * `last`, `lastIndexOf`, `lt`, `lte`, `max`, `min`, `noConflict`, `noop`,
+ * `now`, `pad`, `padLeft`, `padRight`, `parseInt`, `pop`, `random`, `reduce`,
+ * `reduceRight`, `repeat`, `result`, `round`, `runInContext`, `shift`, `size`,
+ * `snakeCase`, `some`, `sortedIndex`, `sortedLastIndex`, `startCase`,
+ * `startsWith`, `sum`, `template`, `trim`, `trimLeft`, `trimRight`, `trunc`,
+ * `unescape`, `uniqueId`, `value`, and `words`
+ *
+ * The wrapper method `sample` will return a wrapped value when `n` is provided,
+ * otherwise an unwrapped value is returned.
+ *
+ * @name _
+ * @constructor
+ * @category Chain
+ * @param {*} value The value to wrap in a `lodash` instance.
+ * @returns {Object} Returns the new `lodash` wrapper instance.
+ * @example
+ *
+ * var wrapped = _([1, 2, 3]);
+ *
+ * // returns an unwrapped value
+ * wrapped.reduce(function(total, n) {
+ *   return total + n;
+ * });
+ * // => 6
+ *
+ * // returns a wrapped value
+ * var squares = wrapped.map(function(n) {
+ *   return n * n;
+ * });
+ *
+ * _.isArray(squares);
+ * // => false
+ *
+ * _.isArray(squares.value());
+ * // => true
+ */
+function lodash(value) {
+  if (isObjectLike(value) && !isArray(value) && !(value instanceof LazyWrapper)) {
+    if (value instanceof LodashWrapper) {
+      return value;
+    }
+    if (hasOwnProperty.call(value, '__chain__') && hasOwnProperty.call(value, '__wrapped__')) {
+      return wrapperClone(value);
+    }
+  }
+  return new LodashWrapper(value);
 }
 
-function optionsAreValid(options) {
-  if (options.apiClient == null) {
-    error('settings.apiClient is required for coinbase', CONFIG_ERROR);
-    return false;
-  }
+// Ensure wrappers are instances of `baseLodash`.
+lodash.prototype = baseLodash.prototype;
 
-  if (!options.configuration.coinbaseEnabled) {
-    error('Coinbase is not enabled for your merchant account', CONFIG_ERROR);
-    return false;
-  }
+module.exports = lodash;
 
-  var cbOptions = options.coinbase;
-  if (!cbOptions || (!cbOptions.container && !cbOptions.button)) {
-    error('Either options.coinbase.container or options.coinbase.button is required for coinbase integrations', CONFIG_ERROR);
-    return false;
-  }
+},{"100":100,"113":113,"139":139,"148":148,"151":151,"99":99}],95:[function(require,module,exports){
+var getNative = require(130);
 
-  if (cbOptions.container && cbOptions.button) {
-    error('options.coinbase.container and options.coinbase.button are mutually exclusive', CONFIG_ERROR);
-    return false;
-  }
+/* Native method references for those with the same name as other `lodash` methods. */
+var nativeNow = getNative(Date, 'now');
 
-  if (isIE8()) {
-    error('Coinbase is not supported by your browser. Please consider upgrading', 'UNSUPPORTED_BROWSER');
-  }
+/**
+ * Gets the number of milliseconds that have elapsed since the Unix epoch
+ * (1 January 1970 00:00:00 UTC).
+ *
+ * @static
+ * @memberOf _
+ * @category Date
+ * @example
+ *
+ * _.defer(function(stamp) {
+ *   console.log(_.now() - stamp);
+ * }, _.now());
+ * // => logs the number of milliseconds it took for the deferred function to be invoked
+ */
+var now = nativeNow || function() {
+  return new Date().getTime();
+};
 
-  return true;
+module.exports = now;
+
+},{"130":130}],96:[function(require,module,exports){
+var createWrapper = require(126),
+    replaceHolders = require(144),
+    restParam = require(98);
+
+/** Used to compose bitmasks for wrapper metadata. */
+var BIND_FLAG = 1,
+    PARTIAL_FLAG = 32;
+
+/**
+ * Creates a function that invokes `func` with the `this` binding of `thisArg`
+ * and prepends any additional `_.bind` arguments to those provided to the
+ * bound function.
+ *
+ * The `_.bind.placeholder` value, which defaults to `_` in monolithic builds,
+ * may be used as a placeholder for partially applied arguments.
+ *
+ * **Note:** Unlike native `Function#bind` this method does not set the "length"
+ * property of bound functions.
+ *
+ * @static
+ * @memberOf _
+ * @category Function
+ * @param {Function} func The function to bind.
+ * @param {*} thisArg The `this` binding of `func`.
+ * @param {...*} [partials] The arguments to be partially applied.
+ * @returns {Function} Returns the new bound function.
+ * @example
+ *
+ * var greet = function(greeting, punctuation) {
+ *   return greeting + ' ' + this.user + punctuation;
+ * };
+ *
+ * var object = { 'user': 'fred' };
+ *
+ * var bound = _.bind(greet, object, 'hi');
+ * bound('!');
+ * // => 'hi fred!'
+ *
+ * // using placeholders
+ * var bound = _.bind(greet, object, _, '!');
+ * bound('hi');
+ * // => 'hi fred!'
+ */
+var bind = restParam(function(func, thisArg, partials) {
+  var bitmask = BIND_FLAG;
+  if (partials.length) {
+    var holders = replaceHolders(partials, bind.placeholder);
+    bitmask |= PARTIAL_FLAG;
+  }
+  return createWrapper(func, bitmask, thisArg, partials, holders);
+});
+
+// Assign default placeholders.
+bind.placeholder = {};
+
+module.exports = bind;
+
+},{"126":126,"144":144,"98":98}],97:[function(require,module,exports){
+var baseFlatten = require(109),
+    createWrapper = require(126),
+    functions = require(158),
+    restParam = require(98);
+
+/** Used to compose bitmasks for wrapper metadata. */
+var BIND_FLAG = 1;
+
+/**
+ * Binds methods of an object to the object itself, overwriting the existing
+ * method. Method names may be specified as individual arguments or as arrays
+ * of method names. If no method names are provided all enumerable function
+ * properties, own and inherited, of `object` are bound.
+ *
+ * **Note:** This method does not set the "length" property of bound functions.
+ *
+ * @static
+ * @memberOf _
+ * @category Function
+ * @param {Object} object The object to bind and assign the bound methods to.
+ * @param {...(string|string[])} [methodNames] The object method names to bind,
+ *  specified as individual method names or arrays of method names.
+ * @returns {Object} Returns `object`.
+ * @example
+ *
+ * var view = {
+ *   'label': 'docs',
+ *   'onClick': function() {
+ *     console.log('clicked ' + this.label);
+ *   }
+ * };
+ *
+ * _.bindAll(view);
+ * jQuery('#docs').on('click', view.onClick);
+ * // => logs 'clicked docs' when the element is clicked
+ */
+var bindAll = restParam(function(object, methodNames) {
+  methodNames = methodNames.length ? baseFlatten(methodNames) : functions(object);
+
+  var index = -1,
+      length = methodNames.length;
+
+  while (++index < length) {
+    var key = methodNames[index];
+    object[key] = createWrapper(object[key], BIND_FLAG, object);
+  }
+  return object;
+});
+
+module.exports = bindAll;
+
+},{"109":109,"126":126,"158":158,"98":98}],98:[function(require,module,exports){
+/** Used as the `TypeError` message for "Functions" methods. */
+var FUNC_ERROR_TEXT = 'Expected a function';
+
+/* Native method references for those with the same name as other `lodash` methods. */
+var nativeMax = Math.max;
+
+/**
+ * Creates a function that invokes `func` with the `this` binding of the
+ * created function and arguments from `start` and beyond provided as an array.
+ *
+ * **Note:** This method is based on the [rest parameter](https://developer.mozilla.org/Web/JavaScript/Reference/Functions/rest_parameters).
+ *
+ * @static
+ * @memberOf _
+ * @category Function
+ * @param {Function} func The function to apply a rest parameter to.
+ * @param {number} [start=func.length-1] The start position of the rest parameter.
+ * @returns {Function} Returns the new function.
+ * @example
+ *
+ * var say = _.restParam(function(what, names) {
+ *   return what + ' ' + _.initial(names).join(', ') +
+ *     (_.size(names) > 1 ? ', & ' : '') + _.last(names);
+ * });
+ *
+ * say('hello', 'fred', 'barney', 'pebbles');
+ * // => 'hello fred, barney, & pebbles'
+ */
+function restParam(func, start) {
+  if (typeof func != 'function') {
+    throw new TypeError(FUNC_ERROR_TEXT);
+  }
+  start = nativeMax(start === undefined ? (func.length - 1) : (+start || 0), 0);
+  return function() {
+    var args = arguments,
+        index = -1,
+        length = nativeMax(args.length - start, 0),
+        rest = Array(length);
+
+    while (++index < length) {
+      rest[index] = args[start + index];
+    }
+    switch (start) {
+      case 0: return func.call(this, rest);
+      case 1: return func.call(this, args[0], rest);
+      case 2: return func.call(this, args[0], args[1], rest);
+    }
+    var otherArgs = Array(start + 1);
+    index = -1;
+    while (++index < start) {
+      otherArgs[index] = args[index];
+    }
+    otherArgs[start] = rest;
+    return func.apply(this, otherArgs);
+  };
 }
 
-function create(options) {
-  if (!optionsAreValid(options)) { return; }
+module.exports = restParam;
 
-  return new Coinbase(options);
+},{}],99:[function(require,module,exports){
+var baseCreate = require(108),
+    baseLodash = require(113);
+
+/** Used as references for `-Infinity` and `Infinity`. */
+var POSITIVE_INFINITY = Number.POSITIVE_INFINITY;
+
+/**
+ * Creates a lazy wrapper object which wraps `value` to enable lazy evaluation.
+ *
+ * @private
+ * @param {*} value The value to wrap.
+ */
+function LazyWrapper(value) {
+  this.__wrapped__ = value;
+  this.__actions__ = [];
+  this.__dir__ = 1;
+  this.__filtered__ = false;
+  this.__iteratees__ = [];
+  this.__takeCount__ = POSITIVE_INFINITY;
+  this.__views__ = [];
 }
 
-module.exports = { create: create };
+LazyWrapper.prototype = baseCreate(baseLodash.prototype);
+LazyWrapper.prototype.constructor = LazyWrapper;
 
-},{"./lib/browser":46,"./lib/coinbase":48,"braintree-bus":56}],46:[function(require,module,exports){
+module.exports = LazyWrapper;
+
+},{"108":108,"113":113}],100:[function(require,module,exports){
+var baseCreate = require(108),
+    baseLodash = require(113);
+
+/**
+ * The base constructor for creating `lodash` wrapper objects.
+ *
+ * @private
+ * @param {*} value The value to wrap.
+ * @param {boolean} [chainAll] Enable chaining for all wrapper methods.
+ * @param {Array} [actions=[]] Actions to peform to resolve the unwrapped value.
+ */
+function LodashWrapper(value, chainAll, actions) {
+  this.__wrapped__ = value;
+  this.__actions__ = actions || [];
+  this.__chain__ = !!chainAll;
+}
+
+LodashWrapper.prototype = baseCreate(baseLodash.prototype);
+LodashWrapper.prototype.constructor = LodashWrapper;
+
+module.exports = LodashWrapper;
+
+},{"108":108,"113":113}],101:[function(require,module,exports){
+/**
+ * Copies the values of `source` to `array`.
+ *
+ * @private
+ * @param {Array} source The array to copy values from.
+ * @param {Array} [array=[]] The array to copy values to.
+ * @returns {Array} Returns `array`.
+ */
+function arrayCopy(source, array) {
+  var index = -1,
+      length = source.length;
+
+  array || (array = Array(length));
+  while (++index < length) {
+    array[index] = source[index];
+  }
+  return array;
+}
+
+module.exports = arrayCopy;
+
+},{}],102:[function(require,module,exports){
+/**
+ * A specialized version of `_.forEach` for arrays without support for callback
+ * shorthands and `this` binding.
+ *
+ * @private
+ * @param {Array} array The array to iterate over.
+ * @param {Function} iteratee The function invoked per iteration.
+ * @returns {Array} Returns `array`.
+ */
+function arrayEach(array, iteratee) {
+  var index = -1,
+      length = array.length;
+
+  while (++index < length) {
+    if (iteratee(array[index], index, array) === false) {
+      break;
+    }
+  }
+  return array;
+}
+
+module.exports = arrayEach;
+
+},{}],103:[function(require,module,exports){
+/**
+ * Appends the elements of `values` to `array`.
+ *
+ * @private
+ * @param {Array} array The array to modify.
+ * @param {Array} values The values to append.
+ * @returns {Array} Returns `array`.
+ */
+function arrayPush(array, values) {
+  var index = -1,
+      length = values.length,
+      offset = array.length;
+
+  while (++index < length) {
+    array[offset + index] = values[index];
+  }
+  return array;
+}
+
+module.exports = arrayPush;
+
+},{}],104:[function(require,module,exports){
+var keys = require(159);
+
+/**
+ * A specialized version of `_.assign` for customizing assigned values without
+ * support for argument juggling, multiple sources, and `this` binding `customizer`
+ * functions.
+ *
+ * @private
+ * @param {Object} object The destination object.
+ * @param {Object} source The source object.
+ * @param {Function} customizer The function to customize assigned values.
+ * @returns {Object} Returns `object`.
+ */
+function assignWith(object, source, customizer) {
+  var index = -1,
+      props = keys(source),
+      length = props.length;
+
+  while (++index < length) {
+    var key = props[index],
+        value = object[key],
+        result = customizer(value, source[key], key, object, source);
+
+    if ((result === result ? (result !== value) : (value === value)) ||
+        (value === undefined && !(key in object))) {
+      object[key] = result;
+    }
+  }
+  return object;
+}
+
+module.exports = assignWith;
+
+},{"159":159}],105:[function(require,module,exports){
+var baseCopy = require(107),
+    keys = require(159);
+
+/**
+ * The base implementation of `_.assign` without support for argument juggling,
+ * multiple sources, and `customizer` functions.
+ *
+ * @private
+ * @param {Object} object The destination object.
+ * @param {Object} source The source object.
+ * @returns {Object} Returns `object`.
+ */
+function baseAssign(object, source) {
+  return source == null
+    ? object
+    : baseCopy(source, keys(source), object);
+}
+
+module.exports = baseAssign;
+
+},{"107":107,"159":159}],106:[function(require,module,exports){
+var arrayCopy = require(101),
+    arrayEach = require(102),
+    baseAssign = require(105),
+    baseForOwn = require(111),
+    initCloneArray = require(131),
+    initCloneByTag = require(132),
+    initCloneObject = require(133),
+    isArray = require(151),
+    isObject = require(154);
+
+/** `Object#toString` result references. */
+var argsTag = '[object Arguments]',
+    arrayTag = '[object Array]',
+    boolTag = '[object Boolean]',
+    dateTag = '[object Date]',
+    errorTag = '[object Error]',
+    funcTag = '[object Function]',
+    mapTag = '[object Map]',
+    numberTag = '[object Number]',
+    objectTag = '[object Object]',
+    regexpTag = '[object RegExp]',
+    setTag = '[object Set]',
+    stringTag = '[object String]',
+    weakMapTag = '[object WeakMap]';
+
+var arrayBufferTag = '[object ArrayBuffer]',
+    float32Tag = '[object Float32Array]',
+    float64Tag = '[object Float64Array]',
+    int8Tag = '[object Int8Array]',
+    int16Tag = '[object Int16Array]',
+    int32Tag = '[object Int32Array]',
+    uint8Tag = '[object Uint8Array]',
+    uint8ClampedTag = '[object Uint8ClampedArray]',
+    uint16Tag = '[object Uint16Array]',
+    uint32Tag = '[object Uint32Array]';
+
+/** Used to identify `toStringTag` values supported by `_.clone`. */
+var cloneableTags = {};
+cloneableTags[argsTag] = cloneableTags[arrayTag] =
+cloneableTags[arrayBufferTag] = cloneableTags[boolTag] =
+cloneableTags[dateTag] = cloneableTags[float32Tag] =
+cloneableTags[float64Tag] = cloneableTags[int8Tag] =
+cloneableTags[int16Tag] = cloneableTags[int32Tag] =
+cloneableTags[numberTag] = cloneableTags[objectTag] =
+cloneableTags[regexpTag] = cloneableTags[stringTag] =
+cloneableTags[uint8Tag] = cloneableTags[uint8ClampedTag] =
+cloneableTags[uint16Tag] = cloneableTags[uint32Tag] = true;
+cloneableTags[errorTag] = cloneableTags[funcTag] =
+cloneableTags[mapTag] = cloneableTags[setTag] =
+cloneableTags[weakMapTag] = false;
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/**
+ * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var objToString = objectProto.toString;
+
+/**
+ * The base implementation of `_.clone` without support for argument juggling
+ * and `this` binding `customizer` functions.
+ *
+ * @private
+ * @param {*} value The value to clone.
+ * @param {boolean} [isDeep] Specify a deep clone.
+ * @param {Function} [customizer] The function to customize cloning values.
+ * @param {string} [key] The key of `value`.
+ * @param {Object} [object] The object `value` belongs to.
+ * @param {Array} [stackA=[]] Tracks traversed source objects.
+ * @param {Array} [stackB=[]] Associates clones with source counterparts.
+ * @returns {*} Returns the cloned value.
+ */
+function baseClone(value, isDeep, customizer, key, object, stackA, stackB) {
+  var result;
+  if (customizer) {
+    result = object ? customizer(value, key, object) : customizer(value);
+  }
+  if (result !== undefined) {
+    return result;
+  }
+  if (!isObject(value)) {
+    return value;
+  }
+  var isArr = isArray(value);
+  if (isArr) {
+    result = initCloneArray(value);
+    if (!isDeep) {
+      return arrayCopy(value, result);
+    }
+  } else {
+    var tag = objToString.call(value),
+        isFunc = tag == funcTag;
+
+    if (tag == objectTag || tag == argsTag || (isFunc && !object)) {
+      result = initCloneObject(isFunc ? {} : value);
+      if (!isDeep) {
+        return baseAssign(result, value);
+      }
+    } else {
+      return cloneableTags[tag]
+        ? initCloneByTag(value, tag, isDeep)
+        : (object ? value : {});
+    }
+  }
+  // Check for circular references and return its corresponding clone.
+  stackA || (stackA = []);
+  stackB || (stackB = []);
+
+  var length = stackA.length;
+  while (length--) {
+    if (stackA[length] == value) {
+      return stackB[length];
+    }
+  }
+  // Add the source value to the stack of traversed objects and associate it with its clone.
+  stackA.push(value);
+  stackB.push(result);
+
+  // Recursively populate clone (susceptible to call stack limits).
+  (isArr ? arrayEach : baseForOwn)(value, function(subValue, key) {
+    result[key] = baseClone(subValue, isDeep, customizer, key, value, stackA, stackB);
+  });
+  return result;
+}
+
+module.exports = baseClone;
+
+},{"101":101,"102":102,"105":105,"111":111,"131":131,"132":132,"133":133,"151":151,"154":154}],107:[function(require,module,exports){
+/**
+ * Copies properties of `source` to `object`.
+ *
+ * @private
+ * @param {Object} source The object to copy properties from.
+ * @param {Array} props The property names to copy.
+ * @param {Object} [object={}] The object to copy properties to.
+ * @returns {Object} Returns `object`.
+ */
+function baseCopy(source, props, object) {
+  object || (object = {});
+
+  var index = -1,
+      length = props.length;
+
+  while (++index < length) {
+    var key = props[index];
+    object[key] = source[key];
+  }
+  return object;
+}
+
+module.exports = baseCopy;
+
+},{}],108:[function(require,module,exports){
+var isObject = require(154);
+
+/**
+ * The base implementation of `_.create` without support for assigning
+ * properties to the created object.
+ *
+ * @private
+ * @param {Object} prototype The object to inherit from.
+ * @returns {Object} Returns the new object.
+ */
+var baseCreate = (function() {
+  function object() {}
+  return function(prototype) {
+    if (isObject(prototype)) {
+      object.prototype = prototype;
+      var result = new object;
+      object.prototype = undefined;
+    }
+    return result || {};
+  };
+}());
+
+module.exports = baseCreate;
+
+},{"154":154}],109:[function(require,module,exports){
+var arrayPush = require(103),
+    isArguments = require(150),
+    isArray = require(151),
+    isArrayLike = require(134),
+    isObjectLike = require(139);
+
+/**
+ * The base implementation of `_.flatten` with added support for restricting
+ * flattening and specifying the start index.
+ *
+ * @private
+ * @param {Array} array The array to flatten.
+ * @param {boolean} [isDeep] Specify a deep flatten.
+ * @param {boolean} [isStrict] Restrict flattening to arrays-like objects.
+ * @param {Array} [result=[]] The initial result value.
+ * @returns {Array} Returns the new flattened array.
+ */
+function baseFlatten(array, isDeep, isStrict, result) {
+  result || (result = []);
+
+  var index = -1,
+      length = array.length;
+
+  while (++index < length) {
+    var value = array[index];
+    if (isObjectLike(value) && isArrayLike(value) &&
+        (isStrict || isArray(value) || isArguments(value))) {
+      if (isDeep) {
+        // Recursively flatten arrays (susceptible to call stack limits).
+        baseFlatten(value, isDeep, isStrict, result);
+      } else {
+        arrayPush(result, value);
+      }
+    } else if (!isStrict) {
+      result[result.length] = value;
+    }
+  }
+  return result;
+}
+
+module.exports = baseFlatten;
+
+},{"103":103,"134":134,"139":139,"150":150,"151":151}],110:[function(require,module,exports){
+var createBaseFor = require(121);
+
+/**
+ * The base implementation of `baseForIn` and `baseForOwn` which iterates
+ * over `object` properties returned by `keysFunc` invoking `iteratee` for
+ * each property. Iteratee functions may exit iteration early by explicitly
+ * returning `false`.
+ *
+ * @private
+ * @param {Object} object The object to iterate over.
+ * @param {Function} iteratee The function invoked per iteration.
+ * @param {Function} keysFunc The function to get the keys of `object`.
+ * @returns {Object} Returns `object`.
+ */
+var baseFor = createBaseFor();
+
+module.exports = baseFor;
+
+},{"121":121}],111:[function(require,module,exports){
+var baseFor = require(110),
+    keys = require(159);
+
+/**
+ * The base implementation of `_.forOwn` without support for callback
+ * shorthands and `this` binding.
+ *
+ * @private
+ * @param {Object} object The object to iterate over.
+ * @param {Function} iteratee The function invoked per iteration.
+ * @returns {Object} Returns `object`.
+ */
+function baseForOwn(object, iteratee) {
+  return baseFor(object, iteratee, keys);
+}
+
+module.exports = baseForOwn;
+
+},{"110":110,"159":159}],112:[function(require,module,exports){
+var isFunction = require(152);
+
+/**
+ * The base implementation of `_.functions` which creates an array of
+ * `object` function property names filtered from those provided.
+ *
+ * @private
+ * @param {Object} object The object to inspect.
+ * @param {Array} props The property names to filter.
+ * @returns {Array} Returns the new array of filtered property names.
+ */
+function baseFunctions(object, props) {
+  var index = -1,
+      length = props.length,
+      resIndex = -1,
+      result = [];
+
+  while (++index < length) {
+    var key = props[index];
+    if (isFunction(object[key])) {
+      result[++resIndex] = key;
+    }
+  }
+  return result;
+}
+
+module.exports = baseFunctions;
+
+},{"152":152}],113:[function(require,module,exports){
+/**
+ * The function whose prototype all chaining wrappers inherit from.
+ *
+ * @private
+ */
+function baseLodash() {
+  // No operation performed.
+}
+
+module.exports = baseLodash;
+
+},{}],114:[function(require,module,exports){
+/**
+ * The base implementation of `_.property` without support for deep paths.
+ *
+ * @private
+ * @param {string} key The key of the property to get.
+ * @returns {Function} Returns the new function.
+ */
+function baseProperty(key) {
+  return function(object) {
+    return object == null ? undefined : object[key];
+  };
+}
+
+module.exports = baseProperty;
+
+},{}],115:[function(require,module,exports){
+var identity = require(161),
+    metaMap = require(141);
+
+/**
+ * The base implementation of `setData` without support for hot loop detection.
+ *
+ * @private
+ * @param {Function} func The function to associate metadata with.
+ * @param {*} data The metadata.
+ * @returns {Function} Returns `func`.
+ */
+var baseSetData = !metaMap ? identity : function(func, data) {
+  metaMap.set(func, data);
+  return func;
+};
+
+module.exports = baseSetData;
+
+},{"141":141,"161":161}],116:[function(require,module,exports){
+var identity = require(161);
+
+/**
+ * A specialized version of `baseCallback` which only supports `this` binding
+ * and specifying the number of arguments to provide to `func`.
+ *
+ * @private
+ * @param {Function} func The function to bind.
+ * @param {*} thisArg The `this` binding of `func`.
+ * @param {number} [argCount] The number of arguments to provide to `func`.
+ * @returns {Function} Returns the callback.
+ */
+function bindCallback(func, thisArg, argCount) {
+  if (typeof func != 'function') {
+    return identity;
+  }
+  if (thisArg === undefined) {
+    return func;
+  }
+  switch (argCount) {
+    case 1: return function(value) {
+      return func.call(thisArg, value);
+    };
+    case 3: return function(value, index, collection) {
+      return func.call(thisArg, value, index, collection);
+    };
+    case 4: return function(accumulator, value, index, collection) {
+      return func.call(thisArg, accumulator, value, index, collection);
+    };
+    case 5: return function(value, other, key, object, source) {
+      return func.call(thisArg, value, other, key, object, source);
+    };
+  }
+  return function() {
+    return func.apply(thisArg, arguments);
+  };
+}
+
+module.exports = bindCallback;
+
+},{"161":161}],117:[function(require,module,exports){
+(function (global){
+/** Native method references. */
+var ArrayBuffer = global.ArrayBuffer,
+    Uint8Array = global.Uint8Array;
+
+/**
+ * Creates a clone of the given array buffer.
+ *
+ * @private
+ * @param {ArrayBuffer} buffer The array buffer to clone.
+ * @returns {ArrayBuffer} Returns the cloned array buffer.
+ */
+function bufferClone(buffer) {
+  var result = new ArrayBuffer(buffer.byteLength),
+      view = new Uint8Array(result);
+
+  view.set(new Uint8Array(buffer));
+  return result;
+}
+
+module.exports = bufferClone;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],118:[function(require,module,exports){
+/* Native method references for those with the same name as other `lodash` methods. */
+var nativeMax = Math.max;
+
+/**
+ * Creates an array that is the composition of partially applied arguments,
+ * placeholders, and provided arguments into a single array of arguments.
+ *
+ * @private
+ * @param {Array|Object} args The provided arguments.
+ * @param {Array} partials The arguments to prepend to those provided.
+ * @param {Array} holders The `partials` placeholder indexes.
+ * @returns {Array} Returns the new array of composed arguments.
+ */
+function composeArgs(args, partials, holders) {
+  var holdersLength = holders.length,
+      argsIndex = -1,
+      argsLength = nativeMax(args.length - holdersLength, 0),
+      leftIndex = -1,
+      leftLength = partials.length,
+      result = Array(leftLength + argsLength);
+
+  while (++leftIndex < leftLength) {
+    result[leftIndex] = partials[leftIndex];
+  }
+  while (++argsIndex < holdersLength) {
+    result[holders[argsIndex]] = args[argsIndex];
+  }
+  while (argsLength--) {
+    result[leftIndex++] = args[argsIndex++];
+  }
+  return result;
+}
+
+module.exports = composeArgs;
+
+},{}],119:[function(require,module,exports){
+/* Native method references for those with the same name as other `lodash` methods. */
+var nativeMax = Math.max;
+
+/**
+ * This function is like `composeArgs` except that the arguments composition
+ * is tailored for `_.partialRight`.
+ *
+ * @private
+ * @param {Array|Object} args The provided arguments.
+ * @param {Array} partials The arguments to append to those provided.
+ * @param {Array} holders The `partials` placeholder indexes.
+ * @returns {Array} Returns the new array of composed arguments.
+ */
+function composeArgsRight(args, partials, holders) {
+  var holdersIndex = -1,
+      holdersLength = holders.length,
+      argsIndex = -1,
+      argsLength = nativeMax(args.length - holdersLength, 0),
+      rightIndex = -1,
+      rightLength = partials.length,
+      result = Array(argsLength + rightLength);
+
+  while (++argsIndex < argsLength) {
+    result[argsIndex] = args[argsIndex];
+  }
+  var offset = argsIndex;
+  while (++rightIndex < rightLength) {
+    result[offset + rightIndex] = partials[rightIndex];
+  }
+  while (++holdersIndex < holdersLength) {
+    result[offset + holders[holdersIndex]] = args[argsIndex++];
+  }
+  return result;
+}
+
+module.exports = composeArgsRight;
+
+},{}],120:[function(require,module,exports){
+var bindCallback = require(116),
+    isIterateeCall = require(136),
+    restParam = require(98);
+
+/**
+ * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
+ *
+ * @private
+ * @param {Function} assigner The function to assign values.
+ * @returns {Function} Returns the new assigner function.
+ */
+function createAssigner(assigner) {
+  return restParam(function(object, sources) {
+    var index = -1,
+        length = object == null ? 0 : sources.length,
+        customizer = length > 2 ? sources[length - 2] : undefined,
+        guard = length > 2 ? sources[2] : undefined,
+        thisArg = length > 1 ? sources[length - 1] : undefined;
+
+    if (typeof customizer == 'function') {
+      customizer = bindCallback(customizer, thisArg, 5);
+      length -= 2;
+    } else {
+      customizer = typeof thisArg == 'function' ? thisArg : undefined;
+      length -= (customizer ? 1 : 0);
+    }
+    if (guard && isIterateeCall(sources[0], sources[1], guard)) {
+      customizer = length < 3 ? undefined : customizer;
+      length = 1;
+    }
+    while (++index < length) {
+      var source = sources[index];
+      if (source) {
+        assigner(object, source, customizer);
+      }
+    }
+    return object;
+  });
+}
+
+module.exports = createAssigner;
+
+},{"116":116,"136":136,"98":98}],121:[function(require,module,exports){
+var toObject = require(147);
+
+/**
+ * Creates a base function for `_.forIn` or `_.forInRight`.
+ *
+ * @private
+ * @param {boolean} [fromRight] Specify iterating from right to left.
+ * @returns {Function} Returns the new base function.
+ */
+function createBaseFor(fromRight) {
+  return function(object, iteratee, keysFunc) {
+    var iterable = toObject(object),
+        props = keysFunc(object),
+        length = props.length,
+        index = fromRight ? length : -1;
+
+    while ((fromRight ? index-- : ++index < length)) {
+      var key = props[index];
+      if (iteratee(iterable[key], key, iterable) === false) {
+        break;
+      }
+    }
+    return object;
+  };
+}
+
+module.exports = createBaseFor;
+
+},{"147":147}],122:[function(require,module,exports){
+(function (global){
+var createCtorWrapper = require(123);
+
+/**
+ * Creates a function that wraps `func` and invokes it with the `this`
+ * binding of `thisArg`.
+ *
+ * @private
+ * @param {Function} func The function to bind.
+ * @param {*} [thisArg] The `this` binding of `func`.
+ * @returns {Function} Returns the new bound function.
+ */
+function createBindWrapper(func, thisArg) {
+  var Ctor = createCtorWrapper(func);
+
+  function wrapper() {
+    var fn = (this && this !== global && this instanceof wrapper) ? Ctor : func;
+    return fn.apply(thisArg, arguments);
+  }
+  return wrapper;
+}
+
+module.exports = createBindWrapper;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"123":123}],123:[function(require,module,exports){
+var baseCreate = require(108),
+    isObject = require(154);
+
+/**
+ * Creates a function that produces an instance of `Ctor` regardless of
+ * whether it was invoked as part of a `new` expression or by `call` or `apply`.
+ *
+ * @private
+ * @param {Function} Ctor The constructor to wrap.
+ * @returns {Function} Returns the new wrapped function.
+ */
+function createCtorWrapper(Ctor) {
+  return function() {
+    // Use a `switch` statement to work with class constructors.
+    // See http://ecma-international.org/ecma-262/6.0/#sec-ecmascript-function-objects-call-thisargument-argumentslist
+    // for more details.
+    var args = arguments;
+    switch (args.length) {
+      case 0: return new Ctor;
+      case 1: return new Ctor(args[0]);
+      case 2: return new Ctor(args[0], args[1]);
+      case 3: return new Ctor(args[0], args[1], args[2]);
+      case 4: return new Ctor(args[0], args[1], args[2], args[3]);
+      case 5: return new Ctor(args[0], args[1], args[2], args[3], args[4]);
+      case 6: return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5]);
+      case 7: return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+    }
+    var thisBinding = baseCreate(Ctor.prototype),
+        result = Ctor.apply(thisBinding, args);
+
+    // Mimic the constructor's `return` behavior.
+    // See https://es5.github.io/#x13.2.2 for more details.
+    return isObject(result) ? result : thisBinding;
+  };
+}
+
+module.exports = createCtorWrapper;
+
+},{"108":108,"154":154}],124:[function(require,module,exports){
+(function (global){
+var arrayCopy = require(101),
+    composeArgs = require(118),
+    composeArgsRight = require(119),
+    createCtorWrapper = require(123),
+    isLaziable = require(137),
+    reorder = require(143),
+    replaceHolders = require(144),
+    setData = require(145);
+
+/** Used to compose bitmasks for wrapper metadata. */
+var BIND_FLAG = 1,
+    BIND_KEY_FLAG = 2,
+    CURRY_BOUND_FLAG = 4,
+    CURRY_FLAG = 8,
+    CURRY_RIGHT_FLAG = 16,
+    PARTIAL_FLAG = 32,
+    PARTIAL_RIGHT_FLAG = 64,
+    ARY_FLAG = 128;
+
+/* Native method references for those with the same name as other `lodash` methods. */
+var nativeMax = Math.max;
+
+/**
+ * Creates a function that wraps `func` and invokes it with optional `this`
+ * binding of, partial application, and currying.
+ *
+ * @private
+ * @param {Function|string} func The function or method name to reference.
+ * @param {number} bitmask The bitmask of flags. See `createWrapper` for more details.
+ * @param {*} [thisArg] The `this` binding of `func`.
+ * @param {Array} [partials] The arguments to prepend to those provided to the new function.
+ * @param {Array} [holders] The `partials` placeholder indexes.
+ * @param {Array} [partialsRight] The arguments to append to those provided to the new function.
+ * @param {Array} [holdersRight] The `partialsRight` placeholder indexes.
+ * @param {Array} [argPos] The argument positions of the new function.
+ * @param {number} [ary] The arity cap of `func`.
+ * @param {number} [arity] The arity of `func`.
+ * @returns {Function} Returns the new wrapped function.
+ */
+function createHybridWrapper(func, bitmask, thisArg, partials, holders, partialsRight, holdersRight, argPos, ary, arity) {
+  var isAry = bitmask & ARY_FLAG,
+      isBind = bitmask & BIND_FLAG,
+      isBindKey = bitmask & BIND_KEY_FLAG,
+      isCurry = bitmask & CURRY_FLAG,
+      isCurryBound = bitmask & CURRY_BOUND_FLAG,
+      isCurryRight = bitmask & CURRY_RIGHT_FLAG,
+      Ctor = isBindKey ? undefined : createCtorWrapper(func);
+
+  function wrapper() {
+    // Avoid `arguments` object use disqualifying optimizations by
+    // converting it to an array before providing it to other functions.
+    var length = arguments.length,
+        index = length,
+        args = Array(length);
+
+    while (index--) {
+      args[index] = arguments[index];
+    }
+    if (partials) {
+      args = composeArgs(args, partials, holders);
+    }
+    if (partialsRight) {
+      args = composeArgsRight(args, partialsRight, holdersRight);
+    }
+    if (isCurry || isCurryRight) {
+      var placeholder = wrapper.placeholder,
+          argsHolders = replaceHolders(args, placeholder);
+
+      length -= argsHolders.length;
+      if (length < arity) {
+        var newArgPos = argPos ? arrayCopy(argPos) : undefined,
+            newArity = nativeMax(arity - length, 0),
+            newsHolders = isCurry ? argsHolders : undefined,
+            newHoldersRight = isCurry ? undefined : argsHolders,
+            newPartials = isCurry ? args : undefined,
+            newPartialsRight = isCurry ? undefined : args;
+
+        bitmask |= (isCurry ? PARTIAL_FLAG : PARTIAL_RIGHT_FLAG);
+        bitmask &= ~(isCurry ? PARTIAL_RIGHT_FLAG : PARTIAL_FLAG);
+
+        if (!isCurryBound) {
+          bitmask &= ~(BIND_FLAG | BIND_KEY_FLAG);
+        }
+        var newData = [func, bitmask, thisArg, newPartials, newsHolders, newPartialsRight, newHoldersRight, newArgPos, ary, newArity],
+            result = createHybridWrapper.apply(undefined, newData);
+
+        if (isLaziable(func)) {
+          setData(result, newData);
+        }
+        result.placeholder = placeholder;
+        return result;
+      }
+    }
+    var thisBinding = isBind ? thisArg : this,
+        fn = isBindKey ? thisBinding[func] : func;
+
+    if (argPos) {
+      args = reorder(args, argPos);
+    }
+    if (isAry && ary < args.length) {
+      args.length = ary;
+    }
+    if (this && this !== global && this instanceof wrapper) {
+      fn = Ctor || createCtorWrapper(func);
+    }
+    return fn.apply(thisBinding, args);
+  }
+  return wrapper;
+}
+
+module.exports = createHybridWrapper;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"101":101,"118":118,"119":119,"123":123,"137":137,"143":143,"144":144,"145":145}],125:[function(require,module,exports){
+(function (global){
+var createCtorWrapper = require(123);
+
+/** Used to compose bitmasks for wrapper metadata. */
+var BIND_FLAG = 1;
+
+/**
+ * Creates a function that wraps `func` and invokes it with the optional `this`
+ * binding of `thisArg` and the `partials` prepended to those provided to
+ * the wrapper.
+ *
+ * @private
+ * @param {Function} func The function to partially apply arguments to.
+ * @param {number} bitmask The bitmask of flags. See `createWrapper` for more details.
+ * @param {*} thisArg The `this` binding of `func`.
+ * @param {Array} partials The arguments to prepend to those provided to the new function.
+ * @returns {Function} Returns the new bound function.
+ */
+function createPartialWrapper(func, bitmask, thisArg, partials) {
+  var isBind = bitmask & BIND_FLAG,
+      Ctor = createCtorWrapper(func);
+
+  function wrapper() {
+    // Avoid `arguments` object use disqualifying optimizations by
+    // converting it to an array before providing it `func`.
+    var argsIndex = -1,
+        argsLength = arguments.length,
+        leftIndex = -1,
+        leftLength = partials.length,
+        args = Array(leftLength + argsLength);
+
+    while (++leftIndex < leftLength) {
+      args[leftIndex] = partials[leftIndex];
+    }
+    while (argsLength--) {
+      args[leftIndex++] = arguments[++argsIndex];
+    }
+    var fn = (this && this !== global && this instanceof wrapper) ? Ctor : func;
+    return fn.apply(isBind ? thisArg : this, args);
+  }
+  return wrapper;
+}
+
+module.exports = createPartialWrapper;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"123":123}],126:[function(require,module,exports){
+var baseSetData = require(115),
+    createBindWrapper = require(122),
+    createHybridWrapper = require(124),
+    createPartialWrapper = require(125),
+    getData = require(127),
+    mergeData = require(140),
+    setData = require(145);
+
+/** Used to compose bitmasks for wrapper metadata. */
+var BIND_FLAG = 1,
+    BIND_KEY_FLAG = 2,
+    PARTIAL_FLAG = 32,
+    PARTIAL_RIGHT_FLAG = 64;
+
+/** Used as the `TypeError` message for "Functions" methods. */
+var FUNC_ERROR_TEXT = 'Expected a function';
+
+/* Native method references for those with the same name as other `lodash` methods. */
+var nativeMax = Math.max;
+
+/**
+ * Creates a function that either curries or invokes `func` with optional
+ * `this` binding and partially applied arguments.
+ *
+ * @private
+ * @param {Function|string} func The function or method name to reference.
+ * @param {number} bitmask The bitmask of flags.
+ *  The bitmask may be composed of the following flags:
+ *     1 - `_.bind`
+ *     2 - `_.bindKey`
+ *     4 - `_.curry` or `_.curryRight` of a bound function
+ *     8 - `_.curry`
+ *    16 - `_.curryRight`
+ *    32 - `_.partial`
+ *    64 - `_.partialRight`
+ *   128 - `_.rearg`
+ *   256 - `_.ary`
+ * @param {*} [thisArg] The `this` binding of `func`.
+ * @param {Array} [partials] The arguments to be partially applied.
+ * @param {Array} [holders] The `partials` placeholder indexes.
+ * @param {Array} [argPos] The argument positions of the new function.
+ * @param {number} [ary] The arity cap of `func`.
+ * @param {number} [arity] The arity of `func`.
+ * @returns {Function} Returns the new wrapped function.
+ */
+function createWrapper(func, bitmask, thisArg, partials, holders, argPos, ary, arity) {
+  var isBindKey = bitmask & BIND_KEY_FLAG;
+  if (!isBindKey && typeof func != 'function') {
+    throw new TypeError(FUNC_ERROR_TEXT);
+  }
+  var length = partials ? partials.length : 0;
+  if (!length) {
+    bitmask &= ~(PARTIAL_FLAG | PARTIAL_RIGHT_FLAG);
+    partials = holders = undefined;
+  }
+  length -= (holders ? holders.length : 0);
+  if (bitmask & PARTIAL_RIGHT_FLAG) {
+    var partialsRight = partials,
+        holdersRight = holders;
+
+    partials = holders = undefined;
+  }
+  var data = isBindKey ? undefined : getData(func),
+      newData = [func, bitmask, thisArg, partials, holders, partialsRight, holdersRight, argPos, ary, arity];
+
+  if (data) {
+    mergeData(newData, data);
+    bitmask = newData[1];
+    arity = newData[9];
+  }
+  newData[9] = arity == null
+    ? (isBindKey ? 0 : func.length)
+    : (nativeMax(arity - length, 0) || 0);
+
+  if (bitmask == BIND_FLAG) {
+    var result = createBindWrapper(newData[0], newData[2]);
+  } else if ((bitmask == PARTIAL_FLAG || bitmask == (BIND_FLAG | PARTIAL_FLAG)) && !newData[4].length) {
+    result = createPartialWrapper.apply(undefined, newData);
+  } else {
+    result = createHybridWrapper.apply(undefined, newData);
+  }
+  var setter = data ? baseSetData : setData;
+  return setter(result, newData);
+}
+
+module.exports = createWrapper;
+
+},{"115":115,"122":122,"124":124,"125":125,"127":127,"140":140,"145":145}],127:[function(require,module,exports){
+var metaMap = require(141),
+    noop = require(162);
+
+/**
+ * Gets metadata for `func`.
+ *
+ * @private
+ * @param {Function} func The function to query.
+ * @returns {*} Returns the metadata for `func`.
+ */
+var getData = !metaMap ? noop : function(func) {
+  return metaMap.get(func);
+};
+
+module.exports = getData;
+
+},{"141":141,"162":162}],128:[function(require,module,exports){
+var realNames = require(142);
+
+/**
+ * Gets the name of `func`.
+ *
+ * @private
+ * @param {Function} func The function to query.
+ * @returns {string} Returns the function name.
+ */
+function getFuncName(func) {
+  var result = (func.name + ''),
+      array = realNames[result],
+      length = array ? array.length : 0;
+
+  while (length--) {
+    var data = array[length],
+        otherFunc = data.func;
+    if (otherFunc == null || otherFunc == func) {
+      return data.name;
+    }
+  }
+  return result;
+}
+
+module.exports = getFuncName;
+
+},{"142":142}],129:[function(require,module,exports){
+var baseProperty = require(114);
+
+/**
+ * Gets the "length" property value of `object`.
+ *
+ * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
+ * that affects Safari on at least iOS 8.1-8.3 ARM64.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @returns {*} Returns the "length" value.
+ */
+var getLength = baseProperty('length');
+
+module.exports = getLength;
+
+},{"114":114}],130:[function(require,module,exports){
+var isNative = require(153);
+
+/**
+ * Gets the native function at `key` of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @param {string} key The key of the method to get.
+ * @returns {*} Returns the function if it's native, else `undefined`.
+ */
+function getNative(object, key) {
+  var value = object == null ? undefined : object[key];
+  return isNative(value) ? value : undefined;
+}
+
+module.exports = getNative;
+
+},{"153":153}],131:[function(require,module,exports){
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * Initializes an array clone.
+ *
+ * @private
+ * @param {Array} array The array to clone.
+ * @returns {Array} Returns the initialized clone.
+ */
+function initCloneArray(array) {
+  var length = array.length,
+      result = new array.constructor(length);
+
+  // Add array properties assigned by `RegExp#exec`.
+  if (length && typeof array[0] == 'string' && hasOwnProperty.call(array, 'index')) {
+    result.index = array.index;
+    result.input = array.input;
+  }
+  return result;
+}
+
+module.exports = initCloneArray;
+
+},{}],132:[function(require,module,exports){
+var bufferClone = require(117);
+
+/** `Object#toString` result references. */
+var boolTag = '[object Boolean]',
+    dateTag = '[object Date]',
+    numberTag = '[object Number]',
+    regexpTag = '[object RegExp]',
+    stringTag = '[object String]';
+
+var arrayBufferTag = '[object ArrayBuffer]',
+    float32Tag = '[object Float32Array]',
+    float64Tag = '[object Float64Array]',
+    int8Tag = '[object Int8Array]',
+    int16Tag = '[object Int16Array]',
+    int32Tag = '[object Int32Array]',
+    uint8Tag = '[object Uint8Array]',
+    uint8ClampedTag = '[object Uint8ClampedArray]',
+    uint16Tag = '[object Uint16Array]',
+    uint32Tag = '[object Uint32Array]';
+
+/** Used to match `RegExp` flags from their coerced string values. */
+var reFlags = /\w*$/;
+
+/**
+ * Initializes an object clone based on its `toStringTag`.
+ *
+ * **Note:** This function only supports cloning values with tags of
+ * `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
+ *
+ * @private
+ * @param {Object} object The object to clone.
+ * @param {string} tag The `toStringTag` of the object to clone.
+ * @param {boolean} [isDeep] Specify a deep clone.
+ * @returns {Object} Returns the initialized clone.
+ */
+function initCloneByTag(object, tag, isDeep) {
+  var Ctor = object.constructor;
+  switch (tag) {
+    case arrayBufferTag:
+      return bufferClone(object);
+
+    case boolTag:
+    case dateTag:
+      return new Ctor(+object);
+
+    case float32Tag: case float64Tag:
+    case int8Tag: case int16Tag: case int32Tag:
+    case uint8Tag: case uint8ClampedTag: case uint16Tag: case uint32Tag:
+      var buffer = object.buffer;
+      return new Ctor(isDeep ? bufferClone(buffer) : buffer, object.byteOffset, object.length);
+
+    case numberTag:
+    case stringTag:
+      return new Ctor(object);
+
+    case regexpTag:
+      var result = new Ctor(object.source, reFlags.exec(object));
+      result.lastIndex = object.lastIndex;
+  }
+  return result;
+}
+
+module.exports = initCloneByTag;
+
+},{"117":117}],133:[function(require,module,exports){
+/**
+ * Initializes an object clone.
+ *
+ * @private
+ * @param {Object} object The object to clone.
+ * @returns {Object} Returns the initialized clone.
+ */
+function initCloneObject(object) {
+  var Ctor = object.constructor;
+  if (!(typeof Ctor == 'function' && Ctor instanceof Ctor)) {
+    Ctor = Object;
+  }
+  return new Ctor;
+}
+
+module.exports = initCloneObject;
+
+},{}],134:[function(require,module,exports){
+var getLength = require(129),
+    isLength = require(138);
+
+/**
+ * Checks if `value` is array-like.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+ */
+function isArrayLike(value) {
+  return value != null && isLength(getLength(value));
+}
+
+module.exports = isArrayLike;
+
+},{"129":129,"138":138}],135:[function(require,module,exports){
+/** Used to detect unsigned integer values. */
+var reIsUint = /^\d+$/;
+
+/**
+ * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
+ * of an array-like value.
+ */
+var MAX_SAFE_INTEGER = 9007199254740991;
+
+/**
+ * Checks if `value` is a valid array-like index.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
+ * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
+ */
+function isIndex(value, length) {
+  value = (typeof value == 'number' || reIsUint.test(value)) ? +value : -1;
+  length = length == null ? MAX_SAFE_INTEGER : length;
+  return value > -1 && value % 1 == 0 && value < length;
+}
+
+module.exports = isIndex;
+
+},{}],136:[function(require,module,exports){
+var isArrayLike = require(134),
+    isIndex = require(135),
+    isObject = require(154);
+
+/**
+ * Checks if the provided arguments are from an iteratee call.
+ *
+ * @private
+ * @param {*} value The potential iteratee value argument.
+ * @param {*} index The potential iteratee index or key argument.
+ * @param {*} object The potential iteratee object argument.
+ * @returns {boolean} Returns `true` if the arguments are from an iteratee call, else `false`.
+ */
+function isIterateeCall(value, index, object) {
+  if (!isObject(object)) {
+    return false;
+  }
+  var type = typeof index;
+  if (type == 'number'
+      ? (isArrayLike(object) && isIndex(index, object.length))
+      : (type == 'string' && index in object)) {
+    var other = object[index];
+    return value === value ? (value === other) : (other !== other);
+  }
+  return false;
+}
+
+module.exports = isIterateeCall;
+
+},{"134":134,"135":135,"154":154}],137:[function(require,module,exports){
+var LazyWrapper = require(99),
+    getData = require(127),
+    getFuncName = require(128),
+    lodash = require(94);
+
+/**
+ * Checks if `func` has a lazy counterpart.
+ *
+ * @private
+ * @param {Function} func The function to check.
+ * @returns {boolean} Returns `true` if `func` has a lazy counterpart, else `false`.
+ */
+function isLaziable(func) {
+  var funcName = getFuncName(func),
+      other = lodash[funcName];
+
+  if (typeof other != 'function' || !(funcName in LazyWrapper.prototype)) {
+    return false;
+  }
+  if (func === other) {
+    return true;
+  }
+  var data = getData(other);
+  return !!data && func === data[0];
+}
+
+module.exports = isLaziable;
+
+},{"127":127,"128":128,"94":94,"99":99}],138:[function(require,module,exports){
+/**
+ * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
+ * of an array-like value.
+ */
+var MAX_SAFE_INTEGER = 9007199254740991;
+
+/**
+ * Checks if `value` is a valid array-like length.
+ *
+ * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+ */
+function isLength(value) {
+  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+}
+
+module.exports = isLength;
+
+},{}],139:[function(require,module,exports){
+/**
+ * Checks if `value` is object-like.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ */
+function isObjectLike(value) {
+  return !!value && typeof value == 'object';
+}
+
+module.exports = isObjectLike;
+
+},{}],140:[function(require,module,exports){
+var arrayCopy = require(101),
+    composeArgs = require(118),
+    composeArgsRight = require(119),
+    replaceHolders = require(144);
+
+/** Used to compose bitmasks for wrapper metadata. */
+var BIND_FLAG = 1,
+    CURRY_BOUND_FLAG = 4,
+    CURRY_FLAG = 8,
+    ARY_FLAG = 128,
+    REARG_FLAG = 256;
+
+/** Used as the internal argument placeholder. */
+var PLACEHOLDER = '__lodash_placeholder__';
+
+/* Native method references for those with the same name as other `lodash` methods. */
+var nativeMin = Math.min;
+
+/**
+ * Merges the function metadata of `source` into `data`.
+ *
+ * Merging metadata reduces the number of wrappers required to invoke a function.
+ * This is possible because methods like `_.bind`, `_.curry`, and `_.partial`
+ * may be applied regardless of execution order. Methods like `_.ary` and `_.rearg`
+ * augment function arguments, making the order in which they are executed important,
+ * preventing the merging of metadata. However, we make an exception for a safe
+ * common case where curried functions have `_.ary` and or `_.rearg` applied.
+ *
+ * @private
+ * @param {Array} data The destination metadata.
+ * @param {Array} source The source metadata.
+ * @returns {Array} Returns `data`.
+ */
+function mergeData(data, source) {
+  var bitmask = data[1],
+      srcBitmask = source[1],
+      newBitmask = bitmask | srcBitmask,
+      isCommon = newBitmask < ARY_FLAG;
+
+  var isCombo =
+    (srcBitmask == ARY_FLAG && bitmask == CURRY_FLAG) ||
+    (srcBitmask == ARY_FLAG && bitmask == REARG_FLAG && data[7].length <= source[8]) ||
+    (srcBitmask == (ARY_FLAG | REARG_FLAG) && bitmask == CURRY_FLAG);
+
+  // Exit early if metadata can't be merged.
+  if (!(isCommon || isCombo)) {
+    return data;
+  }
+  // Use source `thisArg` if available.
+  if (srcBitmask & BIND_FLAG) {
+    data[2] = source[2];
+    // Set when currying a bound function.
+    newBitmask |= (bitmask & BIND_FLAG) ? 0 : CURRY_BOUND_FLAG;
+  }
+  // Compose partial arguments.
+  var value = source[3];
+  if (value) {
+    var partials = data[3];
+    data[3] = partials ? composeArgs(partials, value, source[4]) : arrayCopy(value);
+    data[4] = partials ? replaceHolders(data[3], PLACEHOLDER) : arrayCopy(source[4]);
+  }
+  // Compose partial right arguments.
+  value = source[5];
+  if (value) {
+    partials = data[5];
+    data[5] = partials ? composeArgsRight(partials, value, source[6]) : arrayCopy(value);
+    data[6] = partials ? replaceHolders(data[5], PLACEHOLDER) : arrayCopy(source[6]);
+  }
+  // Use source `argPos` if available.
+  value = source[7];
+  if (value) {
+    data[7] = arrayCopy(value);
+  }
+  // Use source `ary` if it's smaller.
+  if (srcBitmask & ARY_FLAG) {
+    data[8] = data[8] == null ? source[8] : nativeMin(data[8], source[8]);
+  }
+  // Use source `arity` if one is not provided.
+  if (data[9] == null) {
+    data[9] = source[9];
+  }
+  // Use source `func` and merge bitmasks.
+  data[0] = source[0];
+  data[1] = newBitmask;
+
+  return data;
+}
+
+module.exports = mergeData;
+
+},{"101":101,"118":118,"119":119,"144":144}],141:[function(require,module,exports){
+(function (global){
+var getNative = require(130);
+
+/** Native method references. */
+var WeakMap = getNative(global, 'WeakMap');
+
+/** Used to store function metadata. */
+var metaMap = WeakMap && new WeakMap;
+
+module.exports = metaMap;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"130":130}],142:[function(require,module,exports){
+/** Used to lookup unminified function names. */
+var realNames = {};
+
+module.exports = realNames;
+
+},{}],143:[function(require,module,exports){
+var arrayCopy = require(101),
+    isIndex = require(135);
+
+/* Native method references for those with the same name as other `lodash` methods. */
+var nativeMin = Math.min;
+
+/**
+ * Reorder `array` according to the specified indexes where the element at
+ * the first index is assigned as the first element, the element at
+ * the second index is assigned as the second element, and so on.
+ *
+ * @private
+ * @param {Array} array The array to reorder.
+ * @param {Array} indexes The arranged array indexes.
+ * @returns {Array} Returns `array`.
+ */
+function reorder(array, indexes) {
+  var arrLength = array.length,
+      length = nativeMin(indexes.length, arrLength),
+      oldArray = arrayCopy(array);
+
+  while (length--) {
+    var index = indexes[length];
+    array[length] = isIndex(index, arrLength) ? oldArray[index] : undefined;
+  }
+  return array;
+}
+
+module.exports = reorder;
+
+},{"101":101,"135":135}],144:[function(require,module,exports){
+/** Used as the internal argument placeholder. */
+var PLACEHOLDER = '__lodash_placeholder__';
+
+/**
+ * Replaces all `placeholder` elements in `array` with an internal placeholder
+ * and returns an array of their indexes.
+ *
+ * @private
+ * @param {Array} array The array to modify.
+ * @param {*} placeholder The placeholder to replace.
+ * @returns {Array} Returns the new array of placeholder indexes.
+ */
+function replaceHolders(array, placeholder) {
+  var index = -1,
+      length = array.length,
+      resIndex = -1,
+      result = [];
+
+  while (++index < length) {
+    if (array[index] === placeholder) {
+      array[index] = PLACEHOLDER;
+      result[++resIndex] = index;
+    }
+  }
+  return result;
+}
+
+module.exports = replaceHolders;
+
+},{}],145:[function(require,module,exports){
+var baseSetData = require(115),
+    now = require(95);
+
+/** Used to detect when a function becomes hot. */
+var HOT_COUNT = 150,
+    HOT_SPAN = 16;
+
+/**
+ * Sets metadata for `func`.
+ *
+ * **Note:** If this function becomes hot, i.e. is invoked a lot in a short
+ * period of time, it will trip its breaker and transition to an identity function
+ * to avoid garbage collection pauses in V8. See [V8 issue 2070](https://code.google.com/p/v8/issues/detail?id=2070)
+ * for more details.
+ *
+ * @private
+ * @param {Function} func The function to associate metadata with.
+ * @param {*} data The metadata.
+ * @returns {Function} Returns `func`.
+ */
+var setData = (function() {
+  var count = 0,
+      lastCalled = 0;
+
+  return function(key, value) {
+    var stamp = now(),
+        remaining = HOT_SPAN - (stamp - lastCalled);
+
+    lastCalled = stamp;
+    if (remaining > 0) {
+      if (++count >= HOT_COUNT) {
+        return key;
+      }
+    } else {
+      count = 0;
+    }
+    return baseSetData(key, value);
+  };
+}());
+
+module.exports = setData;
+
+},{"115":115,"95":95}],146:[function(require,module,exports){
+var isArguments = require(150),
+    isArray = require(151),
+    isIndex = require(135),
+    isLength = require(138),
+    keysIn = require(160);
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * A fallback implementation of `Object.keys` which creates an array of the
+ * own enumerable property names of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @returns {Array} Returns the array of property names.
+ */
+function shimKeys(object) {
+  var props = keysIn(object),
+      propsLength = props.length,
+      length = propsLength && object.length;
+
+  var allowIndexes = !!length && isLength(length) &&
+    (isArray(object) || isArguments(object));
+
+  var index = -1,
+      result = [];
+
+  while (++index < propsLength) {
+    var key = props[index];
+    if ((allowIndexes && isIndex(key, length)) || hasOwnProperty.call(object, key)) {
+      result.push(key);
+    }
+  }
+  return result;
+}
+
+module.exports = shimKeys;
+
+},{"135":135,"138":138,"150":150,"151":151,"160":160}],147:[function(require,module,exports){
+var isObject = require(154);
+
+/**
+ * Converts `value` to an object if it's not one.
+ *
+ * @private
+ * @param {*} value The value to process.
+ * @returns {Object} Returns the object.
+ */
+function toObject(value) {
+  return isObject(value) ? value : Object(value);
+}
+
+module.exports = toObject;
+
+},{"154":154}],148:[function(require,module,exports){
+var LazyWrapper = require(99),
+    LodashWrapper = require(100),
+    arrayCopy = require(101);
+
+/**
+ * Creates a clone of `wrapper`.
+ *
+ * @private
+ * @param {Object} wrapper The wrapper to clone.
+ * @returns {Object} Returns the cloned wrapper.
+ */
+function wrapperClone(wrapper) {
+  return wrapper instanceof LazyWrapper
+    ? wrapper.clone()
+    : new LodashWrapper(wrapper.__wrapped__, wrapper.__chain__, arrayCopy(wrapper.__actions__));
+}
+
+module.exports = wrapperClone;
+
+},{"100":100,"101":101,"99":99}],149:[function(require,module,exports){
+var baseClone = require(106),
+    bindCallback = require(116);
+
+/**
+ * Creates a deep clone of `value`. If `customizer` is provided it's invoked
+ * to produce the cloned values. If `customizer` returns `undefined` cloning
+ * is handled by the method instead. The `customizer` is bound to `thisArg`
+ * and invoked with up to three argument; (value [, index|key, object]).
+ *
+ * **Note:** This method is loosely based on the
+ * [structured clone algorithm](http://www.w3.org/TR/html5/infrastructure.html#internal-structured-cloning-algorithm).
+ * The enumerable properties of `arguments` objects and objects created by
+ * constructors other than `Object` are cloned to plain `Object` objects. An
+ * empty object is returned for uncloneable values such as functions, DOM nodes,
+ * Maps, Sets, and WeakMaps.
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to deep clone.
+ * @param {Function} [customizer] The function to customize cloning values.
+ * @param {*} [thisArg] The `this` binding of `customizer`.
+ * @returns {*} Returns the deep cloned value.
+ * @example
+ *
+ * var users = [
+ *   { 'user': 'barney' },
+ *   { 'user': 'fred' }
+ * ];
+ *
+ * var deep = _.cloneDeep(users);
+ * deep[0] === users[0];
+ * // => false
+ *
+ * // using a customizer callback
+ * var el = _.cloneDeep(document.body, function(value) {
+ *   if (_.isElement(value)) {
+ *     return value.cloneNode(true);
+ *   }
+ * });
+ *
+ * el === document.body
+ * // => false
+ * el.nodeName
+ * // => BODY
+ * el.childNodes.length;
+ * // => 20
+ */
+function cloneDeep(value, customizer, thisArg) {
+  return typeof customizer == 'function'
+    ? baseClone(value, true, bindCallback(customizer, thisArg, 3))
+    : baseClone(value, true);
+}
+
+module.exports = cloneDeep;
+
+},{"106":106,"116":116}],150:[function(require,module,exports){
+var isArrayLike = require(134),
+    isObjectLike = require(139);
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/** Native method references. */
+var propertyIsEnumerable = objectProto.propertyIsEnumerable;
+
+/**
+ * Checks if `value` is classified as an `arguments` object.
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+ * @example
+ *
+ * _.isArguments(function() { return arguments; }());
+ * // => true
+ *
+ * _.isArguments([1, 2, 3]);
+ * // => false
+ */
+function isArguments(value) {
+  return isObjectLike(value) && isArrayLike(value) &&
+    hasOwnProperty.call(value, 'callee') && !propertyIsEnumerable.call(value, 'callee');
+}
+
+module.exports = isArguments;
+
+},{"134":134,"139":139}],151:[function(require,module,exports){
+var getNative = require(130),
+    isLength = require(138),
+    isObjectLike = require(139);
+
+/** `Object#toString` result references. */
+var arrayTag = '[object Array]';
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/**
+ * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var objToString = objectProto.toString;
+
+/* Native method references for those with the same name as other `lodash` methods. */
+var nativeIsArray = getNative(Array, 'isArray');
+
+/**
+ * Checks if `value` is classified as an `Array` object.
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+ * @example
+ *
+ * _.isArray([1, 2, 3]);
+ * // => true
+ *
+ * _.isArray(function() { return arguments; }());
+ * // => false
+ */
+var isArray = nativeIsArray || function(value) {
+  return isObjectLike(value) && isLength(value.length) && objToString.call(value) == arrayTag;
+};
+
+module.exports = isArray;
+
+},{"130":130,"138":138,"139":139}],152:[function(require,module,exports){
+var isObject = require(154);
+
+/** `Object#toString` result references. */
+var funcTag = '[object Function]';
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/**
+ * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var objToString = objectProto.toString;
+
+/**
+ * Checks if `value` is classified as a `Function` object.
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+ * @example
+ *
+ * _.isFunction(_);
+ * // => true
+ *
+ * _.isFunction(/abc/);
+ * // => false
+ */
+function isFunction(value) {
+  // The use of `Object#toString` avoids issues with the `typeof` operator
+  // in older versions of Chrome and Safari which return 'function' for regexes
+  // and Safari 8 which returns 'object' for typed array constructors.
+  return isObject(value) && objToString.call(value) == funcTag;
+}
+
+module.exports = isFunction;
+
+},{"154":154}],153:[function(require,module,exports){
+var isFunction = require(152),
+    isObjectLike = require(139);
+
+/** Used to detect host constructors (Safari > 5). */
+var reIsHostCtor = /^\[object .+?Constructor\]$/;
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/** Used to resolve the decompiled source of functions. */
+var fnToString = Function.prototype.toString;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/** Used to detect if a method is native. */
+var reIsNative = RegExp('^' +
+  fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
+  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+);
+
+/**
+ * Checks if `value` is a native function.
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
+ * @example
+ *
+ * _.isNative(Array.prototype.push);
+ * // => true
+ *
+ * _.isNative(_);
+ * // => false
+ */
+function isNative(value) {
+  if (value == null) {
+    return false;
+  }
+  if (isFunction(value)) {
+    return reIsNative.test(fnToString.call(value));
+  }
+  return isObjectLike(value) && reIsHostCtor.test(value);
+}
+
+module.exports = isNative;
+
+},{"139":139,"152":152}],154:[function(require,module,exports){
+/**
+ * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+ * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(1);
+ * // => false
+ */
+function isObject(value) {
+  // Avoid a V8 JIT bug in Chrome 19-20.
+  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+  var type = typeof value;
+  return !!value && (type == 'object' || type == 'function');
+}
+
+module.exports = isObject;
+
+},{}],155:[function(require,module,exports){
+var isObjectLike = require(139);
+
+/** `Object#toString` result references. */
+var stringTag = '[object String]';
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/**
+ * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var objToString = objectProto.toString;
+
+/**
+ * Checks if `value` is classified as a `String` primitive or object.
+ *
+ * @static
+ * @memberOf _
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+ * @example
+ *
+ * _.isString('abc');
+ * // => true
+ *
+ * _.isString(1);
+ * // => false
+ */
+function isString(value) {
+  return typeof value == 'string' || (isObjectLike(value) && objToString.call(value) == stringTag);
+}
+
+module.exports = isString;
+
+},{"139":139}],156:[function(require,module,exports){
+var assignWith = require(104),
+    baseAssign = require(105),
+    createAssigner = require(120);
+
+/**
+ * Assigns own enumerable properties of source object(s) to the destination
+ * object. Subsequent sources overwrite property assignments of previous sources.
+ * If `customizer` is provided it's invoked to produce the assigned values.
+ * The `customizer` is bound to `thisArg` and invoked with five arguments:
+ * (objectValue, sourceValue, key, object, source).
+ *
+ * **Note:** This method mutates `object` and is based on
+ * [`Object.assign`](http://ecma-international.org/ecma-262/6.0/#sec-object.assign).
+ *
+ * @static
+ * @memberOf _
+ * @alias extend
+ * @category Object
+ * @param {Object} object The destination object.
+ * @param {...Object} [sources] The source objects.
+ * @param {Function} [customizer] The function to customize assigned values.
+ * @param {*} [thisArg] The `this` binding of `customizer`.
+ * @returns {Object} Returns `object`.
+ * @example
+ *
+ * _.assign({ 'user': 'barney' }, { 'age': 40 }, { 'user': 'fred' });
+ * // => { 'user': 'fred', 'age': 40 }
+ *
+ * // using a customizer callback
+ * var defaults = _.partialRight(_.assign, function(value, other) {
+ *   return _.isUndefined(value) ? other : value;
+ * });
+ *
+ * defaults({ 'user': 'barney' }, { 'age': 36 }, { 'user': 'fred' });
+ * // => { 'user': 'barney', 'age': 36 }
+ */
+var assign = createAssigner(function(object, source, customizer) {
+  return customizer
+    ? assignWith(object, source, customizer)
+    : baseAssign(object, source);
+});
+
+module.exports = assign;
+
+},{"104":104,"105":105,"120":120}],157:[function(require,module,exports){
+var baseAssign = require(105),
+    baseCreate = require(108),
+    isIterateeCall = require(136);
+
+/**
+ * Creates an object that inherits from the given `prototype` object. If a
+ * `properties` object is provided its own enumerable properties are assigned
+ * to the created object.
+ *
+ * @static
+ * @memberOf _
+ * @category Object
+ * @param {Object} prototype The object to inherit from.
+ * @param {Object} [properties] The properties to assign to the object.
+ * @param- {Object} [guard] Enables use as a callback for functions like `_.map`.
+ * @returns {Object} Returns the new object.
+ * @example
+ *
+ * function Shape() {
+ *   this.x = 0;
+ *   this.y = 0;
+ * }
+ *
+ * function Circle() {
+ *   Shape.call(this);
+ * }
+ *
+ * Circle.prototype = _.create(Shape.prototype, {
+ *   'constructor': Circle
+ * });
+ *
+ * var circle = new Circle;
+ * circle instanceof Circle;
+ * // => true
+ *
+ * circle instanceof Shape;
+ * // => true
+ */
+function create(prototype, properties, guard) {
+  var result = baseCreate(prototype);
+  if (guard && isIterateeCall(prototype, properties, guard)) {
+    properties = undefined;
+  }
+  return properties ? baseAssign(result, properties) : result;
+}
+
+module.exports = create;
+
+},{"105":105,"108":108,"136":136}],158:[function(require,module,exports){
+var baseFunctions = require(112),
+    keysIn = require(160);
+
+/**
+ * Creates an array of function property names from all enumerable properties,
+ * own and inherited, of `object`.
+ *
+ * @static
+ * @memberOf _
+ * @alias methods
+ * @category Object
+ * @param {Object} object The object to inspect.
+ * @returns {Array} Returns the new array of property names.
+ * @example
+ *
+ * _.functions(_);
+ * // => ['after', 'ary', 'assign', ...]
+ */
+function functions(object) {
+  return baseFunctions(object, keysIn(object));
+}
+
+module.exports = functions;
+
+},{"112":112,"160":160}],159:[function(require,module,exports){
+var getNative = require(130),
+    isArrayLike = require(134),
+    isObject = require(154),
+    shimKeys = require(146);
+
+/* Native method references for those with the same name as other `lodash` methods. */
+var nativeKeys = getNative(Object, 'keys');
+
+/**
+ * Creates an array of the own enumerable property names of `object`.
+ *
+ * **Note:** Non-object values are coerced to objects. See the
+ * [ES spec](http://ecma-international.org/ecma-262/6.0/#sec-object.keys)
+ * for more details.
+ *
+ * @static
+ * @memberOf _
+ * @category Object
+ * @param {Object} object The object to query.
+ * @returns {Array} Returns the array of property names.
+ * @example
+ *
+ * function Foo() {
+ *   this.a = 1;
+ *   this.b = 2;
+ * }
+ *
+ * Foo.prototype.c = 3;
+ *
+ * _.keys(new Foo);
+ * // => ['a', 'b'] (iteration order is not guaranteed)
+ *
+ * _.keys('hi');
+ * // => ['0', '1']
+ */
+var keys = !nativeKeys ? shimKeys : function(object) {
+  var Ctor = object == null ? undefined : object.constructor;
+  if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
+      (typeof object != 'function' && isArrayLike(object))) {
+    return shimKeys(object);
+  }
+  return isObject(object) ? nativeKeys(object) : [];
+};
+
+module.exports = keys;
+
+},{"130":130,"134":134,"146":146,"154":154}],160:[function(require,module,exports){
+var isArguments = require(150),
+    isArray = require(151),
+    isIndex = require(135),
+    isLength = require(138),
+    isObject = require(154);
+
+/** Used for native method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * Creates an array of the own and inherited enumerable property names of `object`.
+ *
+ * **Note:** Non-object values are coerced to objects.
+ *
+ * @static
+ * @memberOf _
+ * @category Object
+ * @param {Object} object The object to query.
+ * @returns {Array} Returns the array of property names.
+ * @example
+ *
+ * function Foo() {
+ *   this.a = 1;
+ *   this.b = 2;
+ * }
+ *
+ * Foo.prototype.c = 3;
+ *
+ * _.keysIn(new Foo);
+ * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
+ */
+function keysIn(object) {
+  if (object == null) {
+    return [];
+  }
+  if (!isObject(object)) {
+    object = Object(object);
+  }
+  var length = object.length;
+  length = (length && isLength(length) &&
+    (isArray(object) || isArguments(object)) && length) || 0;
+
+  var Ctor = object.constructor,
+      index = -1,
+      isProto = typeof Ctor == 'function' && Ctor.prototype === object,
+      result = Array(length),
+      skipIndexes = length > 0;
+
+  while (++index < length) {
+    result[index] = (index + '');
+  }
+  for (var key in object) {
+    if (!(skipIndexes && isIndex(key, length)) &&
+        !(key == 'constructor' && (isProto || !hasOwnProperty.call(object, key)))) {
+      result.push(key);
+    }
+  }
+  return result;
+}
+
+module.exports = keysIn;
+
+},{"135":135,"138":138,"150":150,"151":151,"154":154}],161:[function(require,module,exports){
+/**
+ * This method returns the first argument provided to it.
+ *
+ * @static
+ * @memberOf _
+ * @category Utility
+ * @param {*} value Any value.
+ * @returns {*} Returns `value`.
+ * @example
+ *
+ * var object = { 'user': 'fred' };
+ *
+ * _.identity(object) === object;
+ * // => true
+ */
+function identity(value) {
+  return value;
+}
+
+module.exports = identity;
+
+},{}],162:[function(require,module,exports){
+/**
+ * A no-operation function that returns `undefined` regardless of the
+ * arguments it receives.
+ *
+ * @static
+ * @memberOf _
+ * @category Utility
+ * @example
+ *
+ * var object = { 'user': 'fred' };
+ *
+ * _.noop(object) === undefined;
+ * // => true
+ */
+function noop() {
+  // No operation performed.
+}
+
+module.exports = noop;
+
+},{}],163:[function(require,module,exports){
+function nodeListToArray(nodeList) {
+  try {
+    return Array.prototype.slice.call(nodeList);
+  } catch (err) {
+    var result = [];
+    for (var i = 0; i < nodeList.length; i++) {
+      result.push(nodeList[i]);
+    }
+    return result;
+  }
+}
+
+if (typeof module !== 'undefined') {
+  module.exports = nodeListToArray;
+}
+
+},{}],164:[function(require,module,exports){
+'use strict';
+
+var bus = require(90);
+var events = require(166);
+var checkOrigin = require(165).checkOrigin;
+
+function BraintreeBus(options) {
+  options = options || {};
+
+  this.channel = options.channel;
+  if (!this.channel) {
+    throw new Error('Channel ID must be specified');
+  }
+
+  this.merchantUrl = options.merchantUrl;
+
+  this._isDestroyed = false;
+  this._isVerbose = false;
+
+  this._listeners = [];
+
+  this._log('new bus on channel ' + this.channel, [location.href]);
+}
+
+BraintreeBus.prototype.on = function (eventName, originalHandler) {
+  var namespacedEvent, args;
+  var handler = originalHandler;
+  var self = this;
+
+  if (this._isDestroyed) { return; }
+
+  if (this.merchantUrl) {
+    handler = function () {
+      /* eslint-disable no-invalid-this */
+      if (checkOrigin(this.origin, self.merchantUrl)) {
+        originalHandler.apply(this, arguments);
+      }
+      /* eslint-enable no-invalid-this */
+    };
+  }
+
+  namespacedEvent = this._namespaceEvent(eventName);
+  args = Array.prototype.slice.call(arguments);
+  args[0] = namespacedEvent;
+  args[1] = handler;
+
+  this._log('on', args);
+  bus.on.apply(bus, args);
+
+  this._listeners.push({
+    eventName: eventName,
+    handler: handler,
+    originalHandler: originalHandler
+  });
+};
+
+BraintreeBus.prototype.emit = function (eventName) {
+  var args;
+
+  if (this._isDestroyed) { return; }
+
+  args = Array.prototype.slice.call(arguments);
+  args[0] = this._namespaceEvent(eventName);
+
+  this._log('emit', args);
+  bus.emit.apply(bus, args);
+};
+
+BraintreeBus.prototype._offDirect = function (eventName) {
+  var args = Array.prototype.slice.call(arguments);
+
+  if (this._isDestroyed) { return; }
+
+  args[0] = this._namespaceEvent(eventName);
+
+  this._log('off', args);
+  bus.off.apply(bus, args);
+};
+
+BraintreeBus.prototype.off = function (eventName, originalHandler) {
+  var i, listener;
+  var handler = originalHandler;
+
+  if (this._isDestroyed) { return; }
+
+  if (this.merchantUrl) {
+    for (i = 0; i < this._listeners.length; i++) {
+      listener = this._listeners[i];
+
+      if (listener.originalHandler === originalHandler) {
+        handler = listener.handler;
+      }
+    }
+  }
+
+  this._offDirect(eventName, handler);
+};
+
+BraintreeBus.prototype._namespaceEvent = function (eventName) {
+  return ['braintree', this.channel, eventName].join(':');
+};
+
+BraintreeBus.prototype.teardown = function () {
+  var listener, i;
+
+  for (i = 0; i < this._listeners.length; i++) {
+    listener = this._listeners[i];
+    this._offDirect(listener.eventName, listener.handler);
+  }
+
+  this._listeners.length = 0;
+
+  this._isDestroyed = true;
+};
+
+BraintreeBus.prototype._log = function (functionName, args) {
+  if (this._isVerbose) {
+    console.log(functionName, args); // eslint-disable-line no-console
+  }
+};
+
+BraintreeBus.events = events;
+
+module.exports = BraintreeBus;
+
+},{"165":165,"166":166,"90":90}],165:[function(require,module,exports){
+'use strict';
+
+var BT_ORIGIN_REGEX = /^https:\/\/([a-zA-Z0-9-]+\.)*(braintreepayments|braintreegateway|paypal)\.com(:\d{1,5})?$/;
+
+function checkOrigin(postMessageOrigin, merchantUrl) {
+  var merchantOrigin, merchantHost;
+  var a = document.createElement('a');
+
+  a.href = merchantUrl;
+
+  if (a.protocol === 'https:') {
+    merchantHost = a.host.replace(/:443$/, '');
+  } else if (a.protocol === 'http:') {
+    merchantHost = a.host.replace(/:80$/, '');
+  } else {
+    merchantHost = a.host;
+  }
+
+  merchantOrigin = a.protocol + '//' + merchantHost;
+
+  return merchantOrigin === postMessageOrigin || BT_ORIGIN_REGEX.test(postMessageOrigin);
+}
+
+module.exports = {
+  checkOrigin: checkOrigin
+};
+
+},{}],166:[function(require,module,exports){
+'use strict';
+
+var i, evnt;
+var eventList = [
+  'PAYMENT_METHOD_REQUEST',
+  'PAYMENT_METHOD_RECEIVED',
+  'PAYMENT_METHOD_GENERATED',
+  'PAYMENT_METHOD_NOT_GENERATED',
+  'PAYMENT_METHOD_CANCELLED',
+  'PAYMENT_METHOD_ERROR',
+  'CONFIGURATION_REQUEST',
+  'ROOT_METADATA_REQUEST',
+  'ERROR',
+  'WARNING',
+  'UI_POPUP_DID_OPEN',
+  'UI_POPUP_DID_CLOSE',
+  'UI_POPUP_FORCE_CLOSE',
+  'ASYNC_DEPENDENCY_INITIALIZING',
+  'ASYNC_DEPENDENCY_READY',
+  'USER_FORM_SUBMIT_REQUEST',
+  'SEND_ANALYTICS_EVENTS'
+];
+var eventEnum = {};
+
+for (i = 0; i < eventList.length; i++) {
+  evnt = eventList[i];
+  eventEnum[evnt] = evnt;
+}
+
+module.exports = eventEnum;
+
+},{}],167:[function(require,module,exports){
+'use strict';
+/* eslint-disable consistent-return */
+
+function convertToLegacyShippingAddress(address) {
+  var prop;
+  var legacyShippingAddress = {};
+
+  if (!address) {
+    return;
+  }
+
+  for (prop in address) {
+    if (address.hasOwnProperty(prop)) {
+      legacyShippingAddress[toSnakeCase(prop)] = address[prop];
+    }
+  }
+
+  return legacyShippingAddress;
+}
+
+function toSnakeCase(string) {
+  return string.replace(/([A-Z])/g, function ($1) {
+    return '_' + $1.toLowerCase();
+  });
+}
+
+module.exports = {convertToLegacyShippingAddress: convertToLegacyShippingAddress};
+
+},{}],168:[function(require,module,exports){
+'use strict';
+
+module.exports = {
+  ROOT_SUCCESS_CALLBACK: 'onPaymentMethodReceived',
+  ROOT_ERROR_CALLBACK: 'onError',
+  ROOT_READY_CALLBACK: 'onReady',
+  TEARDOWN_STATE: {
+    IN_PROGRESS: 'inProgress',
+    COMPLETE: 'complete'
+  }
+};
+
+},{}],169:[function(require,module,exports){
 (function (global){
 'use strict';
 
-function isMetroBrowser() {
-  var supported = null;
-  var errorName = '';
-  try {
-    new ActiveXObject('');
-  } catch (e) {
-    errorName = e.name;
-  }
-  try {
-    supported = !!new ActiveXObject('htmlfile');
-  } catch (e) {
-    supported = false;
-  }
-  if (errorName !== 'ReferenceError' && supported === false) {
-    supported = false;
-  } else {
-    supported = true;
-  }
-  return !supported;
+var clone = require(149);
+var api = require(15);
+var Bus = require(164);
+var Destructor = require(86);
+var bind = require(96);
+var constants = require(168);
+var sanitizePayload = require(179);
+var lookupCallbackFor = require(177);
+var fallbackErrorHandler = require(175);
+var nodeType = require(178);
+var isJQueryElement = nodeType.isJQueryElement;
+var isHTMLElement = nodeType.isHTMLElement;
+
+function noop() {}
+
+function _handleDependencyInitializing() {
+  this._dependenciesRemaining++;
 }
 
-function getIEVersion() {
-  var result = { version: null };
+function _handleDependencyReady() {
+  this._dependenciesRemaining--;
 
-  if (/Trident/.test(global.navigator.userAgent)) {
-    result.version = 11;
+  if (this._dependenciesRemaining === 0) {
+    delete this._dependenciesRemaining;
+
+    this.bus.off(Bus.events.ASYNC_DEPENDENCY_INITIALIZING, this._handleDependencyInitializing);
+    this.bus.off(Bus.events.ASYNC_DEPENDENCY_READY, this._handleDependencyReady);
+
+    this._onIntegrationReady();
+  }
+}
+
+function BaseIntegration(configuration) {
+  this.configuration = configuration;
+
+  this.isReady = false;
+
+  this.destructor = new Destructor();
+
+  this.bus = new Bus({
+    channel: this.configuration.channel,
+    merchantUrl: global.location.href
+  });
+  this._createApiClient();
+  this._configureCallbacks();
+  this._configureAnalytics();
+  this._attachEvents();
+  this._emitInitializing();
+}
+
+BaseIntegration.prototype._emitInitializing = function () {
+  this.bus.emit(Bus.events.ASYNC_DEPENDENCY_INITIALIZING);
+};
+
+BaseIntegration.prototype._createApiClient = function () {
+  var apiClientOptions = {
+    clientToken: this.configuration.gatewayConfiguration,
+    integration: this.configuration.integrationType,
+    analyticsConfiguration: this.configuration.analyticsConfiguration
+  };
+
+  if (this.configuration.merchantConfiguration.enableCORS) {
+    apiClientOptions.enableCORS = true;
   }
 
-  if (/MSIE 10/.test(global.navigator.userAgent)) {
-    result.version = 10;
+  this.apiClient = new api.Client(apiClientOptions);
+};
+
+BaseIntegration.prototype._configureCallbacks = function () {
+  var getCallback = lookupCallbackFor(this.configuration.merchantConfiguration);
+
+  function successHandler(fn) {
+    return function (payload) {
+      fn(sanitizePayload(payload));
+    };
   }
 
-  if (/MSIE 9/.test(global.navigator.userAgent)) {
-    result.version = 9;
+  this.onSuccess = successHandler(getCallback(constants.ROOT_SUCCESS_CALLBACK));
+  this.onError = getCallback(constants.ROOT_ERROR_CALLBACK, fallbackErrorHandler);
+  this.onReady = getCallback(constants.ROOT_READY_CALLBACK);
+};
+
+BaseIntegration.prototype._configureAnalytics = function () {
+  var prefix = 'web.' + this.configuration.integrationType + '.';
+  var apiClient = this.apiClient;
+
+  this.bus.on(Bus.events.SEND_ANALYTICS_EVENTS, function (events, callback) {
+    var i;
+
+    if (!(events instanceof Array)) {
+      events = [events];
+    }
+
+    for (i = 0; i < events.length; i++) {
+      events[i] = prefix + events[i];
+    }
+
+    apiClient.sendAnalyticsEvents(events, callback);
+  });
+};
+
+BaseIntegration.prototype._attachEvents = function () {
+  var replyConfiguration;
+  var configuration = this.configuration;
+
+  this.bus.on(Bus.events.ERROR, this.onError);
+  this.bus.on(Bus.events.PAYMENT_METHOD_RECEIVED, this.onSuccess);
+
+  this.bus.on(Bus.events.WARNING, function (warning) {
+    try { console.warn(warning); } catch (e) { /* ignored */ } // eslint-disable-line no-console
+  });
+
+  replyConfiguration = {
+    enableCORS: configuration.merchantConfiguration.enableCORS,
+    configuration: configuration.gatewayConfiguration,
+    integration: configuration.integrationType,
+    analyticsConfiguration: configuration.analyticsConfiguration,
+    merchantConfiguration: clone(configuration.merchantConfiguration, function (value) {
+      if (isJQueryElement(value) || isHTMLElement(value)) { return {}; }
+    })
+  };
+
+  this.bus.on(Bus.events.CONFIGURATION_REQUEST, function (reply) {
+    reply(replyConfiguration);
+  });
+
+  this._dependenciesRemaining = 0;
+  this._handleDependencyInitializing = bind(_handleDependencyInitializing, this);
+  this._handleDependencyReady = bind(_handleDependencyReady, this);
+  this.bus.on(Bus.events.ASYNC_DEPENDENCY_INITIALIZING, this._handleDependencyInitializing);
+  this.bus.on(Bus.events.ASYNC_DEPENDENCY_READY, this._handleDependencyReady);
+};
+
+BaseIntegration.prototype.teardown = function (merchantCallback) {
+  if (this.teardownState === constants.TEARDOWN_STATE.IN_PROGRESS) {
+    throw new Error('Cannot call teardown while in progress');
   }
 
-  if (/MSIE 8/.test(global.navigator.userAgent)) {
-    result.version = 8;
+  if (this.teardownState === constants.TEARDOWN_STATE.COMPLETE) {
+    throw new Error('Cannot teardown integration more than once');
+  }
+
+  this.teardownMerchantCallback = merchantCallback || noop;
+
+  this.teardownState = constants.TEARDOWN_STATE.IN_PROGRESS;
+
+  this.destructor.teardown(bind(this._handleTeardown, this));
+};
+
+BaseIntegration.prototype._handleTeardown = function () {
+  this.bus.teardown();
+
+  this.teardownState = constants.TEARDOWN_STATE.COMPLETE;
+
+  this.teardownMerchantCallback();
+};
+
+BaseIntegration.prototype._wrapWithTeardownReply = function (funcName, func) {
+  var self = this;
+
+  return function () {
+    if (self.teardownState === constants.TEARDOWN_STATE.IN_PROGRESS) {
+      throw new Error('Cannot call ' + funcName + ' while teardown is in progress');
+    }
+
+    if (self.teardownState === constants.TEARDOWN_STATE.COMPLETE) {
+      throw new Error('Cannot call ' + funcName + ' after teardown has completed');
+    }
+
+    func();
+  };
+};
+
+BaseIntegration.prototype._onIntegrationReady = function (instance) {
+  this.returnedInstance = instance || {};
+
+  this.returnedInstance.teardown = bind(this.teardown, this);
+
+  this.isReady = true;
+  this.onReady(this.returnedInstance);
+};
+
+module.exports = BaseIntegration;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"149":149,"15":15,"164":164,"168":168,"175":175,"177":177,"178":178,"179":179,"86":86,"96":96}],170:[function(require,module,exports){
+'use strict';
+
+var clone = require(149);
+var create = require(157);
+var bind = require(96);
+var api = require(15);
+var coinbase = require(180);
+var Bus = require(164);
+var BaseIntegration = require(169);
+
+function CoinbaseIntegration() {
+  var coinbaseConfiguration, coinbaseIntegration;
+
+  BaseIntegration.apply(this, arguments);
+
+  coinbaseConfiguration = clone(this.configuration.merchantConfiguration);
+
+  this._attachBusEvents();
+
+  coinbaseConfiguration.channel = this.configuration.channel;
+  coinbaseConfiguration.configuration = clone(this.configuration.gatewayConfiguration);
+  coinbaseConfiguration.coinbase = clone(coinbaseConfiguration.coinbase || {});
+  coinbaseConfiguration.apiClient = new api.Client({
+    enableCORS: this.configuration.merchantConfiguration.enableCORS || false,
+    clientToken: this.configuration.gatewayConfiguration,
+    integration: 'coinbase'
+  });
+
+  coinbaseIntegration = coinbase.create(coinbaseConfiguration);
+
+  if (coinbaseConfiguration != null) {
+    this.destructor.registerFunctionForTeardown(function (done) {
+      coinbaseIntegration.teardown(done);
+    });
+  }
+
+  this.bus.emit(Bus.events.ASYNC_DEPENDENCY_READY);
+}
+
+CoinbaseIntegration.prototype = create(BaseIntegration.prototype, {
+  constructor: CoinbaseIntegration
+});
+
+CoinbaseIntegration.prototype._attachBusEvents = function () {
+  this.bus.on(Bus.events.PAYMENT_METHOD_GENERATED, bind(this._onPaymentMethodGenerated, this));
+};
+
+CoinbaseIntegration.prototype._onPaymentMethodGenerated = function (payload) {
+  this.bus.emit(Bus.events.PAYMENT_METHOD_RECEIVED, payload);
+};
+
+module.exports = CoinbaseIntegration;
+
+},{"149":149,"15":15,"157":157,"164":164,"169":169,"180":180,"96":96}],171:[function(require,module,exports){
+'use strict';
+
+var clone = require(149);
+var create = require(157);
+var form = require(198);
+var paypal = require(210);
+var coinbase = require(180);
+var bind = require(96);
+var isFunction = require(152);
+var hostedFields = require(204);
+var FormNapper = require(89);
+var constants = require(168);
+var Bus = require(164);
+var convertToLegacyShippingAddress = require(167).convertToLegacyShippingAddress;
+var BaseIntegration = require(169);
+var nodeType = require(178);
+var isJQueryElement = nodeType.isJQueryElement;
+var isHTMLElement = nodeType.isHTMLElement;
+var NonceManager = require(176);
+
+function CustomIntegration() {
+  BaseIntegration.apply(this, arguments);
+
+  if (this.configuration.merchantConfiguration.hostedFields != null) {
+    this._setupHostedFields();
+  } else {
+    this._setupForm();
+  }
+
+  this._setupPayPal();
+  this._setupCoinbase();
+
+  this.bus.emit(Bus.events.ASYNC_DEPENDENCY_READY);
+}
+
+CustomIntegration.prototype = create(BaseIntegration.prototype, {
+  constructor: CustomIntegration
+});
+
+CustomIntegration.prototype._setupHostedFields = function () {
+  var submitRequestHandler;
+  var merchantConfiguration = this.configuration.merchantConfiguration;
+  var rootSuccessCallback = merchantConfiguration[constants.ROOT_SUCCESS_CALLBACK];
+  var formNapper = new FormNapper(merchantConfiguration.id);
+  var hostedFieldsIntegration = hostedFields.create(this.configuration);
+  var nonceManager = new NonceManager({
+    formNapper: formNapper,
+    rootCallback: rootSuccessCallback,
+    channel: this.configuration.channel
+  });
+
+  if (formNapper.htmlForm == null) {
+    this.bus.emit(Bus.events.ERROR, {
+      type: 'CONFIGURATION',
+      message: 'options.id does not reference a valid DOM element'
+    });
+    return;
+  }
+
+  submitRequestHandler = bind(nonceManager.handleSubmitRequest, nonceManager);
+
+  formNapper.hijack(submitRequestHandler);
+  this.bus.on(Bus.events.USER_FORM_SUBMIT_REQUEST, submitRequestHandler);
+
+  this.destructor.registerFunctionForTeardown(bind(function (done) {
+    nonceManager.teardown();
+    formNapper.detach();
+    hostedFieldsIntegration.teardown(done);
+  }, this));
+};
+
+CustomIntegration.prototype._setupForm = function () {
+  var merchantConfiguration = this.configuration.merchantConfiguration;
+  var formShouldAutoSubmit, successCallback, formIntegration;
+
+  if (merchantConfiguration.id) {
+    formIntegration = form.setup(this.apiClient, this.configuration);
+
+    formShouldAutoSubmit = !isFunction(merchantConfiguration[constants.ROOT_SUCCESS_CALLBACK]);
+    if (!formShouldAutoSubmit) {
+      successCallback = this.onSuccess;
+      formIntegration.onNonceReceived = bind(function (err, payload) {
+        if (err) {
+          this.bus.emit(Bus.events.ERROR, err); // eslint-disable-line no-invalid-this
+        } else {
+          successCallback(payload);
+        }
+      }, this);
+    }
+
+    this.destructor.registerFunctionForTeardown(function () {
+      formIntegration.teardown();
+    });
+  } else {
+    this.bus.on(Bus.events.PAYMENT_METHOD_GENERATED, bind(function (payload) {
+      this.bus.emit(Bus.events.PAYMENT_METHOD_RECEIVED, payload); // eslint-disable-line no-invalid-this
+    }, this));
+  }
+};
+
+CustomIntegration.prototype._setupPayPal = function () {
+  var paypalCallbackLookup, legacyPaypalSuccessCallback, legacyPaypalCancelledCallback, dummyInput, paypalConfiguration;
+  var merchantConfiguration = this.configuration.merchantConfiguration;
+
+  if (!merchantConfiguration.paypal) { return; }
+
+  paypalConfiguration = clone(merchantConfiguration.paypal, function (value) {
+    if (isJQueryElement(value)) {
+      return value[0];
+    } else if (isHTMLElement(value)) {
+      return value;
+    }
+  });
+
+  paypalCallbackLookup = getIntegrationCallbackLookup(merchantConfiguration, 'paypal');
+  legacyPaypalSuccessCallback = paypalCallbackLookup('onSuccess');
+  legacyPaypalCancelledCallback = paypalCallbackLookup('onCancelled');
+
+  if (!paypalConfiguration.paymentMethodNonceInputField) {
+    dummyInput = document.createElement('input');
+    dummyInput.id = 'braintree-custom-integration-dummy-input';
+    paypalConfiguration.paymentMethodNonceInputField = dummyInput;
+  }
+
+  paypalConfiguration.onSuccess = function (payload) {
+    legacyPaypalSuccessCallback(
+      payload.nonce,
+      payload.details.email,
+      convertToLegacyShippingAddress(payload.details.shippingAddress)
+    );
+  };
+
+  paypalConfiguration.onCancelled = function () {
+    legacyPaypalCancelledCallback();
+  };
+
+  if (merchantConfiguration.enableCORS) {
+    paypalConfiguration.enableCORS = true;
+  }
+
+  this.paypalIntegration = paypal.create(this.configuration.gatewayConfiguration, paypalConfiguration, this.configuration.channel);
+
+  if (this.paypalIntegration != null) {
+    this.destructor.registerFunctionForTeardown(bind(function () {
+      this.paypalIntegration.teardown(); // eslint-disable-line no-invalid-this
+    }, this));
+  }
+};
+
+CustomIntegration.prototype._setupCoinbase = function () {
+  var coinbaseConfiguration, coinbaseIntegration;
+
+  if (!this.configuration.merchantConfiguration.coinbase) { return; }
+
+  if (navigator.userAgent.match(/MSIE 8\.0/)) { return; }
+
+  coinbaseConfiguration = clone(this.configuration.merchantConfiguration);
+  coinbaseConfiguration.channel = this.configuration.channel;
+  coinbaseConfiguration.configuration = this.configuration.gatewayConfiguration;
+  coinbaseConfiguration.apiClient = this.apiClient;
+  delete coinbaseConfiguration.paypal;
+
+  coinbaseIntegration = coinbase.create(coinbaseConfiguration);
+
+  if (coinbaseIntegration != null) {
+    this.destructor.registerFunctionForTeardown(function (done) {
+      coinbaseIntegration.teardown(done);
+    });
+  }
+};
+
+CustomIntegration.prototype._onIntegrationReady = function () {
+  var self = this;
+  var returnedInstance = {};
+
+  if (this.paypalIntegration) {
+    returnedInstance.paypal = {
+      initAuthFlow: this._wrapWithTeardownReply('initAuthFlow', function () {
+        self.bus.emit(Bus.events.SEND_ANALYTICS_EVENTS, 'paypal.auth.init');
+        self.paypalIntegration.initAuthFlow();
+      }),
+      closeAuthFlow: this._wrapWithTeardownReply('closeAuthFlow', function () {
+        self.bus.emit(Bus.events.SEND_ANALYTICS_EVENTS, 'paypal.auth.close');
+        self.paypalIntegration.closeAuthFlow();
+      })
+    };
+  }
+
+  BaseIntegration.prototype._onIntegrationReady.call(this, returnedInstance);
+};
+
+function getIntegrationCallbackLookup(options, integration) {
+  return function (funcName) {
+    if (integration in options && isFunction(options[integration][funcName])) {
+      return options[integration][funcName];
+    }
+    return function noop() {};
+  };
+}
+
+module.exports = CustomIntegration;
+
+},{"149":149,"152":152,"157":157,"164":164,"167":167,"168":168,"169":169,"176":176,"178":178,"180":180,"198":198,"204":204,"210":210,"89":89,"96":96}],172:[function(require,module,exports){
+'use strict';
+
+var create = require(157);
+var dropin = require(196);
+var bind = require(96);
+var isFunction = require(152);
+var Bus = require(164);
+var constants = require(168);
+var sanitizePayload = require(179);
+var BaseIntegration = require(169);
+
+function _getLegacyCallback(options) {
+  if (isFunction(options.paymentMethodNonceReceived)) {
+    return options.paymentMethodNonceReceived;
+  }
+
+  return null;
+}
+
+function _hasRootCallback(options) {
+  return isFunction(options[constants.ROOT_SUCCESS_CALLBACK]);
+}
+
+function DropinIntegration() {
+  var merchantConfiguration, legacyCallback, hasRootCallback, dropinIntegration;
+
+  BaseIntegration.apply(this, arguments);
+
+  merchantConfiguration = this.configuration.merchantConfiguration;
+  legacyCallback = _getLegacyCallback(merchantConfiguration);
+  hasRootCallback = _hasRootCallback(merchantConfiguration);
+
+  if (legacyCallback || hasRootCallback) {
+    merchantConfiguration.paymentMethodNonceReceived = bind(function (payload) {
+      if (legacyCallback) {
+        legacyCallback(payload.originalEvent, payload.nonce);
+      }
+
+      this.bus.emit(Bus.events.PAYMENT_METHOD_RECEIVED, sanitizePayload(payload)); // eslint-disable-line no-invalid-this
+    }, this);
+  }
+
+  dropinIntegration = dropin.create(this.configuration);
+  this.destructor.registerFunctionForTeardown(function (done) {
+    dropinIntegration.teardown(done);
+  });
+
+  this.bus.emit(Bus.events.ASYNC_DEPENDENCY_READY);
+}
+
+DropinIntegration.prototype = create(BaseIntegration.prototype, {
+  constructor: DropinIntegration
+});
+
+module.exports = DropinIntegration;
+
+},{"152":152,"157":157,"164":164,"168":168,"169":169,"179":179,"196":196,"96":96}],173:[function(require,module,exports){
+'use strict';
+
+module.exports = {
+  custom: require(171),
+  dropin: require(172),
+  paypal: require(174),
+  coinbase: require(170)
+};
+
+},{"170":170,"171":171,"172":172,"174":174}],174:[function(require,module,exports){
+'use strict';
+
+var create = require(157);
+var paypal = require(210);
+var bind = require(96);
+var isFunction = require(152);
+var constants = require(168);
+var Bus = require(164);
+var convertToLegacyShippingAddress = require(167).convertToLegacyShippingAddress;
+var BaseIntegration = require(169);
+
+function _getLegacyCallback(options) {
+  if ('onSuccess' in options && isFunction(options.onSuccess)) {
+    return options.onSuccess;
+  } else if ('paypal' in options && isFunction(options.paypal.onSuccess)) {
+    return options.paypal.onSuccess;
+  }
+
+  return null;
+}
+
+function _hasRootCallback(options) {
+  return isFunction(options[constants.ROOT_SUCCESS_CALLBACK]);
+}
+
+function PayPalIntegration() {
+  var merchantConfiguration, legacyCallback, hasRootCallback;
+
+  BaseIntegration.apply(this, arguments);
+
+  merchantConfiguration = this.configuration.merchantConfiguration;
+  legacyCallback = _getLegacyCallback(merchantConfiguration);
+  hasRootCallback = _hasRootCallback(merchantConfiguration);
+
+  if (legacyCallback || hasRootCallback) {
+    merchantConfiguration.onSuccess = bind(function (payload) {
+      if (legacyCallback) {
+        legacyCallback(
+          payload.nonce,
+          payload.details.email,
+          convertToLegacyShippingAddress(payload.details.shippingAddress)
+        );
+      }
+
+      this.bus.emit(Bus.events.PAYMENT_METHOD_RECEIVED, payload); // eslint-disable-line no-invalid-this
+    }, this);
+  }
+
+  this.paypalIntegration = paypal.create(this.configuration.gatewayConfiguration, merchantConfiguration, this.configuration.channel);
+
+  this.destructor.registerFunctionForTeardown(bind(function () {
+    this.paypalIntegration.teardown(); // eslint-disable-line no-invalid-this
+  }, this));
+
+  this.bus.emit(Bus.events.ASYNC_DEPENDENCY_READY);
+}
+
+PayPalIntegration.prototype = create(BaseIntegration.prototype, {
+  constructor: PayPalIntegration
+});
+
+PayPalIntegration.prototype._onIntegrationReady = function () {
+  var self = this;
+  var returnedInstance = {};
+
+  if (this.paypalIntegration) {
+    returnedInstance.paypal = {
+      initAuthFlow: this._wrapWithTeardownReply('initAuthFlow', function () {
+        self.bus.emit(Bus.events.SEND_ANALYTICS_EVENTS, 'paypal.auth.init');
+        self.paypalIntegration.initAuthFlow();
+      }),
+      closeAuthFlow: this._wrapWithTeardownReply('closeAuthFlow', function () {
+        self.bus.emit(Bus.events.SEND_ANALYTICS_EVENTS, 'paypal.auth.close');
+        self.paypalIntegration.closeAuthFlow();
+      })
+    };
+  }
+
+  BaseIntegration.prototype._onIntegrationReady.call(this, returnedInstance);
+};
+
+module.exports = PayPalIntegration;
+
+},{"152":152,"157":157,"164":164,"167":167,"168":168,"169":169,"210":210,"96":96}],175:[function(require,module,exports){
+'use strict';
+
+module.exports = function fallbackError(error) {
+  if (error.type === 'CONFIGURATION' || error.type === 'IMMEDIATE') {
+    throw new Error(error.message);
+  } else {
+    try {
+      if (navigator.userAgent.indexOf('MSIE') === -1) {
+        console.error(error); // eslint-disable-line no-console
+      } else {
+        console.error(JSON.stringify(error, null, 2)); // eslint-disable-line no-console
+      }
+    } catch (e) { /* ignored */ }
+  }
+};
+
+},{}],176:[function(require,module,exports){
+'use strict';
+
+var Bus = require(164);
+var hostedFields = require(204);
+
+var ANALYTICS_STRING = 'web.custom.hosted-fields.via.';
+var INPUT_NAME = 'payment_method_nonce';
+
+function NonceManager(configuration) {
+  this.paymentMethod = null;
+  this.nonceInputElement = null;
+
+  this.bus = new Bus({channel: configuration.channel});
+  this.formNapper = configuration.formNapper;
+  this.rootCallback = configuration.rootCallback;
+
+  this._attachEvents();
+}
+
+NonceManager.prototype._clearNonce = function () {
+  this.paymentMethod = null;
+  this.nonceInputElement = this.formNapper.inject(INPUT_NAME, '');
+};
+
+NonceManager.prototype._attachEvents = function () {
+  var self = this;
+
+  this.bus.on(Bus.events.PAYMENT_METHOD_CANCELLED, function () {
+    self._clearNonce();
+  });
+
+  this.bus.on(Bus.events.PAYMENT_METHOD_GENERATED, function (payload) {
+    self.paymentMethod = payload;
+    self.nonceInputElement = self.formNapper.inject(INPUT_NAME, self.paymentMethod.nonce);
+  });
+};
+
+NonceManager.prototype.handleSubmitRequest = function () {
+  var self = this;
+
+  this.bus.emit(hostedFields.events.TOKENIZATION_REQUEST, function (args) {
+    var err = args[0];
+    var payload = args[1];
+
+    if (err) {
+      self.bus.emit(Bus.events.ERROR, err);
+      return;
+    }
+
+    self.paymentMethod = payload || self.paymentMethod;
+
+    if (self.paymentMethod == null) {
+      self.bus.emit(hostedFields.events.VALIDATE_STRICT);
+      self.bus.emit(Bus.events.ERROR, {
+        type: 'VALIDATION',
+        message: 'User did not enter a payment method'
+      });
+      return;
+    }
+
+    if (self.rootCallback) {
+      self.bus.emit(Bus.events.SEND_ANALYTICS_EVENTS, ANALYTICS_STRING + 'callback.success', function () {
+        self.rootCallback(self.paymentMethod);
+      });
+    } else {
+      self.bus.emit(Bus.events.SEND_ANALYTICS_EVENTS, ANALYTICS_STRING + 'formsubmit.success', function () {
+        self.nonceInputElement = self.formNapper.inject(INPUT_NAME, self.paymentMethod.nonce);
+        self.formNapper.submit();
+      });
+    }
+  });
+};
+
+NonceManager.prototype.teardown = function () {
+  this._clearNonce();
+};
+
+module.exports = NonceManager;
+
+},{"164":164,"204":204}],177:[function(require,module,exports){
+'use strict';
+
+var isFunction = require(152);
+
+function noop() {}
+
+module.exports = function lookupCallbackFor(model) {
+  return function (callbackName, fallbackCallback) {
+    if (isFunction(model[callbackName])) {
+      return model[callbackName];
+    } else if (isFunction(fallbackCallback)) {
+      return fallbackCallback;
+    }
+
+    return noop;
+  };
+};
+
+},{"152":152}],178:[function(require,module,exports){
+'use strict';
+
+function isJQueryElement(element) {
+  return typeof element === 'object' && 'jquery' in element && element.length !== 0;
+}
+
+function isHTMLElement(element) {
+  return element && element.nodeType === 1;
+}
+
+module.exports = {
+  isJQueryElement: isJQueryElement,
+  isHTMLElement: isHTMLElement
+};
+
+},{}],179:[function(require,module,exports){
+'use strict';
+
+module.exports = function sanitizePayload(payload) {
+  return {
+    nonce: payload.nonce,
+    details: payload.details,
+    type: payload.type
+  };
+};
+
+},{}],180:[function(require,module,exports){
+'use strict';
+
+var Coinbase = require(183);
+
+function create(options) {
+  var result = new Coinbase(options);
+
+  return result.canCreateIntegration ? result : null;
+}
+
+module.exports = {create: create};
+
+},{"183":183}],181:[function(require,module,exports){
+(function (global){
+'use strict';
+
+function iOSSafariVersion(userAgent) {
+  userAgent = userAgent || global.navigator.userAgent;
+  if (!/AppleWebKit\//.test(userAgent)) {
+    return null;
+  }
+  if (!/Mobile\//.test(userAgent)) {
+    return null;
+  }
+
+  return userAgent.replace(/.* OS ([0-9_]+) like Mac OS X.*/, '$1').replace(/_/g, '.');
+}
+
+function ieVersion(UA) {
+  var userAgent = UA || global.navigator.userAgent;
+  var result = null;
+  var match = /MSIE.(\d+)/.exec(userAgent);
+
+  if (/Trident/.test(userAgent)) {
+    result = 11;
+  }
+
+  if (match) {
+    result = parseInt(match[1], 10);
   }
 
   return result;
 }
 
-function isIE() {
-  return /MSIE|Trident/.test(global.navigator.userAgent) ? getIEVersion() : null;
+function androidVersion(UA) {
+  UA = UA || global.navigator.userAgent;
+  if (!/Android/.test(UA)) { return null; }
+
+  return UA.replace(/^.* Android ([0-9\.]+).*$/, '$1');
 }
 
 module.exports = {
-  isMetroBrowser: isMetroBrowser,
-  isIE: isIE
+  ieVersion: ieVersion,
+  iOSSafariVersion: iOSSafariVersion,
+  androidVersion: androidVersion
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],47:[function(require,module,exports){
+},{}],182:[function(require,module,exports){
 'use strict';
 
-var bus = require('braintree-bus');
+var busEvents = require(164).events;
 
-function tokenize(err, payload, apiClient) {
+function tokenize(err, payload, coinbase) {
   if (err) {
     // TODO: make payload in line with onError()
-    bus.emit(bus.events.ERROR, err.error);
-    apiClient.sendAnalyticsEvents('coinbase.web.error');
+    coinbase.bus.emit(busEvents.ERROR, err.error);
+    coinbase.bus.emit(busEvents.SEND_ANALYTICS_EVENTS, 'coinbase.generate.nonce.failed');
     return;
   }
 
-  bus.emit(bus.events.PAYMENT_METHOD_GENERATED, payload);
-  apiClient.sendAnalyticsEvents('coinbase.web.success');
+  coinbase.bus.emit(busEvents.PAYMENT_METHOD_GENERATED, payload);
+  coinbase.bus.emit(busEvents.SEND_ANALYTICS_EVENTS, 'coinbase.generate.nonce.succeeded');
 }
 
-module.exports = { tokenize: tokenize };
+module.exports = {tokenize: tokenize};
 
-},{"braintree-bus":56}],48:[function(require,module,exports){
+},{"164":164}],183:[function(require,module,exports){
 (function (global){
 'use strict';
 
-var utils = require('braintree-utilities');
-var DOMComposer = require('./dom/composer');
-var urlComposer = require('./url-composer');
-var callbacks = require('./callbacks');
-var constants = require('./constants');
-var bus = require('braintree-bus');
-var detector = require('./detector');
-
-function noop () {}
+var bind = require(96);
+var utils = require(82);
+var Destructor = require(86);
+var DOMComposer = require(187);
+var urlComposer = require(190);
+var callbacks = require(182);
+var constants = require(184);
+var detector = require(185);
+var Bus = require(164);
 
 function _getPopupParams(options) {
   return {
@@ -5243,52 +10255,123 @@ function _getPopupParams(options) {
     redirectUrl: options.configuration.coinbase.redirectUrl,
     scopes: options.configuration.coinbase.scopes || constants.SCOPES,
     meta: {
-      authorizations_merchant_account: options.configuration.coinbase.merchantAccount || ''
+      authorizations_merchant_account: options.configuration.coinbase.merchantAccount || '' // eslint-disable-line camelcase
     }
   };
 }
 
+function _error(bus) {
+  return function (message, type) {
+    bus.emit(Bus.events.ERROR, {type: type, message: message});
+  };
+}
+
+function _optionsAreValid(options, bus) {
+  var cbOptions = (options || {}).coinbase;
+  var busError = _error(bus);
+
+  if (options.apiClient == null) {
+    busError('settings.apiClient is required for coinbase', constants.CONFIGURATION_ERROR);
+  } else if (!options.configuration.coinbaseEnabled) {
+    busError('Coinbase is not enabled for your merchant account', constants.CONFIGURATION_ERROR);
+  } else if (!cbOptions || !cbOptions.container && !cbOptions.button) {
+    busError('Either options.coinbase.container or options.coinbase.button is required for Coinbase integrations', constants.CONFIGURATION_ERROR);
+  } else if (cbOptions.container && cbOptions.button) {
+    busError('options.coinbase.container and options.coinbase.button are mutually exclusive', constants.CONFIGURATION_ERROR);
+  } else if (!detector.isSupportedBrowser()) {
+    busError('Coinbase is not supported by your browser. Please consider upgrading', constants.UNSUPPORTED_BROWSER_ERROR);
+  } else {
+    return true;
+  }
+
+  return false;
+}
+
 function Coinbase(options) {
-  var context;
+  var context, busOptions;
+  var self = this;
+
+  this.destructor = new Destructor();
+
+  this.channel = options.channel;
+
+  busOptions = {channel: this.channel};
+
+  try {
+    if (options.coinbase.container) {
+      busOptions.merchantUrl = global.location.href;
+    }
+  } catch (e) { /* ignored */ }
+
+  this.bus = options.bus || new Bus(busOptions);
+
+  this.canCreateIntegration = _optionsAreValid(options, this.bus);
+  if (!this.canCreateIntegration) {
+    return;
+  }
 
   this.buttonId = options.coinbase.button || constants.BUTTON_ID;
   this.apiClient = options.apiClient;
   this.assetsUrl = options.configuration.assetsUrl;
-  this._onOAuthSuccess = utils.bind(this._onOAuthSuccess, this);
-  this._handleButtonClick = utils.bind(this._handleButtonClick, this);
+  this.environment = options.configuration.coinbase.environment;
+  this._onOAuthSuccess = bind(this._onOAuthSuccess, this);
+  this._handleButtonClick = bind(this._handleButtonClick, this);
   this.popupParams = _getPopupParams(options);
   this.redirectDoneInterval = null;
-
-  context = document.body;
-
-  global.braintreeCoinbaseRedirectCallback = this._onOAuthSuccess;
 
   if (options.coinbase.container) {
     context = utils.normalizeElement(options.coinbase.container);
     this._insertFrame(context);
   } else {
-    utils.addEventListener(context, 'click', this._handleButtonClick);
-  }
+    global.braintreeCoinbasePopupCallback = this._onOAuthSuccess;
 
-  this._sendAnalyticsEvents('coinbase.web.initialized');
+    context = document.body;
+    utils.addEventListener(context, 'click', this._handleButtonClick);
+
+    this.bus.emit(Bus.events.SEND_ANALYTICS_EVENTS, 'coinbase.initialized');
+
+    this.destructor.registerFunctionForTeardown(function () {
+      self._closePopup();
+    });
+
+    this.bus.on(constants.TEARDOWN_EVENT, bind(this.destructor.teardown, this.destructor));
+  }
 }
 
-Coinbase.prototype._sendAnalyticsEvents = function (eventName) {
-  this.apiClient.sendAnalyticsEvents(eventName);
-};
-
 Coinbase.prototype._insertFrame = function (container) {
-  var frame = DOMComposer.createFrame({ src: this.assetsUrl +'/coinbase/' + constants.VERSION + '/coinbase-frame.html' });
+  var self = this;
+  var frame = DOMComposer.createFrame({channel: this.channel});
+
+  this.bus.emit(Bus.events.ASYNC_DEPENDENCY_INITIALIZING);
+
   container.appendChild(frame);
+  this.destructor.registerFunctionForTeardown(function () {
+    container.removeChild(frame);
+  });
+
+  // Delayed to make sure browser caches are busted.
+  setTimeout(function () {
+    frame.src = self.assetsUrl + '/coinbase/' + constants.VERSION + '/coinbase-frame.html#' + self.channel;
+  }, 0);
 };
 
 Coinbase.prototype._onOAuthSuccess = function (data) {
-  bus.emit('coinbase:view:navigate', 'loading');
-  this._clearPollForRedirectDone();
+  var self = this;
 
-  this.apiClient.tokenizeCoinbase({ code: data.code, query: urlComposer.getQueryString() }, utils.bind(function (err, payload) {
-    callbacks.tokenize.apply(null, [err, payload, this.apiClient]);
-  }, this));
+  if (!data.code) {
+    this.bus.emit(Bus.events.SEND_ANALYTICS_EVENTS, 'coinbase.popup.denied');
+    this._closePopup();
+    return;
+  }
+
+  this.bus.emit('coinbase:view:navigate', 'loading');
+  this.bus.emit(Bus.events.SEND_ANALYTICS_EVENTS, 'coinbase.popup.authorized');
+
+  this.apiClient.tokenizeCoinbase({code: data.code, query: urlComposer.getQueryString()}, function (err, payload) {
+    callbacks.tokenize.apply(null, [err, payload, self]);
+  });
+
+  this._closePopup();
 };
 
 Coinbase.prototype._clearPollForRedirectDone = function () {
@@ -5298,46 +10381,84 @@ Coinbase.prototype._clearPollForRedirectDone = function () {
   }
 };
 
+Coinbase.prototype._closePopup = function (popup) {
+  popup = popup || this.popup;
+
+  if (popup == null) { return; }
+
+  if (detector.shouldCloseFromParent()) {
+    popup.close();
+  }
+
+  this._popupCleanup();
+};
+
+Coinbase.prototype._popupCleanup = function () {
+  this._clearPollForRedirectDone();
+  this.bus.emit(Bus.events.UI_POPUP_DID_CLOSE, {source: constants.INTEGRATION_NAME});
+};
+
 Coinbase.prototype._pollForRedirectDone = function (popup) {
-  this.redirectDoneInterval = setInterval(utils.bind(function () {
+  var self = this;
+  var interval = setInterval(function () {
     var code;
 
     if (popup == null || popup.closed) {
-      this._clearPollForRedirectDone();
+      self.bus.emit(Bus.events.SEND_ANALYTICS_EVENTS, 'coinbase.popup.aborted');
+      self._popupCleanup();
       return;
     }
 
     try {
+      if (popup.location.href === 'about:blank') { throw new Error('Not finished loading'); }
       code = utils.decodeQueryString(popup.location.search.replace(/^\?/, '')).code;
     } catch (e) {
       return;
     }
 
-    if (code) {
-      this._onOAuthSuccess({ code: code });
-      popup.close();
-    }
-  }, this), 100);
+    self._onOAuthSuccess({code: code});
+  }, 100);
+
+  this.redirectDoneInterval = interval;
+  return interval;
 };
 
 Coinbase.prototype._openPopup = function () {
   var popup;
 
-  this._sendAnalyticsEvents('coinbase.web.start.popup');
-  popup = DOMComposer.createPopup(urlComposer.compose(this.popupParams));
-  global.popup = popup;
+  this.bus.emit(Bus.events.SEND_ANALYTICS_EVENTS, 'coinbase.popup.started');
+
+  popup = DOMComposer.createPopup(urlComposer.compose(this._getOAuthBaseUrl(), this.popupParams));
   popup.focus();
 
-  if (detector.shouldPoll()) {
-    this._pollForRedirectDone(popup);
-    global.braintreeCoinbaseRedirectCallback = noop;
+  this._pollForRedirectDone(popup);
+
+  this.bus.emit(Bus.events.UI_POPUP_DID_OPEN, {source: constants.INTEGRATION_NAME});
+  this.bus.on(Bus.events.UI_POPUP_FORCE_CLOSE, function (payload) {
+    if (payload.target === constants.INTEGRATION_NAME) {
+      popup.close();
+    }
+  });
+
+  this.popup = popup;
+};
+
+Coinbase.prototype._getOAuthBaseUrl = function () {
+  var baseUrl;
+
+  if (this.environment === 'shared_sandbox') {
+    baseUrl = constants.SANDBOX_OAUTH_BASE_URL;
+  } else {
+    baseUrl = constants.PRODUCTION_OAUTH_BASE_URL;
   }
+
+  return baseUrl;
 };
 
 Coinbase.prototype._handleButtonClick = function (event) {
   var target = event.target || event.srcElement;
 
-  while (true) {
+  while (true) { // eslint-disable-line
     if (target == null) { return; }
     if (target === event.currentTarget) { return; }
     if (target.id === this.buttonId) { break; }
@@ -5354,42 +10475,84 @@ Coinbase.prototype._handleButtonClick = function (event) {
   this._openPopup();
 };
 
+Coinbase.prototype.teardown = function (done) {
+  var self = this;
+
+  if (!this.canCreateIntegration) {
+    done(null);
+    return;
+  }
+
+  this.bus.emit(constants.TEARDOWN_EVENT, function () {
+    self.destructor.teardown(function (err) {
+      if (err) { return done(err); }
+
+      self.bus.teardown();
+      done(null);
+    });
+  });
+};
+
 module.exports = Coinbase;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./callbacks":47,"./constants":49,"./detector":50,"./dom/composer":52,"./url-composer":55,"braintree-bus":56,"braintree-utilities":64}],49:[function(require,module,exports){
+},{"164":164,"182":182,"184":184,"185":185,"187":187,"190":190,"82":82,"86":86,"96":96}],184:[function(require,module,exports){
 'use strict';
 
 module.exports = {
-  BASE_URL: 'https://coinbase.com',
+  PRODUCTION_OAUTH_BASE_URL: 'https://coinbase.com',
+  SANDBOX_OAUTH_BASE_URL: 'https://sandbox.coinbase.com',
   ORIGIN_URL: 'https://www.coinbase.com',
   FRAME_NAME: 'braintree-coinbase-frame',
   POPUP_NAME: 'coinbase',
   BUTTON_ID: 'bt-coinbase-button',
   SCOPES: 'send',
-  VERSION: "0.0.2"
+  VERSION: "2.15.2",
+  INTEGRATION_NAME: 'Coinbase',
+  CONFIGURATION_ERROR: 'CONFIGURATION',
+  UNSUPPORTED_BROWSER_ERROR: 'UNSUPPORTED_BROWSER',
+  TEARDOWN_EVENT: 'coinbase:TEARDOWN'
 };
 
-},{}],50:[function(require,module,exports){
+},{}],185:[function(require,module,exports){
 'use strict';
 
-var browser = require('./browser');
+var browser = require(181);
 
-function shouldPoll() {
-  var ie = browser.isIE();
-  return ie && ie.version > 9;
+function isSupportedBrowser() {
+  var version = browser.ieVersion();
+
+  return !version || version > 8;
+}
+
+function shouldDisplayLollipopClose() {
+  var version = browser.androidVersion();
+
+  if (version == null) { return false; }
+
+  return /^5/.test(version);
 }
 
 function shouldCloseFromParent() {
-  return browser.isIE() && browser.isMetroBrowser();
+  return !(shouldDisplayLollipopClose() || shouldDisplayIOSClose());
+}
+
+function shouldDisplayIOSClose() {
+  var version = browser.iOSSafariVersion();
+
+  if (version == null) { return false; }
+
+  return /^8\.0/.test(version) || /^8\.1$/.test(version);
 }
 
 module.exports = {
-  shouldPoll: shouldPoll,
-  shouldCloseFromParent: shouldCloseFromParent
+  isSupportedBrowser: isSupportedBrowser,
+  shouldCloseFromParent: shouldCloseFromParent,
+  shouldDisplayIOSClose: shouldDisplayIOSClose,
+  shouldDisplayLollipopClose: shouldDisplayLollipopClose
 };
 
-},{"./browser":46}],51:[function(require,module,exports){
+},{"181":181}],186:[function(require,module,exports){
 'use strict';
 
 function createButton(config) {
@@ -5408,14 +10571,14 @@ function createButton(config) {
   return button;
 }
 
-module.exports = { create: createButton };
+module.exports = {create: createButton};
 
-},{}],52:[function(require,module,exports){
+},{}],187:[function(require,module,exports){
 'use strict';
 
-var popup = require('./popup');
-var button = require('./button');
-var frame = require('./frame');
+var popup = require(189);
+var button = require(186);
+var frame = require(188);
 
 module.exports = {
   createButton: button.create,
@@ -5423,39 +10586,39 @@ module.exports = {
   createFrame: frame.create
 };
 
-},{"./button":51,"./frame":53,"./popup":54}],53:[function(require,module,exports){
+},{"186":186,"188":188,"189":189}],188:[function(require,module,exports){
 'use strict';
 
-var constants = require('../constants');
+var constants = require(184);
+var iframer = require(91);
 
-function createFrame(config) {
-  var iframe = document.createElement('iframe');
-  iframe.src = config.src;
-  iframe.id = constants.FRAME_NAME;
-  iframe.name = constants.FRAME_NAME;
-  iframe.allowTransparency = true;
-  iframe.height = '70px';
-  iframe.width = '100%';
-  iframe.frameBorder = 0;
-  iframe.style.padding = 0;
-  iframe.style.margin = 0;
-  iframe.style.border = 0;
-  iframe.style.outline = 'none';
-  return iframe;
+function createFrame() {
+  return iframer({
+    name: constants.FRAME_NAME,
+    height: '70px',
+    width: '100%',
+    style: {
+      padding: 0,
+      margin: 0,
+      border: 0,
+      outline: 'none'
+    }
+  });
 }
 
-module.exports = { create: createFrame };
+module.exports = {create: createFrame};
 
-},{"../constants":49}],54:[function(require,module,exports){
+},{"184":184,"91":91}],189:[function(require,module,exports){
 (function (global){
 'use strict';
 
-var constants = require('../constants');
+var constants = require(184);
 
 function _stringifyParams(payload) {
+  var param;
   var params = [];
 
-  for (var param in payload) {
+  for (param in payload) {
     if (payload.hasOwnProperty(param)) {
       params.push([param, payload[param]].join('='));
     }
@@ -5465,8 +10628,8 @@ function _stringifyParams(payload) {
 }
 
 function _getParams() {
-  var baseWidth = 850;
-  var baseHeight = 600;
+  var baseWidth = 580;
+  var baseHeight = 810;
 
   return _stringifyParams({
     width: baseWidth,
@@ -5480,20 +10643,21 @@ function createPopup(url) {
   return global.open(url, constants.POPUP_NAME, _getParams());
 }
 
-module.exports = { create: createPopup };
+module.exports = {create: createPopup};
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../constants":49}],55:[function(require,module,exports){
+},{"184":184}],190:[function(require,module,exports){
 'use strict';
 
-var constants = require('./constants');
+var constants = require(184);
 
 function getQueryString() {
   return 'version=' + constants.VERSION;
 }
 
-function compose(params) {
-  var url = constants.BASE_URL + '/oauth/authorize?response_type=code';
+function compose(baseUrl, params) {
+  var key;
+  var url = baseUrl + '/oauth/authorize?response_type=code';
   var redirectUri = params.redirectUrl + '?' + getQueryString();
 
   url += '&redirect_uri=' + encodeURIComponent(redirectUri);
@@ -5504,7 +10668,7 @@ function compose(params) {
   }
 
   if (params.meta) {
-    for (var key in params.meta) {
+    for (key in params.meta) {
       if (params.meta.hasOwnProperty(key)) {
         url += '&meta[' + encodeURIComponent(key) + ']=' + encodeURIComponent(params.meta[key]);
       }
@@ -5519,374 +10683,52 @@ module.exports = {
   getQueryString: getQueryString
 };
 
-},{"./constants":49}],56:[function(require,module,exports){
-arguments[4][42][0].apply(exports,arguments)
-},{"./lib/events":57,"dup":42,"framebus":58}],57:[function(require,module,exports){
-arguments[4][43][0].apply(exports,arguments)
-},{"dup":43}],58:[function(require,module,exports){
-arguments[4][44][0].apply(exports,arguments)
-},{"dup":44}],59:[function(require,module,exports){
-arguments[4][15][0].apply(exports,arguments)
-},{"dup":15}],60:[function(require,module,exports){
-arguments[4][16][0].apply(exports,arguments)
-},{"dup":16}],61:[function(require,module,exports){
-arguments[4][17][0].apply(exports,arguments)
-},{"dup":17}],62:[function(require,module,exports){
-arguments[4][39][0].apply(exports,arguments)
-},{"dup":39}],63:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],64:[function(require,module,exports){
-arguments[4][41][0].apply(exports,arguments)
-},{"./lib/dom":59,"./lib/events":60,"./lib/fn":61,"./lib/string":62,"./lib/url":63,"dup":41}],65:[function(require,module,exports){
+},{"184":184}],191:[function(require,module,exports){
+'use strict';
+
+var RPC_METHOD_NAMES = ['getCreditCards', 'unlockCreditCard', 'sendAnalyticsEvents'];
+
+function APIProxyServer(apiClient) {
+  this.apiClient = apiClient;
+}
+
+APIProxyServer.prototype.attach = function (rpcServer) {
+  var self = this;
+  var i = 0;
+  var len = RPC_METHOD_NAMES.length;
+
+  function attachDefine(name) {
+    rpcServer.define(name, function () {
+      self.apiClient[name].apply(self.apiClient, arguments);
+    });
+  }
+
+  for (i; i < len; i++) {
+    attachDefine(RPC_METHOD_NAMES[i]);
+  }
+};
+
+module.exports = APIProxyServer;
+
+},{}],192:[function(require,module,exports){
 (function (global){
 'use strict';
 
-var braintreeUtils = require('braintree-utilities');
-var braintree3ds = require('braintree-3ds');
-var parseClientToken = require('./parse-client-token');
-var JSONPDriver = require('./jsonp-driver');
-var util = require('./util');
-var SEPAMandate = require('./sepa-mandate');
-var SEPABankAccount = require('./sepa-bank-account');
-var CreditCard = require('./credit-card');
-var CoinbaseAccount = require('./coinbase-account');
-var rootData = require('./root-data');
-var normalizeCreditCardFields = require('./normalize-api-fields').normalizeCreditCardFields;
-
-function deserialize(response, mapper) {
-  if (response.status >= 400) {
-    return [response, null];
-  } else {
-    return [null, mapper(response)];
-  }
-}
-
-function Client(options) {
-  var parsedClientToken;
-
-  this.attrs = {};
-
-  if (options.hasOwnProperty('sharedCustomerIdentifier')) {
-    this.attrs.sharedCustomerIdentifier = options.sharedCustomerIdentifier;
-  }
-
-  parsedClientToken = parseClientToken(options.clientToken);
-
-  this.driver = options.driver || JSONPDriver;
-  this.authUrl = parsedClientToken.authUrl;
-  this.analyticsUrl = parsedClientToken.analytics ? parsedClientToken.analytics.url : undefined;
-  this.clientApiUrl = parsedClientToken.clientApiUrl;
-  this.customerId = options.customerId;
-  this.challenges = parsedClientToken.challenges;
-  this.integration = options.integration || '';
-
-  var secure3d = braintree3ds.create(this, {
-    container: options.container,
-    clientToken: parsedClientToken
-  });
-  this.verify3DS = braintreeUtils.bind(secure3d.verify, secure3d);
-
-  this.attrs.authorizationFingerprint = parsedClientToken.authorizationFingerprint;
-  this.attrs.sharedCustomerIdentifierType = options.sharedCustomerIdentifierType;
-
-  if (parsedClientToken.merchantAccountId) {
-    this.attrs.merchantAccountId = parsedClientToken.merchantAccountId;
-  }
-
-  this.timeoutWatchers = [];
-  if (options.hasOwnProperty('timeout')) {
-    this.requestTimeout = options.timeout;
-  } else {
-    this.requestTimeout = 60000;
-  }
-}
-
-function noop () {}
-
-function mergeOptions(obj1, obj2) {
-  var obj3 = {};
-  var attrname;
-  for (attrname in obj1) {
-    if (obj1.hasOwnProperty(attrname)) {
-      obj3[attrname] = obj1[attrname];
-    }
-  }
-  for (attrname in obj2) {
-    if (obj2.hasOwnProperty(attrname)) {
-      obj3[attrname] = obj2[attrname];
-    }
-  }
-  return obj3;
-}
-
-Client.prototype.requestWithTimeout = function (url, attrs, deserializer, method, callback) {
-  callback = callback || noop;
-
-  var uniqueName, version;
-  var client = this;
-
-  rootData.get(function (payload) {
-    version = 'braintree/web/' + payload.sdkVersion;
-
-    attrs.braintreeLibraryVersion = version;
-
-    if (attrs.hasOwnProperty('analytics') && attrs.hasOwnProperty('_meta')) {
-      attrs._meta.sdkVersion = version;
-      attrs._meta.merchantAppId = payload.merchantAppId;
-    }
-
-    uniqueName = method(url, attrs, function (data, uniqueName) {
-      if (client.timeoutWatchers[uniqueName]) {
-        clearTimeout(client.timeoutWatchers[uniqueName]);
-        var args = deserialize(data, function (d) { return deserializer(d);});
-        callback.apply(null, args);
-      }
-    });
-
-    if (client.requestTimeout > 0) {
-      this.timeoutWatchers[uniqueName] = setTimeout(function () {
-        client.timeoutWatchers[uniqueName] = null;
-        callback.apply(null, [{'errors': 'Unknown error'}, null]);
-      }, client.requestTimeout);
-    } else {
-      callback.apply(null, [{'errors': 'Unknown error'}, null]);
-    }
-  }, this);
-};
-
-Client.prototype.post = function (url, attrs, deserializer, callback) {
-  this.requestWithTimeout(url, attrs, deserializer, this.driver.post, callback);
-};
-
-Client.prototype.get = function (url, attrs, deserializer, callback) {
-  this.requestWithTimeout(url, attrs, deserializer, this.driver.get, callback);
-};
-
-Client.prototype.put = function (url, attrs, deserializer, callback) {
-  this.requestWithTimeout(url, attrs, deserializer, this.driver.put, callback);
-};
-
-Client.prototype.getCreditCards = function (callback) {
-  this.get(
-    util.joinUrlFragments([this.clientApiUrl, 'v1', 'payment_methods']),
-    this.attrs,
-    function (d) {
-      var i = 0;
-      var len = d.paymentMethods.length;
-      var creditCards = [];
-
-      for (i; i < len; i++) {
-        creditCards.push(new CreditCard(d.paymentMethods[i]));
-      }
-
-      return creditCards;
-    },
-    callback
-  );
-};
-
-Client.prototype.tokenizeCoinbase = function (attrs, callback) {
-  attrs.options = { validate: false };
-  this.addCoinbase(attrs, function (err, result) {
-    if (err) {
-      callback(err, null);
-    } else if (result && result.nonce) {
-      callback(err, result);
-    } else {
-      callback('Unable to tokenize coinbase account.', null);
-    }
-  });
-};
-
-Client.prototype.tokenizeCard = function (attrs, callback) {
-  attrs.options = { validate: false };
-  this.addCreditCard(attrs, function (err, result) {
-    if (result && result.nonce) {
-      callback(err, result.nonce, {type: result.type});
-    } else {
-      callback('Unable to tokenize card.', null);
-    }
-  });
-};
-
-Client.prototype.lookup3DS = function (attrs, callback) {
-  var url = util.joinUrlFragments([this.clientApiUrl, 'v1/payment_methods', attrs.nonce, 'three_d_secure/lookup']);
-  var mergedAttrs = mergeOptions(this.attrs, {amount: attrs.amount});
-  this.post(url, mergedAttrs, function (d) {
-      return d;
-    },
-    callback
-  );
-};
-
-Client.prototype.addSEPAMandate = function (attrs, callback) {
-  var mergedAttrs = mergeOptions(this.attrs, {sepaMandate: attrs});
-  this.post(
-    util.joinUrlFragments([this.clientApiUrl, 'v1', 'sepa_mandates.json']),
-    mergedAttrs,
-    function (d) { return new SEPAMandate(d.sepaMandates[0]); },
-    callback
-  );
-};
-
-Client.prototype.acceptSEPAMandate = function (mandateReferenceNumber, callback) {
-  this.put(
-    util.joinUrlFragments([this.clientApiUrl, 'v1', 'sepa_mandates', mandateReferenceNumber, 'accept']),
-    this.attrs,
-    function (d) { return new SEPABankAccount(d.sepaBankAccounts[0]); },
-    callback
-  );
-};
-
-Client.prototype.getSEPAMandate = function (mandateIdentifier, callback) {
-  var mergedAttrs;
-  if (mandateIdentifier.paymentMethodToken) {
-    mergedAttrs = mergeOptions(this.attrs, {paymentMethodToken: mandateIdentifier.paymentMethodToken});
-  } else {
-    mergedAttrs = this.attrs;
-  }
-  this.get(
-    util.joinUrlFragments([this.clientApiUrl, 'v1', 'sepa_mandates', mandateIdentifier.mandateReferenceNumber || '']),
-    mergedAttrs,
-    function (d) { return new SEPAMandate(d.sepaMandates[0]); },
-    callback
-  );
-};
-
-Client.prototype.addCoinbase = function (attrs, callback) {
-  var mergedAttrs;
-  delete attrs.share;
-
-  mergedAttrs = mergeOptions(this.attrs, {
-    coinbaseAccount: attrs,
-    _meta: {
-      integration: this.integration || 'custom',
-      source: 'coinbase'
-    }
-  });
-
-  this.post(
-    util.joinUrlFragments([this.clientApiUrl, 'v1', 'payment_methods/coinbase_accounts']),
-    mergedAttrs,
-    function (d) {
-      return new CoinbaseAccount(d.coinbaseAccounts[0]);
-    },
-    callback
-  );
-};
-
-Client.prototype.addCreditCard = function (attrs, callback) {
-  var mergedAttrs;
-  var share = attrs.share;
-  delete attrs.share;
-
-  var creditCard = normalizeCreditCardFields(attrs);
-
-  mergedAttrs = mergeOptions(this.attrs, {
-    share: share,
-    creditCard: creditCard,
-    _meta: {
-      integration: this.integration || 'custom',
-      source: 'form'
-    }
-  });
-
-  this.post(
-    util.joinUrlFragments([this.clientApiUrl, 'v1', 'payment_methods/credit_cards']),
-    mergedAttrs,
-    function (d) {
-      return new CreditCard(d.creditCards[0]);
-    },
-    callback
-  );
-};
-
-Client.prototype.unlockCreditCard = function (creditCard, params, callback) {
-  var attrs = mergeOptions(this.attrs, {challengeResponses: params});
-  this.put(
-    util.joinUrlFragments([this.clientApiUrl, 'v1', 'payment_methods/', creditCard.nonce]),
-    attrs,
-    function (d) { return new CreditCard(d.paymentMethods[0]); },
-    callback
-  );
-};
-
-Client.prototype.sendAnalyticsEvents = function (events, callback) {
-  var attrs;
-  var url = this.analyticsUrl;
-  var eventObjects = [];
-  events = util.isArray(events) ? events : [events];
-
-  if (!url) {
-    if (callback) {
-      callback.apply(null, [null, {}]);
-    }
-    return;
-  }
-
-  for (var event in events) {
-    if (events.hasOwnProperty(event)) {
-      eventObjects.push({ kind: events[event] });
-    }
-  }
-
-  attrs = mergeOptions(this.attrs, {
-    analytics: eventObjects,
-    _meta: {
-      platform: 'web',
-      platformVersion: global.navigator.userAgent,
-      integrationType: this.integration
-    }
-  });
-
-  this.post(url, attrs, function (d) { return d; }, callback);
-};
-
-module.exports = Client;
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./coinbase-account":66,"./credit-card":67,"./jsonp-driver":68,"./normalize-api-fields":70,"./parse-client-token":71,"./root-data":73,"./sepa-bank-account":74,"./sepa-mandate":75,"./util":76,"braintree-3ds":85,"braintree-utilities":104}],66:[function(require,module,exports){
-arguments[4][3][0].apply(exports,arguments)
-},{"dup":3}],67:[function(require,module,exports){
-arguments[4][4][0].apply(exports,arguments)
-},{"dup":4}],68:[function(require,module,exports){
-arguments[4][5][0].apply(exports,arguments)
-},{"./jsonp":69,"dup":5}],69:[function(require,module,exports){
-arguments[4][6][0].apply(exports,arguments)
-},{"./util":76,"dup":6}],70:[function(require,module,exports){
-arguments[4][7][0].apply(exports,arguments)
-},{"dup":7}],71:[function(require,module,exports){
-arguments[4][8][0].apply(exports,arguments)
-},{"./polyfill":72,"dup":8}],72:[function(require,module,exports){
-arguments[4][9][0].apply(exports,arguments)
-},{"dup":9}],73:[function(require,module,exports){
-arguments[4][10][0].apply(exports,arguments)
-},{"braintree-rpc":93,"dup":10}],74:[function(require,module,exports){
-arguments[4][11][0].apply(exports,arguments)
-},{"dup":11}],75:[function(require,module,exports){
-arguments[4][12][0].apply(exports,arguments)
-},{"dup":12}],76:[function(require,module,exports){
-arguments[4][13][0].apply(exports,arguments)
-},{"dup":13}],77:[function(require,module,exports){
-arguments[4][14][0].apply(exports,arguments)
-},{"./lib/client":65,"./lib/jsonp":69,"./lib/jsonp-driver":68,"./lib/parse-client-token":71,"./lib/util":76,"dup":14}],78:[function(require,module,exports){
-arguments[4][15][0].apply(exports,arguments)
-},{"dup":15}],79:[function(require,module,exports){
-arguments[4][16][0].apply(exports,arguments)
-},{"dup":16}],80:[function(require,module,exports){
-arguments[4][17][0].apply(exports,arguments)
-},{"dup":17}],81:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],82:[function(require,module,exports){
-arguments[4][19][0].apply(exports,arguments)
-},{"./lib/dom":78,"./lib/events":79,"./lib/fn":80,"./lib/url":81,"dup":19}],83:[function(require,module,exports){
-'use strict';
-
-var utils = require('braintree-utilities');
-var Receiver = require('../shared/receiver');
-var version = "1.1.0";
-
 var htmlNode, bodyNode;
+var api = require(15);
+var BraintreeBus = require(164);
+var Destructor = require(86);
+var rpc = require(64);
+var utils = require(82);
+var normalizeElement = utils.normalizeElement;
+var bind = require(96);
+var isBrowserHttps = utils.isBrowserHttps;
+var APIProxyServer = require(191);
+var MerchantFormManager = require(195);
+var FrameContainer = require(194);
+var constants = require(197);
+var version = "2.15.2";
+var PayPalModalView = require(214);
 
 function getElementStyle(element, style) {
   var computedStyle = window.getComputedStyle ? getComputedStyle(element) : element.currentStyle;
@@ -5908,430 +10750,2226 @@ function getMerchantPageDefaultStyles() {
   };
 }
 
-function AuthenticationService (assetsUrl, container) {
-  this.assetsUrl = assetsUrl;
-  this.container = container || document.body;
-  this.iframe = null;
+function isMobile() {
+  var isMobileUserAgent = /Android|iPhone|iPod|iPad/i.test(window.navigator.userAgent);
 
-  htmlNode = document.documentElement;
-  bodyNode = document.body;
-  this.merchantPageDefaultStyles = getMerchantPageDefaultStyles();
+  return isMobileUserAgent;
 }
 
-AuthenticationService.prototype.get = function (response, callback) {
-  var self = this,
-  url = this.constructAuthorizationURL(response);
+function Client(settings) {
+  var inlineFramePath, modalFramePath, formElement;
+  var self = this;
 
-  if (this.container && utils.isFunction(this.container)) {
-    this.container(url + '&no_style=1');
-  } else {
-    this.insertIframe(url);
+  this.channel = settings.channel;
+  this.destructor = new Destructor();
+  this.merchantConfiguration = settings.merchantConfiguration;
+  this.encodedClientToken = settings.gatewayConfiguration;
+  this.analyticsConfiguration = settings.analyticsConfiguration;
+  this.paypalOptions = settings.merchantConfiguration.paypal || {};
+  this.container = null;
+  this.merchantFormManager = null;
+  this.root = settings.root;
+  this.configurationRequests = [];
+  this.braintreeApiClient = api.configure({
+    clientToken: settings.gatewayConfiguration,
+    analyticsConfiguration: this.analyticsConfiguration,
+    integration: 'dropin',
+    enableCORS: this.merchantConfiguration.enableCORS
+  });
+
+  this.paymentMethodNonceReceivedCallback = settings.merchantConfiguration.paymentMethodNonceReceived;
+  this.clientToken = api.parseClientToken(settings.gatewayConfiguration);
+
+  this.braintreeBus = new BraintreeBus({
+    merchantUrl: global.location.href,
+    channel: settings.channel
+  });
+
+  this.bus = new rpc.MessageBus(this.root, this.channel);
+  this.rpcServer = new rpc.RPCServer(this.bus);
+  this.apiProxyServer = new APIProxyServer(this.braintreeApiClient);
+
+  this.apiProxyServer.attach(this.rpcServer);
+
+  inlineFramePath = settings.inlineFramePath || this.clientToken.assetsUrl + '/dropin/' + version + '/inline-frame.html';
+  modalFramePath = settings.modalFramePath || this.clientToken.assetsUrl + '/dropin/' + version + '/modal-frame.html';
+  htmlNode = document.documentElement;
+  bodyNode = document.body;
+
+  this.frames = {
+    inline: this._createFrame(inlineFramePath, constants.INLINE_FRAME_NAME),
+    modal: this._createFrame(modalFramePath, constants.MODAL_FRAME_NAME)
+  };
+
+  this.container = normalizeElement(settings.merchantConfiguration.container, 'Unable to find valid container.');
+
+  formElement = normalizeElement(settings.merchantConfiguration.form || this._findClosest(this.container, 'form'));
+
+  this.merchantFormManager = new MerchantFormManager({
+    form: formElement,
+    frames: this.frames,
+    onSubmit: this.paymentMethodNonceReceivedCallback,
+    apiClient: this.braintreeApiClient
+  }).initialize();
+
+  this.destructor.registerFunctionForTeardown(function () {
+    self.merchantFormManager.teardown();
+  });
+
+  if (settings.gatewayConfiguration.paypalEnabled) {
+    this._configurePayPal();
   }
 
-  new Receiver(function (response) {
-    if (!utils.isFunction(self.container)) {
-      self.removeIframe();
+  this.braintreeApiClient.sendAnalyticsEvents('dropin.web.initialized');
+}
+
+Client.prototype.initialize = function () {
+  var i;
+  var self = this;
+
+  this._initializeModal();
+
+  this.braintreeBus.emit(BraintreeBus.events.ASYNC_DEPENDENCY_INITIALIZING);
+  this.container.appendChild(this.frames.inline.element);
+  bodyNode.appendChild(this.frames.modal.element);
+
+  this.destructor.registerFunctionForTeardown(function (done) {
+    self._hideModal(function () {
+      self.container.removeChild(self.frames.inline.element);
+      bodyNode.removeChild(self.frames.modal.element);
+
+      done();
+    });
+  });
+
+  this.rpcServer.define('receiveSharedCustomerIdentifier', function (sharedCustomerIdentifier) {
+    self.braintreeApiClient.attrs.sharedCustomerIdentifier = sharedCustomerIdentifier;
+    self.braintreeApiClient.attrs.sharedCustomerIdentifierType = 'browser_session_cookie_store';
+
+    for (i = 0; i < self.configurationRequests.length; i++) {
+      self.configurationRequests[i](self.encodedClientToken);
     }
-    callback(response);
+
+    self.configurationRequests = [];
+  });
+
+  this.braintreeBus.on(BraintreeBus.events.PAYMENT_METHOD_GENERATED, bind(this._handleAltPayData, this));
+
+  this.rpcServer.define('getConfiguration', function (reply) {
+    reply({
+      enableCORS: self.merchantConfiguration.enableCORS,
+      clientToken: self.encodedClientToken,
+      paypalOptions: self.paypalOptions,
+      analyticsConfiguration: self.analyticsConfiguration,
+      merchantHttps: isBrowserHttps()
+    });
+  });
+
+  this.rpcServer.define('selectPaymentMethod', function (paymentMethods) {
+    self.frames.modal.rpcClient.invoke('selectPaymentMethod', [paymentMethods]);
+    self._showModal();
+  });
+
+  this.rpcServer.define('sendAddedPaymentMethod', function (paymentMethod) {
+    self.merchantFormManager.setNoncePayload(paymentMethod);
+
+    self.frames.inline.rpcClient.invoke('receiveNewPaymentMethod', [paymentMethod]);
+  });
+
+  this.rpcServer.define('sendUsedPaymentMethod', function (paymentMethod) {
+    self.frames.inline.rpcClient.invoke('selectPaymentMethod', [paymentMethod]);
+  });
+
+  this.rpcServer.define('sendUnlockedNonce', function (paymentMethod) {
+    self.merchantFormManager.setNoncePayload(paymentMethod);
+  });
+
+  this.rpcServer.define('clearNonce', function () {
+    self.merchantFormManager.clearNoncePayload();
+  });
+
+  this.rpcServer.define('closeDropInModal', function () {
+    self._hideModal();
+  });
+
+  this.rpcServer.define('setInlineFrameHeight', function (height) {
+    self.frames.inline.element.style.height = height + 'px';
+  });
+
+  this.bus.register('ready', function (message) {
+    if (message.source === self.frames.inline.element.contentWindow) {
+      self.frames.inline.rpcClient = new rpc.RPCClient(self.bus, message.source);
+    } else if (message.source === self.frames.modal.element.contentWindow) {
+      self.frames.modal.rpcClient = new rpc.RPCClient(self.bus, message.source);
+    }
   });
 };
 
-AuthenticationService.prototype.removeIframe = function () {
-  if (this.container && this.container.nodeType && this.container.nodeType === 1) {
-    this.container.removeChild(this.iframe);
-  } else if (this.container && window.jQuery && this.container instanceof jQuery) {
-    $(this.iframe, this.container).remove();
-  } else if (typeof this.container === 'string') {
-    document.getElementById(this.container).removeChild(this.iframe);
-  }
-
-  this.unlockMerchantWindowSize();
+Client.prototype._createFrame = function (endpoint, name) {
+  return new FrameContainer(endpoint, name, this.braintreeBus);
 };
 
-AuthenticationService.prototype.insertIframe = function (url) {
-  // TODO: Security - This takes a url and makes an iframe. Doesn't seem like this would be a problem.
-  var iframe = document.createElement('iframe');
-  iframe.src = url;
-  this.applyStyles(iframe);
-  this.lockMerchantWindowSize();
-
-  if (this.container && this.container.nodeType && this.container.nodeType === 1) {
-    this.container.appendChild(iframe);
-  } else if (this.container && window.jQuery && this.container instanceof jQuery && this.container.length !== 0) {
-    this.container.append(iframe);
-  } else if (typeof this.container === 'string' && document.getElementById(this.container)) {
-    document.getElementById(this.container).appendChild(iframe);
-  } else {
-    throw new Error('Unable to find valid container for iframe.');
-  }
-  this.iframe = iframe;
+Client.prototype._initializeModal = function () {
+  this.frames.modal.element.style.display = 'none';
+  this.frames.modal.element.style.position = isMobile() ? 'absolute' : 'fixed';
+  this.frames.modal.element.style.top = '0';
+  this.frames.modal.element.style.left = '0';
+  this.frames.modal.element.style.height = '100%';
+  this.frames.modal.element.style.width = '100%';
 };
 
-AuthenticationService.prototype.applyStyles = function (iframe) {
-  iframe.style.position = 'fixed';
-  iframe.style.top = '0';
-  iframe.style.left = '0';
-  iframe.style.height = '100%';
-  iframe.style.width = '100%';
-  iframe.setAttribute('frameborder', '0');
-  iframe.setAttribute('allowTransparency', 'true');
-  iframe.style.border = '0';
-  iframe.style.zIndex = '99999';
+Client.prototype._lockMerchantWindowSize = function () {
+  setTimeout(function () {
+    htmlNode.style.overflow = 'hidden';
+    bodyNode.style.overflow = 'hidden';
+    bodyNode.style.height = '100%';
+
+    if (isMobile()) {
+      htmlNode.style.position = 'relative';
+      htmlNode.style.height = window.innerHeight + 'px';
+    }
+  }, 160);
 };
 
-AuthenticationService.prototype.lockMerchantWindowSize = function () {
-  htmlNode.style.overflow = 'hidden';
-  bodyNode.style.overflow = 'hidden';
-  bodyNode.style.height = '100%';
-};
-
-AuthenticationService.prototype.unlockMerchantWindowSize = function () {
+Client.prototype._unlockMerchantWindowSize = function () {
   var defaultStyles = this.merchantPageDefaultStyles;
+
+  if (!defaultStyles) { return; }
 
   bodyNode.style.height = defaultStyles.body.height;
   bodyNode.style.overflow = defaultStyles.body.overflow;
 
   htmlNode.style.overflow = defaultStyles.html.overflow;
-};
 
-AuthenticationService.prototype.constructAuthorizationURL = function (response) {
-  var queryString,
-  parentURL = window.location.href;
-
-  if (parentURL.indexOf('#') > -1) {
-    parentURL = parentURL.split('#')[0];
+  if (isMobile()) {
+    htmlNode.style.height = defaultStyles.html.height;
+    htmlNode.style.position = defaultStyles.html.position;
   }
 
-  queryString = utils.makeQueryString({
-    acsUrl: response.acsUrl,
-    pareq: response.pareq,
-    termUrl: response.termUrl + '&three_d_secure_version=' + version,
-    md: response.md,
-    parentUrl: parentURL
-  });
-  return this.assetsUrl + '/3ds/' + version + '/html/style_frame?' + queryString;
+  delete this.merchantPageDefaultStyles;
 };
 
-module.exports = AuthenticationService;
-
-},{"../shared/receiver":87,"braintree-utilities":82}],84:[function(require,module,exports){
-'use strict';
-
-var utils = require('braintree-utilities');
-var AuthenticationService = require('./authorization_service');
-
-function Client(api, options) {
-  options = options || {};
-  this.clientToken = options.clientToken;
-  this.container = options.container;
-  this.api = api;
-  this.nonce = null;
-}
-
-Client.prototype.verify = function (data, callback) {
-  if (!utils.isFunction(callback)) {
-    this.api.sendAnalyticsEvents('3ds.web.no_callback');
-    throw new Error('No suitable callback argument was given');
-  }
-
-  var dataRecord = {nonce: '', amount: data.amount};
-  var creditCardMetaData = data.creditCard;
-
-  if (typeof creditCardMetaData === 'string') {
-    dataRecord.nonce = creditCardMetaData;
-    this.api.sendAnalyticsEvents('3ds.web.verify.nonce');
-    this.startVerification(dataRecord, callback);
-  } else {
-    var self = this;
-    var boundHandleTokenizeCard = function (err, nonce) {
-      if (err) {
-        return callback(err);
-      }
-      dataRecord.nonce = nonce;
-      self.startVerification(dataRecord, callback);
-    };
-    this.api.sendAnalyticsEvents('3ds.web.verify.credit_card');
-    this.api.tokenizeCard(creditCardMetaData, boundHandleTokenizeCard);
-  }
-};
-
-Client.prototype.startVerification = function (data, merchantCallback) {
-  this.api.lookup3DS(data, utils.bind(this.handleLookupResponse(merchantCallback), this));
-};
-
-Client.prototype.handleLookupResponse = function (merchantCallback) {
+Client.prototype._showModal = function () {
   var self = this;
-  return function (errorResponse, lookupResponse) {
-    var authenticationService;
-    if (errorResponse) {
-      merchantCallback(errorResponse.error);
-    } else if (lookupResponse.lookup && lookupResponse.lookup.acsUrl && lookupResponse.lookup.acsUrl.length > 0) {
-      self.nonce = lookupResponse.paymentMethod.nonce;
-      authenticationService = new AuthenticationService(this.clientToken.assetsUrl, this.container);
-      authenticationService.get(lookupResponse.lookup, utils.bind(this.handleAuthenticationResponse(merchantCallback), this));
-    } else {
-      self.nonce = lookupResponse.paymentMethod.nonce;
-      merchantCallback(null, {
-        nonce: self.nonce,
-        verificationDetails: lookupResponse.threeDSecureInfo
-      });
-    }
-  };
+  var el = this.frames.modal.element;
+
+  this.merchantPageDefaultStyles = getMerchantPageDefaultStyles();
+
+  el.style.display = 'block';
+
+  this.frames.modal.rpcClient.invoke('open', [], function () {
+    setTimeout(function () {
+      self._lockMerchantWindowSize();
+      el.contentWindow.focus();
+    }, 200);
+  });
 };
 
-Client.prototype.handleAuthenticationResponse = function (merchantCallback) {
-  return function (authResponseQueryString) {
-    var authResponse,
-        queryParams = utils.decodeQueryString(authResponseQueryString);
+Client.prototype._hideModal = function (done) {
+  this._unlockMerchantWindowSize();
+  this.frames.modal.element.style.display = 'none';
 
-    if (queryParams.user_closed) {
-      return;
+  if (done) {
+    done();
+  }
+};
+
+Client.prototype._configurePayPal = function () {
+  this.paypalModalView = new PayPalModalView({
+    channel: this.channel,
+    insertFrameFunction: this.paypalOptions.insertFrame,
+    paypalAssetsUrl: this.clientToken.paypal.assetsUrl,
+    isHermes: Boolean(this.paypalOptions.singleUse) && Boolean(this.paypalOptions.amount) && Boolean(this.paypalOptions.currency)
+  });
+};
+
+Client.prototype._handleAltPayData = function (payload) {
+  this.merchantFormManager.setNoncePayload(payload);
+  this.frames.inline.rpcClient.invoke('receiveNewPaymentMethod', [payload]);
+  this.frames.modal.rpcClient.invoke('modalViewClose');
+};
+
+Client.prototype._findClosest = function (node, tagName) {
+  tagName = tagName.toUpperCase();
+
+  do {
+    if (node.nodeName === tagName) {
+      return node;
     }
+    node = node.parentNode;
+  } while (node);
 
-    authResponse = JSON.parse(queryParams.auth_response);
+  throw new Error('Unable to find a valid ' + tagName);
+};
 
-    if (authResponse.success) {
-      merchantCallback(null, {
-        nonce: authResponse.paymentMethod.nonce,
-        verificationDetails: authResponse.threeDSecureInfo
+Client.prototype.teardown = function (done) {
+  var self = this;
+
+  if (this.paypalModalView) {
+    this.paypalModalView.teardown();
+  }
+
+  this.braintreeBus.emit(constants.MODAL_FRAME_TEARDOWN_EVENT, function () {
+    self.braintreeBus.emit(constants.INLINE_FRAME_TEARDOWN_EVENT, function () {
+      self.destructor.teardown(function (err) {
+        if (err) { return done(err); }
+
+        self.braintreeBus.teardown();
+        done();
       });
-    } else if (authResponse.threeDSecureInfo && authResponse.threeDSecureInfo.liabilityShiftPossible) {
-      merchantCallback(null, {
-        nonce: this.nonce,
-        verificationDetails: authResponse.threeDSecureInfo
-      });
-    } else {
-      merchantCallback(authResponse.error);
-    }
-  };
+    });
+  });
 };
 
 module.exports = Client;
 
-},{"./authorization_service":83,"braintree-utilities":82}],85:[function(require,module,exports){
-arguments[4][22][0].apply(exports,arguments)
-},{"./client":84,"./vendor/json2":86,"dup":22}],86:[function(require,module,exports){
-arguments[4][23][0].apply(exports,arguments)
-},{"dup":23}],87:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"15":15,"164":164,"191":191,"194":194,"195":195,"197":197,"214":214,"64":64,"82":82,"86":86,"96":96}],193:[function(require,module,exports){
 'use strict';
 
-var utils = require('braintree-utilities');
+var Client = require(192);
+var VERSION = "2.15.2";
 
-function Receiver (callback) {
-  this.postMessageReceiver(callback);
-  this.hashChangeReceiver(callback);
+function create(options) {
+  var client = new Client(options);
+
+  client.initialize();
+
+  return client;
 }
 
-Receiver.prototype.postMessageReceiver = function (callback) {
+module.exports = {
+  create: create,
+  VERSION: VERSION
+};
+
+},{"192":192}],194:[function(require,module,exports){
+'use strict';
+
+var BraintreeBus = require(164);
+var constants = require(197);
+var iFramer = require(91);
+
+// TODO: move to shared and deduplicate from src/internal/util/dropin-util.js
+var TRANSITION_END_EVENT_NAMES = {
+  transition: 'transitionend',
+  '-o-transition': 'otransitionEnd',
+  '-moz-transition': 'transitionend',
+  '-webkit-transition': 'webkitTransitionEnd'
+};
+
+function getTransitionEndEventName() {
+  var eventName;
+  var fakeEl = document.createElement('fakeelement');
+
+  for (eventName in TRANSITION_END_EVENT_NAMES) {
+    if (typeof fakeEl.style[eventName] !== 'undefined') {
+      return TRANSITION_END_EVENT_NAMES[eventName];
+    }
+  }
+  return null;
+}
+
+function listenForReady(el, braintreeBus) {
+  var transitionEndEvent = getTransitionEndEventName();
+
+  function handler(event) {
+    if (event.target === el && event.propertyName === 'height') {
+      braintreeBus.emit(BraintreeBus.events.ASYNC_DEPENDENCY_READY);
+      el.removeEventListener(transitionEndEvent, handler);
+    }
+  }
+
+  if (transitionEndEvent) {
+    el.addEventListener(transitionEndEvent, handler);
+  } else {
+    setTimeout(function () {
+      braintreeBus.emit(BraintreeBus.events.ASYNC_DEPENDENCY_READY);
+    }, 500);
+  }
+}
+
+function FrameContainer(endpoint, name, braintreeBus) {
+  var transition = 'height 210ms cubic-bezier(0.390, 0.575, 0.565, 1.000)';
+  var element = iFramer({
+    name: name,
+    width: '100%',
+    height: '68',
+    style: {
+      transition: transition,
+      WebkitTransition: transition,
+      MozTransition: transition,
+      msTransition: transition,
+      OTransition: transition,
+      border: '0',
+      zIndex: '9999'
+    }
+  });
+
+  this.element = element;
+
+  // Delayed so that browsers won't cache iframe URLs.
+  setTimeout(function () {
+    element.src = endpoint + '#' + braintreeBus.channel;
+  }, 0);
+
+  if (name === constants.INLINE_FRAME_NAME) {
+    listenForReady(element, braintreeBus);
+  }
+}
+
+module.exports = FrameContainer;
+
+},{"164":164,"197":197,"91":91}],195:[function(require,module,exports){
+'use strict';
+
+var bind = require(96);
+var FormNapper = require(89);
+
+function MerchantFormManager(options) {
+  this.formNapper = new FormNapper(options.form);
+  this.frames = options.frames;
+  this.onSubmit = options.onSubmit;
+  this.apiClient = options.apiClient;
+}
+
+MerchantFormManager.prototype.initialize = function () {
+  if (this._isSubmitBased()) {
+    this._setElements();
+  }
+
+  this._setEvents();
+
+  return this;
+};
+
+MerchantFormManager.prototype.setNoncePayload = function (payload) {
+  this.noncePayload = payload;
+};
+
+MerchantFormManager.prototype.clearNoncePayload = function () {
+  this.noncePayload = null;
+};
+
+MerchantFormManager.prototype._isSubmitBased = function () {
+  return !this.onSubmit;
+};
+
+MerchantFormManager.prototype._isCallbackBased = function () {
+  return Boolean(this.onSubmit);
+};
+
+MerchantFormManager.prototype._setElements = function () {
+  this.nonceInput = this.formNapper.inject('payment_method_nonce', '');
+};
+
+MerchantFormManager.prototype._setEvents = function () {
+  this.formNapper.hijack(bind(this._handleFormSubmit, this));
+};
+
+MerchantFormManager.prototype._handleFormSubmit = function (event) {
   var self = this;
 
-  this.wrappedCallback = function (event) {
-    // TODO: Security - We should probably check event.origin in order to only act on our own events.
-    callback(event.data);
-    self.stopListening();
+  if (this.noncePayload && this.noncePayload.nonce) {
+    this._handleNonceReply(event);
+  } else {
+    this.frames.inline.rpcClient.invoke('requestNonce', [], function (payload) {
+      self.setNoncePayload(payload);
+      self._handleNonceReply(event);
+    });
+  }
+};
+
+MerchantFormManager.prototype._handleNonceReply = function (event) {
+  var self = this;
+
+  if (this._isCallbackBased()) {
+    this.apiClient.sendAnalyticsEvents('dropin.web.end.callback', function () {
+      var payload = self.noncePayload;
+
+      payload.originalEvent = event;
+
+      self.onSubmit(payload);
+
+      setTimeout(function () {
+        delete payload.originalEvent;
+
+        self.frames.inline.rpcClient.invoke('clearLoadingState');
+        self.frames.inline.rpcClient.invoke('receiveNewPaymentMethod', [payload]);
+      }, 200);
+    });
+  } else {
+    this._triggerFormSubmission();
+  }
+};
+
+MerchantFormManager.prototype._triggerFormSubmission = function () {
+  var self = this;
+
+  this.nonceInput = this.formNapper.inject('payment_method_nonce', this.noncePayload.nonce);
+
+  this.apiClient.sendAnalyticsEvents('dropin.web.end.auto-submit', function () {
+    self.formNapper.submit();
+  });
+};
+
+MerchantFormManager.prototype.teardown = function () {
+  var form;
+
+  if (this.nonceInput) {
+    form = this.formNapper.htmlForm;
+    form.removeChild(this.nonceInput);
+  }
+
+  this.formNapper.detach();
+};
+
+module.exports = MerchantFormManager;
+
+},{"89":89,"96":96}],196:[function(require,module,exports){
+'use strict';
+
+module.exports = require(193);
+
+},{"193":193}],197:[function(require,module,exports){
+module.exports={
+  "PAYPAL_INTEGRATION_NAME": "PayPal",
+  "INLINE_FRAME_NAME": "braintree-dropin-frame",
+  "MODAL_FRAME_NAME": "braintree-dropin-modal-frame",
+  "PAYMENT_METHOD_TYPES": ["CoinbaseAccount", "PayPalAccount", "CreditCard"],
+  "cssClassMap": {
+    "American Express": "american-express",
+    "Diners Club": "diners-club",
+    "DinersClub": "diners-club",
+    "Discover": "discover",
+    "JCB": "jcb",
+    "Maestro": "maestro",
+    "MasterCard": "master-card",
+    "Solo": "solo",
+    "Switch": "switch",
+    "UKMaestro": "maestro",
+    "UnionPay": "unionpay",
+    "Visa": "visa"
+  },
+  "INLINE_FRAME_TEARDOWN_EVENT": "dropin:TEARDOWN_INLINE_FRAME",
+  "MODAL_FRAME_TEARDOWN_EVENT": "dropin:TEARDOWN_MODAL_FRAME"
+}
+
+},{}],198:[function(require,module,exports){
+'use strict';
+
+var Form = require(200);
+var validateAnnotations = require(203);
+
+function setup(apiClient, configuration) {
+  var merchantConfiguration = configuration.merchantConfiguration || {};
+  var htmlForm = document.getElementById(merchantConfiguration.id);
+  var isCreditCardForm = merchantConfiguration.useCreditCard !== false;
+
+  if (!htmlForm) {
+    throw new Error('Unable to find form with id: "' + merchantConfiguration.id + '"');
+  }
+
+  if (isCreditCardForm) {
+    validateAnnotations(htmlForm);
+  }
+
+  return new Form(apiClient, configuration);
+}
+
+module.exports = {setup: setup};
+
+},{"200":200,"203":203}],199:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var ELEMENT_NODE = global.Node ? global.Node.ELEMENT_NODE : 1;
+
+function extractValues(node, results) {
+  var child, i, dataAttr;
+  var children = node.children;
+
+  results = results || {};
+
+  for (i = 0; i < children.length; i++) {
+    child = children[i];
+
+    if (isBraintreeNode(child)) {
+      dataAttr = child.getAttribute('data-braintree-name');
+
+      if (dataAttr === 'postal_code') {
+        results.billingAddress = {
+          postalCode: child.value
+        };
+      } else {
+        results[dataAttr] = child.value;
+      }
+
+      scrubAttributes(child);
+    } else if (child.children && child.children.length > 0) {
+      extractValues(child, results);
+    }
+  }
+
+  return results;
+}
+
+function scrubAttributes(node) {
+  try {
+    node.attributes.removeNamedItem('name');
+  } catch (e) { /* ignored */ }
+}
+
+function scrubAllAttributes(node) {
+  extractValues(node);
+}
+
+function isBraintreeNode(node) {
+  return node.nodeType === ELEMENT_NODE && node.attributes['data-braintree-name'];
+}
+
+module.exports = {
+  extractValues: extractValues,
+  scrubAllAttributes: scrubAllAttributes,
+  scrubAttributes: scrubAttributes,
+  isBraintreeNode: isBraintreeNode
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],200:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var bind = require(96);
+var util = require(82);
+var fields = require(199);
+var Destructor = require(86);
+var Bus = require(164);
+var PaymentMethodModel = require(202);
+var getNonceInput = require(201);
+var ERROR_PAYLOAD = {
+  message: 'Unable to process payments at this time',
+  type: 'IMMEDIATE'
+};
+
+function Form(apiClient, configuration) {
+  var merchantConfiguration = configuration.merchantConfiguration;
+  var hasExistingInput = typeof merchantConfiguration.paymentMethodNonceInputField === 'object';
+  var self = this;
+
+  this.destructor = new Destructor();
+
+  this.apiClient = apiClient;
+
+  this.isCreditCardForm = merchantConfiguration.useCreditCard !== false;
+
+  this.htmlForm = document.getElementById(merchantConfiguration.id);
+
+  this.paymentMethodNonceInput = getNonceInput(merchantConfiguration.paymentMethodNonceInputField);
+  this.htmlForm.appendChild(this.paymentMethodNonceInput);
+  this.destructor.registerFunctionForTeardown(function () {
+    if (hasExistingInput) {
+      self.paymentMethodNonceInput.value = '';
+    } else {
+      self.htmlForm.removeChild(self.paymentMethodNonceInput);
+    }
+  });
+
+  this.model = new PaymentMethodModel();
+
+  this.bus = new Bus({
+    merchantUrl: global.location.href,
+    channel: configuration.channel
+  });
+
+  this.setEvents();
+  this.destructor.registerFunctionForTeardown(function () {
+    self.bus.teardown();
+  });
+}
+
+Form.prototype.setEvents = function () {
+  var self = this;
+
+  this.onSubmitHandler = bind(this.handleSubmit, this);
+  this.onExternalNonceReceived = bind(this.onExternalNonceReceived, this);
+  this.clearExternalNonce = bind(this.clearExternalNonce, this);
+
+  util.addEventListener(this.htmlForm, 'submit', this.onSubmitHandler);
+  this.destructor.registerFunctionForTeardown(function () {
+    util.removeEventListener(self.htmlForm, 'submit', self.onSubmitHandler);
+  });
+
+  this.bus.on(Bus.events.PAYMENT_METHOD_GENERATED, this.onExternalNonceReceived);
+  this.bus.on(Bus.events.PAYMENT_METHOD_CANCELLED, this.clearExternalNonce);
+};
+
+Form.prototype.handleSubmit = function (event) {
+  var type;
+  var self = this;
+
+  if (event.preventDefault) {
+    event.preventDefault();
+  } else {
+    event.returnValue = false;
+  }
+
+  if (!this.isCreditCardForm) {
+    this.onNonceReceived(null, this.model.attributes);
+    return;
+  }
+
+  type = this.model.get('type');
+
+  if (type && type !== 'CreditCard') {
+    fields.scrubAllAttributes(this.htmlForm);
+    this.onNonceReceived(null, this.model.attributes);
+    return;
+  }
+
+  this.apiClient.tokenizeCard(fields.extractValues(this.htmlForm), function (err, nonce, payload) {
+    if (err) {
+      self.onNonceReceived(ERROR_PAYLOAD, null);
+    } else {
+      self.model.set({
+        nonce: nonce,
+        type: payload.type,
+        details: payload.details
+      });
+
+      self.onNonceReceived(null, self.model.attributes);
+    }
+  });
+};
+
+Form.prototype.writeNonceToDOM = function () {
+  this.paymentMethodNonceInput.value = this.model.get('nonce');
+};
+
+Form.prototype.onExternalNonceReceived = function (payload) {
+  this.model.set(payload);
+  this.writeNonceToDOM();
+};
+
+Form.prototype.clearExternalNonce = function () {
+  this.model.reset();
+};
+
+Form.prototype.onNonceReceived = function (err) {
+  var form = this.htmlForm;
+
+  if (err) {
+    this.bus.emit(Bus.events.ERROR, ERROR_PAYLOAD);
+    return;
+  }
+
+  util.removeEventListener(form, 'submit', this.onSubmitHandler);
+
+  this.writeNonceToDOM();
+
+  if (form.submit && (typeof form.submit === 'function' || form.submit.call)) {
+    form.submit();
+  } else {
+    setTimeout(function () {
+      form.querySelector('[type="submit"]').click();
+    }, 1);
+  }
+};
+
+Form.prototype.teardown = function () {
+  this.destructor.teardown();
+};
+
+module.exports = Form;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"164":164,"199":199,"201":201,"202":202,"82":82,"86":86,"96":96}],201:[function(require,module,exports){
+'use strict';
+
+module.exports = function getNonceInput(paymentMethodNonceInputField) {
+  var nonceInputName, nonceInput;
+
+  if (typeof paymentMethodNonceInputField === 'object') {
+    return paymentMethodNonceInputField;
+  }
+
+  nonceInputName = 'payment_method_nonce';
+
+  if (typeof paymentMethodNonceInputField === 'string') {
+    nonceInputName = paymentMethodNonceInputField;
+  }
+
+  nonceInput = document.createElement('input');
+  nonceInput.name = nonceInputName;
+  nonceInput.type = 'hidden';
+
+  return nonceInput;
+};
+
+},{}],202:[function(require,module,exports){
+'use strict';
+
+function PaymentMethodModel() {
+  this.reset();
+}
+
+PaymentMethodModel.prototype.get = function (key) {
+  return this.attributes[key];
+};
+
+PaymentMethodModel.prototype.set = function (payload) {
+  this.attributes = payload || {};
+};
+
+PaymentMethodModel.prototype.reset = function () {
+  this.attributes = {};
+};
+
+module.exports = PaymentMethodModel;
+
+},{}],203:[function(require,module,exports){
+'use strict';
+
+module.exports = function validateAnnotations(htmlForm) {
+  var i, field;
+  var inputs = htmlForm.getElementsByTagName('*');
+  var valid = {};
+
+  for (i = 0; i < inputs.length; i++) {
+    field = inputs[i].getAttribute('data-braintree-name');
+    valid[field] = true;
+  }
+
+  if (!valid.number) {
+    throw new Error('Unable to find an input with data-braintree-name="number" in your form. Please add one.');
+  }
+
+  if (valid.expiration_date) {
+    if (valid.expiration_month || valid.expiration_year) {
+      throw new Error('You have inputs with data-braintree-name="expiration_date" AND data-braintree-name="expiration_(year|month)". Please use either "expiration_date" or "expiration_year" and "expiration_month".');
+    }
+  } else {
+    if (!valid.expiration_month && !valid.expiration_year) {
+      throw new Error('Unable to find an input with data-braintree-name="expiration_date" in your form. Please add one.');
+    }
+
+    if (!valid.expiration_month) {
+      throw new Error('Unable to find an input with data-braintree-name="expiration_month" in your form. Please add one.');
+    }
+
+    if (!valid.expiration_year) {
+      throw new Error('Unable to find an input with data-braintree-name="expiration_year" in your form. Please add one.');
+    }
+  }
+};
+
+},{}],204:[function(require,module,exports){
+'use strict';
+
+var HostedFields = require(206);
+var events = require(208).events;
+var VERSION = "2.15.2";
+
+module.exports = {
+  create: function (configuration) {
+    return new HostedFields(configuration);
+  },
+  events: events,
+  VERSION: VERSION
+};
+
+},{"206":206,"208":208}],205:[function(require,module,exports){
+'use strict';
+
+var constants = require(208);
+
+module.exports = function composeUrl(assetsUrl, channel) {
+  return assetsUrl +
+    '/hosted-fields/' +
+    constants.VERSION +
+    '/hosted-fields-frame.html#' +
+    channel;
+};
+
+},{"208":208}],206:[function(require,module,exports){
+'use strict';
+
+var Destructor = require(86);
+var classListManager = require(83);
+var iFramer = require(91);
+var Bus = require(164);
+var composeUrl = require(205);
+var constants = require(208);
+var nodeListToArray = require(163);
+var utils = require(82);
+var findParentTags = require(209);
+var shouldUseLabelFocus = require(207);
+var events = constants.events;
+
+function injectFrame(frame, container) {
+  var clearboth = document.createElement('div');
+
+  clearboth.style.clear = 'both';
+
+  container = container || document.body;
+
+  container.appendChild(frame);
+  container.appendChild(clearboth);
+
+  return {
+    parent: container,
+    children: [frame, clearboth]
+  };
+}
+
+function inputEventHandler(fields, onFieldEvent) {
+  return function (eventData) {
+    var container = fields[eventData.fieldKey].containerElement;
+    var classList = classListManager(container);
+
+    eventData.target = {
+      fieldKey: eventData.fieldKey,
+      container: container
+    };
+
+    classList
+      .toggle(constants.externalClasses.FOCUSED, eventData.isFocused)
+      .toggle(constants.externalClasses.VALID, eventData.isValid);
+    if (eventData.isStrictlyValidating) {
+      classList.toggle(constants.externalClasses.INVALID, !eventData.isValid);
+    } else {
+      classList.toggle(constants.externalClasses.INVALID, !eventData.isPotentiallyValid);
+    }
+
+    delete eventData.fieldKey;
+    delete eventData.isStrictlyValidating;
+
+    if (onFieldEvent) {
+      onFieldEvent(eventData);
+    }
+  };
+}
+
+function HostedFieldsIntegration(configuration) {
+  var field, container, frame, key, msg;
+  var self = this;
+  var fields = {};
+  var fieldCount = 0;
+
+  this.injectedNodes = [];
+  this.destructor = new Destructor();
+
+  this.bus = new Bus({
+    channel: configuration.channel,
+    merchantUrl: location.href
+  });
+
+  this.destructor.registerFunctionForTeardown(function () {
+    self.bus.teardown();
+  });
+
+  this.bus.emit(Bus.events.ASYNC_DEPENDENCY_INITIALIZING);
+  this.bus.emit(Bus.events.SEND_ANALYTICS_EVENTS, 'hosted-fields.initialized');
+
+  for (key in constants.whitelistedFields) {
+    if (constants.whitelistedFields.hasOwnProperty(key)) {
+      field = configuration.merchantConfiguration.hostedFields[key];
+
+      if (!field) { continue; }
+
+      container = document.querySelector(field.selector);
+
+      if (!container) {
+        msg = 'Unable to find element with selector "' + field.selector + '" for hostedFields.' + key;
+        this.bus.emit(Bus.events.ERROR, {
+          message: msg
+        });
+        continue;
+      } else if (container.querySelector('iframe[name^="braintree-"]')) {
+        this.bus.emit(Bus.events.ERROR, {
+          message: 'Cannot place two elements in "' + field.selector + '"'
+        });
+        continue;
+      }
+
+      frame = iFramer({
+        type: key,
+        name: 'braintree-hosted-field-' + key,
+        style: constants.defaultIFrameStyle
+      });
+
+      this.injectedNodes.push(injectFrame(frame, container));
+      this.setupLabelFocus(key, container);
+      fields[key] = {
+        frameElement: frame,
+        containerElement: container
+      };
+      fieldCount++;
+
+      /* eslint-disable no-loop-func */
+      setTimeout((function (f) {
+        return function () {
+          f.src = composeUrl(
+            configuration.gatewayConfiguration.assetsUrl,
+            configuration.channel
+          );
+        };
+      })(frame), 0);
+    }
+  } /* eslint-enable no-loop-func */
+
+  this.bus.on(events.FRAME_READY, function (reply) {
+    fieldCount--;
+    if (fieldCount === 0) {
+      reply(true);
+    } else {
+      reply(false);
+    }
+  });
+
+  this.bus.on(
+    events.INPUT_EVENT,
+    inputEventHandler(fields, configuration.merchantConfiguration.hostedFields.onFieldEvent)
+  );
+
+  this.destructor.registerFunctionForTeardown(function () {
+    var j, k, nodeGroup;
+
+    for (j = 0; j < self.injectedNodes.length; j++) {
+      nodeGroup = self.injectedNodes[j];
+
+      for (k = 0; k < nodeGroup.children.length; k++) {
+        nodeGroup.parent.removeChild(nodeGroup.children[k]);
+      }
+
+      classListManager(nodeGroup.parent).remove(
+        constants.externalClasses.FOCUSED,
+        constants.externalClasses.INVALID,
+        constants.externalClasses.VALID
+      );
+    }
+  });
+}
+
+HostedFieldsIntegration.prototype.setupLabelFocus = function (type, container) {
+  var labels, i;
+  var bus = this.bus;
+
+  if (!shouldUseLabelFocus()) { return; }
+  if (container.id == null) { return; }
+
+  function triggerFocus() {
+    bus.emit(events.TRIGGER_INPUT_FOCUS, type);
+  }
+
+  labels = nodeListToArray(document.querySelectorAll('label[for="' + container.id + '"]'));
+  labels = labels.concat(findParentTags(container, 'label'));
+
+  for (i = 0; i < labels.length; i++) {
+    utils.addEventListener(labels[i], 'click', triggerFocus, false);
+  }
+
+  this.destructor.registerFunctionForTeardown(function () {
+    for (i = 0; i < labels.length; i++) {
+      utils.removeEventListener(labels[i], 'click', triggerFocus, false);
+    }
+  });
+};
+
+HostedFieldsIntegration.prototype.teardown = function (done) {
+  this.destructor.teardown(done);
+};
+
+module.exports = HostedFieldsIntegration;
+
+},{"163":163,"164":164,"205":205,"207":207,"208":208,"209":209,"82":82,"83":83,"86":86,"91":91}],207:[function(require,module,exports){
+'use strict';
+
+module.exports = function shouldUseLabelFocus() {
+  return !/(iPad|iPhone|iPod)/i.test(navigator.userAgent);
+};
+
+},{}],208:[function(require,module,exports){
+'use strict';
+/* eslint-disable no-reserved-keys */
+
+var VERSION = "2.15.2";
+
+module.exports = {
+  VERSION: VERSION,
+  events: {
+    FRAME_READY: 'hosted-fields:FRAME_READY',
+    VALIDATE_STRICT: 'hosted-fields:VALIDATE_STRICT',
+    CONFIGURATION: 'hosted-fields:CONFIGURATION',
+    TOKENIZATION_REQUEST: 'hosted-fields:TOKENIZATION_REQUEST',
+    INPUT_EVENT: 'hosted-fields:INPUT_EVENT',
+    TRIGGER_INPUT_FOCUS: 'hosted-fields:TRIGGER_INPUT_FOCUS'
+  },
+  externalEvents: {
+    FOCUS: 'focus',
+    BLUR: 'blur',
+    FIELD_STATE_CHANGE: 'fieldStateChange'
+  },
+  defaultMaxLengths: {
+    number: 19,
+    postalCode: 8,
+    expirationDate: 7,
+    expirationMonth: 2,
+    expirationYear: 4,
+    cvv: 3
+  },
+  externalClasses: {
+    FOCUSED: 'braintree-hosted-fields-focused',
+    INVALID: 'braintree-hosted-fields-invalid',
+    VALID: 'braintree-hosted-fields-valid'
+  },
+  defaultIFrameStyle: {
+    border: 'none',
+    width: '100%',
+    height: '100%',
+    'float': 'left'
+  },
+  whitelistedStyles: [
+    '-moz-osx-font-smoothing',
+    '-moz-transition',
+    '-webkit-font-smoothing',
+    '-webkit-transition',
+    'color',
+    'font',
+    'font-family',
+    'font-size',
+    'font-size-adjust',
+    'font-stretch',
+    'font-style',
+    'font-variant',
+    'font-variant-alternates',
+    'font-variant-caps',
+    'font-variant-east-asian',
+    'font-variant-ligatures',
+    'font-variant-numeric',
+    'font-weight',
+    'line-height',
+    'opacity',
+    'outline',
+    'text-shadow',
+    'transition'
+  ],
+  whitelistedFields: {
+    number: {
+      name: 'credit-card-number',
+      label: 'Credit Card Number'
+    },
+    cvv: {
+      name: 'cvv',
+      label: 'CVV'
+    },
+    expirationDate: {
+      name: 'expiration',
+      label: 'Expiration Date'
+    },
+    expirationMonth: {
+      name: 'expiration-month',
+      label: 'Expiration Month'
+    },
+    expirationYear: {
+      name: 'expiration-year',
+      label: 'Expiration Year'
+    },
+    postalCode: {
+      name: 'postal-code',
+      label: 'Postal Code'
+    }
+  }
+};
+
+},{}],209:[function(require,module,exports){
+'use strict';
+
+function findParentTags(element, tag) {
+  var parent = element.parentNode;
+  var parents = [];
+
+  while (parent != null) {
+    if (parent.tagName != null && parent.tagName.toLowerCase() === tag) {
+      parents.push(parent);
+    }
+
+    parent = parent.parentNode;
+  }
+
+  return parents;
+}
+
+module.exports = findParentTags;
+
+},{}],210:[function(require,module,exports){
+'use strict';
+
+module.exports = require(212);
+
+},{"212":212}],211:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var braintreeUtil = require(82);
+var bind = require(96);
+var isFunction = require(152);
+var Destructor = require(86);
+var Bus = require(164);
+var AppView = require(214);
+var LoggedInView = require(216);
+var LoggedOutView = require(217);
+var OverlayView = require(220);
+var MerchantPageView = require(218);
+var PaymentMethodNonceInputFieldView = require(221);
+var BridgeIframeView = require(215);
+var browser = require(231);
+var constants = require(223);
+var util = require(233);
+var bindAll = require(97);
+
+function Client(clientToken, options, channel) {
+  options = options || {};
+
+  this._clientToken = clientToken;
+  this._clientOptions = options;
+
+  this._clientToken.correlationId = util.generateUid();
+
+  this.destructor = new Destructor();
+
+  this.channel = channel;
+  this.bus = new Bus({
+    merchantUrl: global.location.href,
+    channel: this.channel
+  });
+
+  this.container = braintreeUtil.normalizeElement(options.container || document.body);
+  this.paymentMethodNonceInputField = options.paymentMethodNonceInputField;
+
+  this.insertFrameFunction = options.insertFrame;
+  this.onSuccess = options.onSuccess;
+  this.onCancelled = options.onCancelled;
+  this.loggedInView = null;
+  this.loggedOutView = null;
+  this.appView = null;
+  this.merchantPageView = null;
+  this.paymentMethodNonceInputFieldView = null;
+  this.overlayView = null;
+  this.bridgeIframeView = null;
+  this.headless = options.headless;
+  this.isDropin = options.isDropin;
+
+  bindAll(this, ['initAuthFlow', 'closeAuthFlow']);
+}
+
+Client.prototype.initialize = function () {
+  var clickLoginHandler = bind(this._handleClickLogin, this);
+
+  this._createViews();
+
+  this.bus.on(
+    constants.events.GET_CLIENT_TOKEN,
+    bind(this._handleGetClientToken, this)
+  );
+
+  this.bus.on(
+    constants.events.GET_CLIENT_OPTIONS,
+    bind(this._handleGetClientOptions, this)
+  );
+
+  this.bus.on(
+    Bus.events.PAYMENT_METHOD_CANCELLED,
+    bind(this._handlePaymentMethodCancelled, this)
+  );
+
+  if (!this.isDropin) {
+    this.bus.on(
+      Bus.events.PAYMENT_METHOD_GENERATED,
+      bind(this._handlePaymentMethodGenerated, this)
+    );
+  }
+
+  braintreeUtil.addEventListener(document.body, 'click', clickLoginHandler);
+
+  this.destructor.registerFunctionForTeardown(function () {
+    braintreeUtil.removeEventListener(document.body, 'click', clickLoginHandler);
+  });
+};
+
+Client.prototype._createViews = function () {
+  var i;
+  var views = [];
+  var self = this;
+
+  if (browser.isBridgeIframeRequired()) {
+    this.bridgeIframeView = new BridgeIframeView({
+      container: this.container,
+      paypalAssetsUrl: this._clientToken.paypal.assetsUrl,
+      channel: this.channel
+    });
+    views.push(this.bridgeIframeView);
+  }
+
+  this.appView = new AppView({
+    insertFrameFunction: this.insertFrameFunction,
+    paypalAssetsUrl: this._clientToken.paypal.assetsUrl,
+    isHermes: util.isHermesConfiguration(this._clientToken, this._clientOptions),
+    isDropin: this.isDropin,
+    channel: this.channel
+  });
+  views.push(this.appView);
+
+  if (!this.isDropin) {
+    this.merchantPageView = new MerchantPageView({
+      channel: this.channel
+    });
+    views.push(this.merchantPageView);
+
+    if (browser.isPopupSupported() && browser.isOverlaySupported()) {
+      this.overlayView = new OverlayView({
+        paypalAssetsUrl: this._clientToken.paypal.assetsUrl,
+        onFocus: function () { self.bus.emit(constants.events.FOCUS_APP); },
+        onClose: function () { self.bus.emit(constants.events.CLOSE_APP); },
+        locale: this._clientOptions.locale,
+        channel: this.channel
+      });
+      views.push(this.overlayView);
+    }
+  }
+
+  if (!(this.isDropin || this.headless)) {
+    this.paymentMethodNonceInputFieldView = new PaymentMethodNonceInputFieldView({
+      container: this.container,
+      el: this.paymentMethodNonceInputField,
+      channel: this.channel
+    });
+    views.push(this.paymentMethodNonceInputFieldView);
+
+    this.loggedInView = new LoggedInView({
+      paypalAssetsUrl: this._clientToken.paypal.assetsUrl,
+      container: this.container,
+      locale: this._clientOptions.locale,
+      channel: this.channel
+    });
+    views.push(this.loggedInView);
+
+    this.loggedOutView = new LoggedOutView({
+      paypalAssetsUrl: this._clientToken.paypal.assetsUrl,
+      container: this.container,
+      enablePayPalButton: util.isOnetimeHermesConfiguration(this._clientToken, this._clientOptions),
+      locale: this._clientOptions.locale,
+      channel: this.channel
+    });
+    views.push(this.loggedOutView);
+  }
+
+  this.destructor.registerFunctionForTeardown(function () {
+    for (i = 0; i < views.length; i++) {
+      views[i].teardown();
+    }
+  });
+};
+
+Client.prototype._handleClickLogin = function (event) {
+  var target = event.target || event.srcElement;
+
+  while (true) { // eslint-disable-line no-constant-condition
+    if (target == null) { return; }
+    if (target === event.currentTarget) { return; }
+    if (this._isButton(target)) { break; }
+
+    target = target.parentNode;
+  }
+
+  util.preventDefault(event);
+
+  this.initAuthFlow();
+};
+
+Client.prototype.initAuthFlow = function () {
+  this.appView.open();
+};
+
+Client.prototype.closeAuthFlow = function () {
+  this.appView.close();
+};
+
+Client.prototype._isButton = function (node) {
+  var isPayPalButton = node.id === 'braintree-paypal-button';
+  var isHermesButton = util.isOnetimeHermesConfiguration(this._clientToken, this._clientOptions) &&
+    node.className.match(/paypal-button(?!-widget)/);
+
+  return isPayPalButton || isHermesButton;
+};
+
+Client.prototype._handlePaymentMethodGenerated = function (bundle) {
+  if (bundle.type === constants.NONCE_TYPE && isFunction(this.onSuccess)) {
+    this.onSuccess(bundle);
+  }
+};
+
+Client.prototype._handlePaymentMethodCancelled = function (payload) {
+  if (payload.source === constants.PAYPAL_INTEGRATION_NAME && isFunction(this.onCancelled)) {
+    this.onCancelled();
+  }
+};
+
+Client.prototype._clientTokenData = function () {
+  return {
+    analyticsUrl: this._clientToken.analytics ?
+      this._clientToken.analytics.url : null,
+    authorizationFingerprint: this._clientToken.authorizationFingerprint,
+    clientApiUrl: this._clientToken.clientApiUrl,
+    displayName: this._clientOptions.displayName || this._clientToken.paypal.displayName,
+    paypalAssetsUrl: this._clientToken.paypal.assetsUrl,
+    paypalClientId: this._clientToken.paypal.clientId,
+    paypalPrivacyUrl: this._clientToken.paypal.privacyUrl,
+    paypalUserAgreementUrl: this._clientToken.paypal.userAgreementUrl,
+    billingAgreementsEnabled: this._clientToken.paypal.billingAgreementsEnabled,
+    unvettedMerchant: this._clientToken.paypal.unvettedMerchant,
+    payeeEmail: this._clientToken.paypal.payeeEmail,
+    correlationId: this._clientToken.correlationId,
+    offline: this._clientOptions.offline || this._clientToken.paypal.environmentNoNetwork,
+    sdkVersion: this._clientToken.sdkVersion,
+    merchantAppId: this._clientToken.merchantAppId
+  };
+};
+
+Client.prototype._handleGetClientToken = function (callback) {
+  callback(this._clientTokenData());
+};
+
+Client.prototype._clientOptionsData = function () {
+  return {
+    locale: this._clientOptions.locale || 'en_us',
+    onetime: this._clientOptions.singleUse || false,
+    integration: this._clientOptions.integration || 'paypal',
+    enableShippingAddress: this._clientOptions.enableShippingAddress || false,
+    enableBillingAddress: this._clientOptions.enableBillingAddress || false,
+    enableHermes: util.isHermesConfiguration(this._clientToken, this._clientOptions),
+    amount: this._clientOptions.amount || null,
+    currency: this._clientOptions.currency || null,
+    shippingAddressOverride: this._clientOptions.shippingAddressOverride || null,
+    enableCORS: this._clientOptions.enableCORS
+  };
+};
+
+Client.prototype._handleGetClientOptions = function (callback) {
+  callback(this._clientOptionsData());
+};
+
+Client.prototype.teardown = function () {
+  var self = this;
+
+  this.destructor.teardown(function () {
+    self.bus.teardown();
+  });
+};
+
+module.exports = Client;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"152":152,"164":164,"214":214,"215":215,"216":216,"217":217,"218":218,"220":220,"221":221,"223":223,"231":231,"233":233,"82":82,"86":86,"96":96,"97":97}],212:[function(require,module,exports){
+'use strict';
+
+var Client = require(211);
+var browser = require(231);
+var constants = require(223);
+var getLocale = require(225);
+var isHermesConfiguration = require(233).isHermesConfiguration;
+var isOnetimeHermesConfiguration = require(233).isOnetimeHermesConfiguration;
+var VERSION = "2.15.2";
+var braintreeUtil = require(82);
+var braintreeApi = require(15);
+
+function create(clientToken, options, channel) {
+  var client, onUnsupported;
+
+  options = options || {};
+  onUnsupported = options.onUnsupported;
+
+  if (typeof onUnsupported !== 'function') {
+    onUnsupported = function (error) {
+      try {
+        console.log(error); // eslint-disable-line no-console
+      } catch (e) {} // eslint-disable-line
+    };
+  }
+
+  if (!clientToken) {
+    onUnsupported(new Error('Parameter "clientToken" cannot be null'));
+    return null;
+  }
+
+  clientToken = braintreeApi.parseClientToken(clientToken);
+
+  if (!clientToken.paypalEnabled) {
+    onUnsupported(new Error('PayPal is not enabled'));
+    return null;
+  }
+
+  if (!browser.detectedPostMessage()) {
+    onUnsupported(new Error('unsupported browser detected'));
+    return null;
+  }
+
+  if (!options.container && !options.headless) {
+    onUnsupported(new Error('Please supply a container for the PayPal button to be appended to'));
+    return null;
+  }
+
+  if (!isBrowserSecure(clientToken, options)) {
+    onUnsupported(new Error('unsupported protocol detected'));
+    return null;
+  }
+
+  if (isMisconfiguredUnvettedMerchant(clientToken, options)) {
+    onUnsupported(new Error('Unvetted merchant client token does not include a payee email'));
+    return null;
+  }
+
+  if (isHermesConfiguration(clientToken, options)) {
+    if (!isHermesSupportedCountry(options.locale)) {
+      onUnsupported(new Error('This PayPal integration does not support this country'));
+      return null;
+    }
+  }
+
+  if (isOnetimeHermesConfiguration(clientToken, options)) {
+    if (!isHermesSupportedCurrency(options.currency)) {
+      onUnsupported(new Error('This PayPal integration does not support this currency'));
+      return null;
+    }
+
+    if (!isValidAmount(options.amount)) {
+      onUnsupported(new Error('Amount must be a number'));
+      return null;
+    }
+  }
+
+  client = new Client(clientToken, options, channel);
+  client.initialize();
+
+  return client;
+}
+
+function isSupportedOption(option, supported) {
+  var i;
+  var supportedLength = supported.length;
+  var isSupported = false;
+
+  for (i = 0; i < supportedLength; i++) {
+    if (option.toLowerCase() === supported[i].toLowerCase()) {
+      isSupported = true;
+    }
+  }
+
+  return isSupported;
+}
+
+function isHermesSupportedCurrency(currency) {
+  return isSupportedOption(currency, constants.HERMES_SUPPORTED_CURRENCIES);
+}
+
+function isHermesSupportedCountry(locale) {
+  return isSupportedOption(getLocale(locale).split('_')[1], constants.HERMES_SUPPORTED_COUNTRIES);
+}
+
+function isValidAmount(amount) {
+  amount = parseFloat(amount);
+  return typeof amount === 'number' && !isNaN(amount) && amount >= 0;
+}
+
+function isMisconfiguredUnvettedMerchant(clientToken, options) {
+  return clientToken.paypal.unvettedMerchant && (!isHermesConfiguration(clientToken, options) || !clientToken.paypal.payeeEmail);
+}
+
+function isBrowserSecure(clientToken, options) {
+  if (clientToken.paypal.allowHttp) { return true; }
+  if (browser.isPopupSupported()) { return true; }
+  if ('merchantHttps' in options) { return options.merchantHttps; }
+
+  return braintreeUtil.isBrowserHttps();
+}
+
+module.exports = {
+  create: create,
+  VERSION: VERSION
+};
+
+},{"15":15,"211":211,"223":223,"225":225,"231":231,"233":233,"82":82}],213:[function(require,module,exports){
+module.exports={
+  "en_us": {
+    "cancel": "Cancel",
+    "overlay_text": "Don't see the secure PayPal browser? We'll help you re-launch the window to complete your purchase.",
+    "continue_link": "Continue"
+  },
+  "en_uk": {
+    "cancel":  "Cancel",
+    "overlay_text": "Don't see the secure PayPal browser? We'll help you re-launch the window to complete your purchase.",
+    "continue_link": "Continue"
+  },
+  "en_au": {
+    "cancel": "Cancel",
+    "overlay_text": "Don't see the secure PayPal browser? We'll help you re-launch the window to complete your purchase.",
+    "continue_link": "Continue"
+  },
+  "sv_se": {
+    "cancel": "Avbryt",
+    "overlay_text": "Ser du inte den sÃ¤kra PayPal-webbl&auml;saren? Vi hj&auml;lper dig att starta om f&ouml;nstret f&ouml;r att slutf&ouml;ra k&ouml;pet.",
+    "continue_link": "Forts&auml;tt"
+  },
+  "de_de": {
+    "cancel": "Abbrechen",
+    "overlay_text": "Sie sehen das sichere Browserfenster von PayPal nicht? Das Fenster wird neu ge&ouml;ffnet, damit Sie Ihren Einkauf abschlie&szlig;en k&ouml;nnen.",
+    "continue_link": "Weiter"
+  },
+  "fr_fr": {
+    "cancel": "Annuler",
+    "overlay_text": "Vous ne voyez pas le navigateur s&eacute;curis&eacute; PayPal ? Nous allons vous aider &agrave; relancer la fen&ecirc;tre pour effectuer votre achat.",
+    "continue_link": "Continuer"
+  },
+  "en_ca": {
+    "cancel": "Cancel",
+    "overlay_text": "Don't see the secure PayPal browser? We'll help you re-launch the window to complete your purchase.",
+    "continue_link": "Continue"
+  },
+  "fr_ca": {
+    "cancel": "Annuler",
+    "overlay_text": "Vous ne voyez pas le navigateur s&eacute;curis&eacute; de PayPal ? Nous vous aiderons &agrave; relancer la fen&ecirc;tre afin d'effectuer votre achat.",
+    "continue_link": "Continuer"
+  },
+  "es_es": {
+    "cancel": "Cancelar",
+    "overlay_text": "&iquest;No ves el s&iacute;mbolo de navegaci&oacute;n segura de PayPal? Te ayudaremos a abrir de nuevo la ventana para completar la compra.",
+    "continue_link": "Continuar"
+  },
+  "es_xc": {
+    "cancel": "Cancelar",
+    "overlay_text": "&iquest;No ve el s&iacute;mbolo de navegaci&oacute;n segura de PayPal? Abriremos la ventana nuevamente para que pueda completar su compra.",
+    "continue_link": "Continuar"
+  },
+  "fr_xc": {
+    "cancel": "Annuler",
+    "overlay_text": "Le navigateur s&eacute;curis&eacute; de PayPal n'appara&icirc;t pas ? Nous allons vous aider &agrave; rouvrir la fen&ecirc;tre pour finaliser votre achat.",
+    "continue_link": "Continuer"
+  },
+  "nl_nl": {
+    "cancel": "Annuleren",
+    "overlay_text": "Ziet u de beveiligde PayPal-browser niet? We helpen u het venster opnieuw te openen zodat u uw aankoop kunt voltooien.",
+    "continue_link": "Doorgaan"
+  },
+  "pt_pt": {
+    "cancel": "Cancelar",
+    "overlay_text": "N&atilde;o est&aacute; a ver a indica&ccedil;&atilde;o de liga&ccedil;&atilde;o segura PayPal no browser? Vamos ent&atilde;o voltar a abrir a janela para concluir a sua compra.",
+    "continue_link": "Continuar"
+  },
+  "ru_ru": {
+    "cancel": "ÐžÑ‚Ð¼ÐµÐ½Ð°",
+    "overlay_text": "ÐÐµ Ð¾Ñ‚Ð¾Ð±Ñ€Ð°Ð¶Ð°ÐµÑ‚ÑÑ Ð±ÐµÐ·Ð¾Ð¿Ð°ÑÐ½Ð°Ñ ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ð° PayPal Ð² Ð±Ñ€Ð°ÑƒÐ·ÐµÑ€Ðµ? ÐœÑ‹ Ð¿Ð¾Ð¼Ð¾Ð¶ÐµÐ¼ Ð²Ð°Ð¼ Ð¿Ð¾Ð²Ñ‚Ð¾Ñ€Ð½Ð¾ Ð·Ð°Ð³Ñ€ÑƒÐ·Ð¸Ñ‚ÑŒ Ð¾ÐºÐ½Ð¾, Ñ‡Ñ‚Ð¾Ð±Ñ‹ Ð·Ð°Ð²ÐµÑ€ÑˆÐ¸Ñ‚ÑŒ Ð¿Ð¾ÐºÑƒÐ¿ÐºÑƒ.",
+    "continue_link": "ÐŸÑ€Ð¾Ð´Ð¾Ð»Ð¶Ð¸Ñ‚ÑŒ"
+  },
+  "da_dk": {
+    "cancel": "Annuller",
+    "overlay_text": "Kan du ikke se PayPals sikre browser? Vi hj&aelig;lper dig med at &aring;bne vinduet igen, s&aring; du kan betale.",
+    "continue_link": "Forts&aelig;t"
+  },
+  "it_it": {
+    "cancel": "Annulla",
+    "overlay_text": "Non vedi il browser sicuro di PayPal? Ti aiuteremo a riavviare la pagina per completare l'acquisto.",
+    "continue_link": "Continua"
+  },
+  "no_no": {
+    "cancel": "Avbryt",
+    "overlay_text": "Ser du ikke den sikre PayPal-nettleseren? Vi hjelper deg med &aring; &aring;pne vinduet p&aring; nytt s&aring; du kan fullf&oslash;re kj&oslash;pet.",
+    "continue_link": "Fortsett"
+  },
+  "pl_pl": {
+    "cancel": "Anuluj",
+    "overlay_text": "Nie widzisz bezpiecznej przeglÄ…darki PayPal? PomoÅ¼emy Ci ponownie uruchomiÄ‡ to okno w celu dokonania zakupu.",
+    "continue_link": "Kontynuuj"
+  },
+  "tr_tr": {
+    "cancel": "Ä°ptal",
+    "overlay_text": "G&uuml;venli PayPal tarayÄ±cÄ±sÄ±nÄ± g&ouml;rm&uuml;yor musunuz? AlÄ±ÅŸveriÅŸinizi tamamlamak i&ccedil;in pencereyi yeniden baÅŸlatmanÄ±za yardÄ±mcÄ± olacaÄŸÄ±z.",
+    "continue_link": "Devam"
+  },
+  "zh_xc": {
+    "cancel": "å–æ¶ˆ",
+    "overlay_text": "æ²¡æœ‰çœ‹åˆ°å®‰å…¨çš„PayPalæµè§ˆå™¨ï¼Ÿæˆ‘ä»¬å°†å¸®åŠ©æ‚¨é‡å¯çª—å£ä»¥å®Œæˆè´­ç‰©ã€‚",
+    "continue_link": "ç»§ç»­"
+  },
+  "en_hk": {
+    "cancel": "Cancel",
+    "overlay_text": "Don't see the secure PayPal browser? We'll help you re-launch the window to complete your purchase.",
+    "continue_link": "Continue"
+  },
+  "zh_hk": {
+    "cancel": "å–æ¶ˆ",
+    "overlay_text": "çœ‹ä¸åˆ°å®‰å…¨çš„ PayPal ç€è¦½å™¨è¦–çª—ï¼Ÿæˆ‘å€‘æœƒåŠ©ä½ é‡æ–°å•Ÿå‹•è¦–çª—ï¼Œä»¥å®Œæˆè³¼ç‰©ã€‚",
+    "continue_link": "ç¹¼çºŒ"
+  },
+  "en_my": {
+    "cancel": "Cancel",
+    "overlay_text": "Don't see the secure PayPal browser? We'll help you re-launch the window to complete your purchase.",
+    "continue_link": "Continue"
+  },
+  "en_nz": {
+    "cancel": "Cancel",
+    "overlay_text": "Don't see the secure PayPal browser? We'll help you re-launch the window to complete your purchase.",
+    "continue_link": "Continue"
+  },
+  "en_sg": {
+    "cancel": "Cancel",
+    "overlay_text": "Don't see the secure PayPal browser? We'll help you re-launch the window to complete your purchase.",
+    "continue_link": "Continue"
+  }
+}
+
+},{}],214:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var bind = require(96);
+var isFunction = require(152);
+var browser = require(231);
+var Destructor = require(86);
+var Bus = require(164);
+var constants = require(223);
+var PopupView = require(222);
+var ModalView = require(219);
+
+function AppView(options) {
+  var self = this;
+
+  this.options = options || {};
+
+  this.destructor = new Destructor();
+
+  this.bus = new Bus({
+    merchantUrl: global.location.href,
+    channel: this.options.channel
+  });
+
+  this.destructor.registerFunctionForTeardown(function () {
+    self.bus.teardown();
+  });
+
+  this._initialize();
+}
+
+AppView.prototype._initialize = function () {
+  var self = this;
+
+  if (browser.isPopupSupported()) {
+    this.app = new PopupView({
+      src: this._buildUrl(),
+      isHermes: this.options.isHermes,
+      channel: this.options.channel
+    });
+  } else {
+    this.app = new ModalView({
+      src: this._buildUrl(),
+      isDropin: this.options.isDropin,
+      isHermes: this.options.isHermes,
+      insertFrameFunction: this.options.insertFrameFunction,
+      channel: this.options.channel
+    });
+  }
+
+  this.destructor.registerFunctionForTeardown(function () {
+    self.app.teardown();
+  });
+
+  this.bus.on(constants.events.CLOSE_APP, bind(this.close, this));
+  this.bus.on(constants.events.FOCUS_APP, bind(this.focus, this));
+  this.bus.on(Bus.events.PAYMENT_METHOD_GENERATED, bind(this._handlePaymentMethodGenerated, this));
+  this.bus.on(Bus.events.UI_POPUP_FORCE_CLOSE, bind(this._handleForceClose, this));
+};
+
+AppView.prototype._buildUrl = function () {
+  var url = this.options.paypalAssetsUrl;
+
+  url += '/pwpp/';
+  url += constants.VERSION;
+  url += '/html/braintree-frame.html';
+  url += '#' + this.options.channel;
+
+  return url;
+};
+
+AppView.prototype.open = function () {
+  this.focus();
+  this.app.open();
+  this.poll();
+};
+
+AppView.prototype._handleForceClose = function (event) {
+  if (event.target === constants.PAYPAL_INTEGRATION_NAME) {
+    this.close();
+  }
+};
+
+AppView.prototype.close = function () {
+  this.app.close();
+};
+
+AppView.prototype.focus = function () {
+  if (isFunction(this.app.focus)) {
+    this.app.focus();
+  }
+};
+
+AppView.prototype.isClosed = function () {
+  return this.app.isClosed();
+};
+
+AppView.prototype.stopPolling = function () {
+  clearInterval(this.pollId);
+};
+
+AppView.prototype.poll = function () {
+  var self = this;
+
+  this.pollId = setInterval(function () {
+    if (self.isClosed()) {
+      self._handleClosed();
+    }
+  }, 100);
+};
+
+AppView.prototype._handlePaymentMethodGenerated = function (bundle) {
+  if (bundle.type === constants.NONCE_TYPE) {
+    this.close();
+  }
+};
+
+AppView.prototype._handleClosed = function () {
+  this.stopPolling();
+
+  this.close();
+
+  if (browser.isPopupSupported()) {
+    this.app.el = null;
+  }
+};
+
+AppView.prototype.teardown = function () {
+  this.destructor.teardown();
+};
+
+module.exports = AppView;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"152":152,"164":164,"219":219,"222":222,"223":223,"231":231,"86":86,"96":96}],215:[function(require,module,exports){
+'use strict';
+
+var constants = require(223);
+var iframer = require(91);
+
+function BridgeIframeView(options) {
+  this.options = options || {};
+
+  this.el = iframer({
+    src: this._buildUrl(),
+    name: constants.BRIDGE_FRAME_NAME,
+    height: 1,
+    width: 1,
+    style: {
+      position: 'static',
+      top: 0,
+      left: 0,
+      bottom: 0,
+      padding: 0,
+      margin: 0,
+      border: 0,
+      outline: 'none',
+      background: 'transparent'
+    }
+  });
+
+  this.options.container.appendChild(this.el);
+}
+
+BridgeIframeView.prototype._buildUrl = function () {
+  var url = this.options.paypalAssetsUrl;
+
+  url += '/pwpp/';
+  url += constants.VERSION;
+  url += '/html/bridge-frame.html';
+  url += '#' + this.options.channel;
+
+  return url;
+};
+
+BridgeIframeView.prototype.teardown = function () {
+  this.options.container.removeChild(this.el);
+};
+
+module.exports = BridgeIframeView;
+
+},{"223":223,"91":91}],216:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var braintreeUtil = require(82);
+var bind = require(96);
+var Destructor = require(86);
+var Bus = require(164);
+var util = require(233);
+var dom = require(232);
+var constants = require(223);
+var getLocalizationData = require(226);
+var translations = require(213);
+
+function LoggedInView(options) {
+  var localizationData;
+
+  this.options = options || {};
+  this.wrapper = this.options.container || document.body;
+
+  this.destructor = new Destructor();
+
+  this.bus = new Bus({
+    merchantUrl: global.location.href,
+    channel: options.channel
+  });
+
+  localizationData = getLocalizationData(this.options.locale, translations);
+  this.translation = localizationData.translation;
+
+  this._initialize();
+}
+
+LoggedInView.prototype._initialize = function () {
+  var self = this;
+  var clickLogoutHandler = bind(this._handleClickLogout, this);
+
+  this._createViewContainer();
+  this._createPayPalName();
+  this._createEmailNode();
+  this._createLogoutNode();
+
+  braintreeUtil.addEventListener(this.logoutNode, 'click', clickLogoutHandler);
+
+  this.destructor.registerFunctionForTeardown(function () {
+    braintreeUtil.removeEventListener(self.logoutNode, 'click', clickLogoutHandler);
+  });
+
+  this.bus.on(Bus.events.PAYMENT_METHOD_GENERATED, bind(this._handlePaymentMethodGenerated, this));
+  this.bus.on(Bus.events.PAYMENT_METHOD_CANCELLED, bind(this._handlePaymentMethodCancelled, this));
+};
+
+LoggedInView.prototype._createViewContainer = function () {
+  var cssStyles = [
+    'display: none',
+    'max-width: 500px',
+    'overflow: hidden',
+    'padding: 16px',
+    'background-image: url(' + this.options.paypalAssetsUrl + '/pwpp/' + constants.VERSION + '/images/paypal-small.png)',
+    'background-image: url(' + this.options.paypalAssetsUrl + '/pwpp/' + constants.VERSION + '/images/paypal-small.svg), none',
+    'background-position: 20px 50%',
+    'background-repeat: no-repeat',
+    'background-size: 13px 15px',
+    'border-top: 1px solid #d1d4d6',
+    'border-bottom: 1px solid #d1d4d6'
+  ].join(';');
+
+  this.container = document.createElement('div');
+  this.container.id = 'braintree-paypal-loggedin';
+  this.container.style.cssText = cssStyles;
+
+  this.wrapper.appendChild(this.container);
+};
+
+LoggedInView.prototype._createPayPalName = function () {
+  var cssStyles = [
+    'color: #283036',
+    'font-size: 13px',
+    'font-weight: 800',
+    'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif',
+    'margin-left: 36px',
+    '-webkit-font-smoothing: antialiased',
+    '-moz-font-smoothing: antialiased',
+    '-ms-font-smoothing: antialiased',
+    'font-smoothing: antialiased'
+  ].join(';');
+
+  this.payPalName = document.createElement('span');
+  this.payPalName.id = 'bt-pp-name';
+  this.payPalName.innerHTML = 'PayPal';
+  this.payPalName.style.cssText = cssStyles;
+
+  return this.container.appendChild(this.payPalName);
+};
+
+LoggedInView.prototype._createEmailNode = function () {
+  var cssStyles = [
+    'color: #6e787f',
+    'font-size: 13px',
+    'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif',
+    'margin-left: 5px',
+    '-webkit-font-smoothing: antialiased',
+    '-moz-font-smoothing: antialiased',
+    '-ms-font-smoothing: antialiased',
+    'font-smoothing: antialiased'
+  ].join(';');
+
+  this.emailNode = document.createElement('span');
+  this.emailNode.id = 'bt-pp-email';
+  this.emailNode.style.cssText = cssStyles;
+
+  this.container.appendChild(this.emailNode);
+};
+
+LoggedInView.prototype._createLogoutNode = function () {
+  var cssStyles = [
+    'color: #3d95ce',
+    'font-size: 11px',
+    'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif',
+    'line-height: 20px',
+    'margin: 0 0 0 25px',
+    'padding: 0',
+    'background-color: transparent',
+    'border: 0',
+    'cursor: pointer',
+    'text-decoration: underline',
+    'float: right',
+    '-webkit-font-smoothing: antialiased',
+    '-moz-font-smoothing: antialiased',
+    '-ms-font-smoothing: antialiased',
+    'font-smoothing: antialiased'
+  ].join(';');
+
+  this.logoutNode = document.createElement('button');
+  this.logoutNode.id = 'bt-pp-cancel';
+  this.logoutNode.innerHTML = this.translation.cancel;
+  this.logoutNode.style.cssText = cssStyles;
+
+  this.container.appendChild(this.logoutNode);
+};
+
+LoggedInView.prototype.show = function (email) {
+  this.container.style.display = 'block';
+  dom.setTextContent(this.emailNode, email);
+};
+
+LoggedInView.prototype.hide = function () {
+  this.container.style.display = 'none';
+};
+
+LoggedInView.prototype._handleClickLogout = function (event) {
+  util.preventDefault(event);
+
+  this.bus.emit(Bus.events.PAYMENT_METHOD_CANCELLED, {source: constants.PAYPAL_INTEGRATION_NAME});
+};
+
+LoggedInView.prototype._handlePaymentMethodGenerated = function (bundle) {
+  var email;
+
+  if (bundle.type === constants.NONCE_TYPE) {
+    email = bundle && bundle.details && bundle.details.email ? bundle.details.email : '';
+    this.show(email);
+  }
+};
+
+LoggedInView.prototype._handlePaymentMethodCancelled = function (event) {
+  if (event.source === constants.PAYPAL_INTEGRATION_NAME) {
+    this.hide();
+  }
+};
+
+LoggedInView.prototype.teardown = function () {
+  this.wrapper.removeChild(this.container);
+  this.destructor.teardown();
+  this.bus.teardown();
+};
+
+module.exports = LoggedInView;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"164":164,"213":213,"223":223,"226":226,"232":232,"233":233,"82":82,"86":86,"96":96}],217:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var bind = require(96);
+var Bus = require(164);
+var constants = require(223);
+var getLocale = require(225);
+
+function LoggedOutView(options) {
+  this.options = options;
+  this.wrapper = this.options.container || document.body;
+
+  this.bus = new Bus({
+    merchantUrl: global.location.href,
+    channel: options.channel
+  });
+
+  this._initialize();
+}
+
+LoggedOutView.prototype._initialize = function () {
+  this.createViewContainer();
+
+  if (this.options.enablePayPalButton) {
+    this.createCheckoutWithPayPalButton();
+  } else {
+    this.createPayWithPayPalButton();
+  }
+
+  this.bus.on(Bus.events.PAYMENT_METHOD_GENERATED, bind(this._handlePaymentMethodGenerated, this));
+  this.bus.on(Bus.events.PAYMENT_METHOD_CANCELLED, bind(this._handlePaymentMethodCancelled, this));
+};
+
+LoggedOutView.prototype.createViewContainer = function () {
+  this.container = document.createElement('div');
+  this.container.id = 'braintree-paypal-loggedout';
+
+  this.wrapper.appendChild(this.container);
+  this.loginNode = this.container;
+};
+
+LoggedOutView.prototype.createPayWithPayPalButton = function () {
+  var element = document.createElement('a');
+  var image = new Image();
+  var imageCssText = [
+    'max-width: 100%',
+    'display: block',
+    'width: 100%',
+    'height: 100%',
+    'outline: none',
+    'border: 0'
+  ].join(';');
+  var cssStyles = [
+    'display: block',
+    'width: 115px',
+    'height: 44px',
+    'overflow: hidden'
+  ].join(';');
+
+  element.id = 'braintree-paypal-button';
+  element.href = '#';
+  element.style.cssText = cssStyles;
+
+  image.src = this.options.paypalAssetsUrl + '/pwpp/' + constants.VERSION + '/images/pay-with-paypal.png';
+  image.setAttribute('alt', 'Pay with PayPal');
+  image.style.cssText = imageCssText;
+
+  element.appendChild(image);
+  this.container.appendChild(element);
+};
+
+LoggedOutView.prototype.createCheckoutWithPayPalButton = function () {
+  var script = document.createElement('script');
+  var attr;
+  var scriptAttrs = {
+    'data-merchant': 'merchant-id',
+    'data-button': 'checkout',
+    'data-type': 'button',
+    'data-color': 'blue',
+    'data-lc': getLocale(this.options.locale)
   };
 
-  utils.addEventListener(window, 'message', this.wrappedCallback);
-};
+  script.src = '//www.paypalobjects.com/api/button.js';
+  script.async = true;
 
-Receiver.prototype.hashChangeReceiver = function (callback) {
-  var hash,
-      originalHash = window.location.hash,
-      self = this;
-
-  this.poll = setInterval(function () {
-    hash = window.location.hash;
-
-    if (hash.length > 0 && (hash !== originalHash)) {
-      self.stopListening();
-
-      hash = hash.substring(1, hash.length);
-      callback(hash);
-
-      if (originalHash.length > 0) {
-        window.location.hash = originalHash;
-      } else {
-        window.location.hash = '';
-      }
+  for (attr in scriptAttrs) {
+    if (scriptAttrs.hasOwnProperty(attr)) {
+      script.setAttribute(attr, scriptAttrs[attr]);
     }
-  }, 10);
+  }
+
+  this.container.appendChild(script);
 };
 
-Receiver.prototype.stopListening = function () {
-  clearTimeout(this.poll);
-
-  utils.removeEventListener(window, 'message', this.wrappedCallback);
+LoggedOutView.prototype.show = function () {
+  this.container.style.display = 'block';
 };
 
-module.exports = Receiver;
+LoggedOutView.prototype.hide = function () {
+  this.container.style.display = 'none';
+};
 
-},{"braintree-utilities":82}],88:[function(require,module,exports){
-arguments[4][25][0].apply(exports,arguments)
-},{"braintree-utilities":98,"dup":25}],89:[function(require,module,exports){
-arguments[4][26][0].apply(exports,arguments)
-},{"braintree-utilities":98,"dup":26}],90:[function(require,module,exports){
-arguments[4][27][0].apply(exports,arguments)
-},{"dup":27}],91:[function(require,module,exports){
-arguments[4][28][0].apply(exports,arguments)
-},{"braintree-utilities":98,"dup":28}],92:[function(require,module,exports){
-arguments[4][29][0].apply(exports,arguments)
-},{"braintree-utilities":98,"dup":29}],93:[function(require,module,exports){
-arguments[4][30][0].apply(exports,arguments)
-},{"./lib/message-bus":88,"./lib/pubsub-client":89,"./lib/pubsub-server":90,"./lib/rpc-client":91,"./lib/rpc-server":92,"dup":30}],94:[function(require,module,exports){
-arguments[4][31][0].apply(exports,arguments)
-},{"dup":31}],95:[function(require,module,exports){
-arguments[4][32][0].apply(exports,arguments)
-},{"dup":32}],96:[function(require,module,exports){
-arguments[4][33][0].apply(exports,arguments)
-},{"dup":33}],97:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],98:[function(require,module,exports){
-arguments[4][19][0].apply(exports,arguments)
-},{"./lib/dom":94,"./lib/events":95,"./lib/fn":96,"./lib/url":97,"dup":19}],99:[function(require,module,exports){
-arguments[4][15][0].apply(exports,arguments)
-},{"dup":15}],100:[function(require,module,exports){
-arguments[4][16][0].apply(exports,arguments)
-},{"dup":16}],101:[function(require,module,exports){
-arguments[4][17][0].apply(exports,arguments)
-},{"dup":17}],102:[function(require,module,exports){
-arguments[4][39][0].apply(exports,arguments)
-},{"dup":39}],103:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],104:[function(require,module,exports){
-arguments[4][41][0].apply(exports,arguments)
-},{"./lib/dom":99,"./lib/events":100,"./lib/fn":101,"./lib/string":102,"./lib/url":103,"dup":41}],105:[function(require,module,exports){
-arguments[4][42][0].apply(exports,arguments)
-},{"./lib/events":106,"dup":42,"framebus":107}],106:[function(require,module,exports){
-arguments[4][43][0].apply(exports,arguments)
-},{"dup":43}],107:[function(require,module,exports){
-arguments[4][44][0].apply(exports,arguments)
-},{"dup":44}],108:[function(require,module,exports){
-arguments[4][65][0].apply(exports,arguments)
-},{"./coinbase-account":109,"./credit-card":110,"./jsonp-driver":111,"./normalize-api-fields":113,"./parse-client-token":114,"./root-data":116,"./sepa-bank-account":117,"./sepa-mandate":118,"./util":119,"braintree-3ds":128,"braintree-utilities":147,"dup":65}],109:[function(require,module,exports){
-arguments[4][3][0].apply(exports,arguments)
-},{"dup":3}],110:[function(require,module,exports){
-arguments[4][4][0].apply(exports,arguments)
-},{"dup":4}],111:[function(require,module,exports){
-arguments[4][5][0].apply(exports,arguments)
-},{"./jsonp":112,"dup":5}],112:[function(require,module,exports){
-arguments[4][6][0].apply(exports,arguments)
-},{"./util":119,"dup":6}],113:[function(require,module,exports){
-arguments[4][7][0].apply(exports,arguments)
-},{"dup":7}],114:[function(require,module,exports){
-arguments[4][8][0].apply(exports,arguments)
-},{"./polyfill":115,"dup":8}],115:[function(require,module,exports){
-arguments[4][9][0].apply(exports,arguments)
-},{"dup":9}],116:[function(require,module,exports){
-arguments[4][10][0].apply(exports,arguments)
-},{"braintree-rpc":136,"dup":10}],117:[function(require,module,exports){
-arguments[4][11][0].apply(exports,arguments)
-},{"dup":11}],118:[function(require,module,exports){
-arguments[4][12][0].apply(exports,arguments)
-},{"dup":12}],119:[function(require,module,exports){
-arguments[4][13][0].apply(exports,arguments)
-},{"dup":13}],120:[function(require,module,exports){
-arguments[4][14][0].apply(exports,arguments)
-},{"./lib/client":108,"./lib/jsonp":112,"./lib/jsonp-driver":111,"./lib/parse-client-token":114,"./lib/util":119,"dup":14}],121:[function(require,module,exports){
-arguments[4][15][0].apply(exports,arguments)
-},{"dup":15}],122:[function(require,module,exports){
-arguments[4][16][0].apply(exports,arguments)
-},{"dup":16}],123:[function(require,module,exports){
-arguments[4][17][0].apply(exports,arguments)
-},{"dup":17}],124:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],125:[function(require,module,exports){
-arguments[4][19][0].apply(exports,arguments)
-},{"./lib/dom":121,"./lib/events":122,"./lib/fn":123,"./lib/url":124,"dup":19}],126:[function(require,module,exports){
-arguments[4][83][0].apply(exports,arguments)
-},{"../shared/receiver":130,"braintree-utilities":125,"dup":83}],127:[function(require,module,exports){
-arguments[4][84][0].apply(exports,arguments)
-},{"./authorization_service":126,"braintree-utilities":125,"dup":84}],128:[function(require,module,exports){
-arguments[4][22][0].apply(exports,arguments)
-},{"./client":127,"./vendor/json2":129,"dup":22}],129:[function(require,module,exports){
-arguments[4][23][0].apply(exports,arguments)
-},{"dup":23}],130:[function(require,module,exports){
-arguments[4][87][0].apply(exports,arguments)
-},{"braintree-utilities":125,"dup":87}],131:[function(require,module,exports){
-arguments[4][25][0].apply(exports,arguments)
-},{"braintree-utilities":141,"dup":25}],132:[function(require,module,exports){
-arguments[4][26][0].apply(exports,arguments)
-},{"braintree-utilities":141,"dup":26}],133:[function(require,module,exports){
-arguments[4][27][0].apply(exports,arguments)
-},{"dup":27}],134:[function(require,module,exports){
-arguments[4][28][0].apply(exports,arguments)
-},{"braintree-utilities":141,"dup":28}],135:[function(require,module,exports){
-arguments[4][29][0].apply(exports,arguments)
-},{"braintree-utilities":141,"dup":29}],136:[function(require,module,exports){
-arguments[4][30][0].apply(exports,arguments)
-},{"./lib/message-bus":131,"./lib/pubsub-client":132,"./lib/pubsub-server":133,"./lib/rpc-client":134,"./lib/rpc-server":135,"dup":30}],137:[function(require,module,exports){
-arguments[4][31][0].apply(exports,arguments)
-},{"dup":31}],138:[function(require,module,exports){
-arguments[4][32][0].apply(exports,arguments)
-},{"dup":32}],139:[function(require,module,exports){
-arguments[4][33][0].apply(exports,arguments)
-},{"dup":33}],140:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],141:[function(require,module,exports){
-arguments[4][19][0].apply(exports,arguments)
-},{"./lib/dom":137,"./lib/events":138,"./lib/fn":139,"./lib/url":140,"dup":19}],142:[function(require,module,exports){
-arguments[4][15][0].apply(exports,arguments)
-},{"dup":15}],143:[function(require,module,exports){
-arguments[4][16][0].apply(exports,arguments)
-},{"dup":16}],144:[function(require,module,exports){
-arguments[4][17][0].apply(exports,arguments)
-},{"dup":17}],145:[function(require,module,exports){
-arguments[4][39][0].apply(exports,arguments)
-},{"dup":39}],146:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],147:[function(require,module,exports){
-arguments[4][41][0].apply(exports,arguments)
-},{"./lib/dom":142,"./lib/events":143,"./lib/fn":144,"./lib/string":145,"./lib/url":146,"dup":41}],148:[function(require,module,exports){
-arguments[4][25][0].apply(exports,arguments)
-},{"braintree-utilities":158,"dup":25}],149:[function(require,module,exports){
-arguments[4][26][0].apply(exports,arguments)
-},{"braintree-utilities":158,"dup":26}],150:[function(require,module,exports){
-arguments[4][27][0].apply(exports,arguments)
-},{"dup":27}],151:[function(require,module,exports){
-arguments[4][28][0].apply(exports,arguments)
-},{"braintree-utilities":158,"dup":28}],152:[function(require,module,exports){
-arguments[4][29][0].apply(exports,arguments)
-},{"braintree-utilities":158,"dup":29}],153:[function(require,module,exports){
-arguments[4][30][0].apply(exports,arguments)
-},{"./lib/message-bus":148,"./lib/pubsub-client":149,"./lib/pubsub-server":150,"./lib/rpc-client":151,"./lib/rpc-server":152,"dup":30}],154:[function(require,module,exports){
-arguments[4][31][0].apply(exports,arguments)
-},{"dup":31}],155:[function(require,module,exports){
-arguments[4][32][0].apply(exports,arguments)
-},{"dup":32}],156:[function(require,module,exports){
-arguments[4][33][0].apply(exports,arguments)
-},{"dup":33}],157:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],158:[function(require,module,exports){
-arguments[4][19][0].apply(exports,arguments)
-},{"./lib/dom":154,"./lib/events":155,"./lib/fn":156,"./lib/url":157,"dup":19}],159:[function(require,module,exports){
-arguments[4][31][0].apply(exports,arguments)
-},{"dup":31}],160:[function(require,module,exports){
-arguments[4][32][0].apply(exports,arguments)
-},{"dup":32}],161:[function(require,module,exports){
-arguments[4][33][0].apply(exports,arguments)
-},{"dup":33}],162:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],163:[function(require,module,exports){
-arguments[4][19][0].apply(exports,arguments)
-},{"./lib/dom":159,"./lib/events":160,"./lib/fn":161,"./lib/url":162,"dup":19}],164:[function(require,module,exports){
-var braintreeApi = require('braintree-api');
-var braintreeRpc = require('braintree-rpc');
-var braintreeUtil = require('braintree-utilities');
-var LoggedInView = require('./logged-in-view');
-var LoggedOutView = require('./logged-out-view');
-var OverlayView = require('./overlay-view');
-var browser = require('../shared/util/browser');
-var dom = require('../shared/util/dom');
-var constants = require('../shared/constants');
-var util = require('../shared/util/util');
-var getLocale = require('../shared/get-locale');
+LoggedOutView.prototype._handlePaymentMethodGenerated = function (bundle) {
+  if (bundle.type === constants.NONCE_TYPE) {
+    this.hide();
+  }
+};
+
+LoggedOutView.prototype._handlePaymentMethodCancelled = function (event) {
+  if (event.source === constants.PAYPAL_INTEGRATION_NAME) {
+    this.show();
+  }
+};
+
+LoggedOutView.prototype.teardown = function () {
+  this.wrapper.removeChild(this.container);
+  this.bus.teardown();
+};
+
+module.exports = LoggedOutView;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"164":164,"223":223,"225":225,"96":96}],218:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var Bus = require(164);
+var bind = require(96);
+var constants = require(223);
+
+function MerchantPageView(options) {
+  this.options = options;
+
+  this.bus = new Bus({
+    merchantUrl: global.location.href,
+    channel: options.channel
+  });
+
+  this.bus.on(constants.events.UI_MODAL_DID_OPEN, bind(this.lockWindowSize, this));
+  this.bus.on(constants.events.UI_MODAL_DID_CLOSE, bind(this.unlockWindowSize, this));
+}
+
+MerchantPageView.prototype.lockWindowSize = function () {
+  this.defaultStyles = getMerchantPageDefaultStyles();
+  document.documentElement.style.height = '100%';
+  document.documentElement.style.overflow = 'hidden';
+  document.body.style.height = '100%';
+  document.body.style.overflow = 'hidden';
+};
+
+MerchantPageView.prototype.unlockWindowSize = function () {
+  if (this.defaultStyles) {
+    document.documentElement.style.height = this.defaultStyles.html.styles.height;
+    document.documentElement.style.overflow = this.defaultStyles.html.styles.overflow;
+    document.body.style.height = this.defaultStyles.body.styles.height;
+    document.body.style.overflow = this.defaultStyles.body.styles.overflow;
+    delete this.defaultStyles;
+  }
+};
+
+MerchantPageView.prototype._handleUIModalDidOpen = function (event) {
+  if (event.source === constants.PAYPAL_INTEGRATION_NAME) {
+    this.lockWindowSize();
+  }
+};
+
+MerchantPageView.prototype._handleUIModalDidClose = function (event) {
+  if (event.source === constants.PAYPAL_INTEGRATION_NAME) {
+    this.unlockWindowSize();
+  }
+};
+
+MerchantPageView.prototype.teardown = function () {
+  this.unlockWindowSize();
+  this.bus.teardown();
+};
 
 function getStyles(element) {
   var computedStyles = window.getComputedStyle ? getComputedStyle(element) : element.currentStyle;
+
   return {
     overflow: computedStyles.overflow || '',
     height: element.style.height || ''
@@ -6351,667 +12989,142 @@ function getMerchantPageDefaultStyles() {
   };
 }
 
-function Client(clientToken, options) {
-  if (!clientToken) {
-    throw new Error('Parameter "clientToken" cannot be null');
+module.exports = MerchantPageView;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"164":164,"223":223,"96":96}],219:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var bind = require(96);
+var isFunction = require(152);
+var browser = require(231);
+var constants = require(223);
+var Bus = require(164);
+var iframer = require(91);
+
+function ModalView(options) {
+  this.options = options || {};
+  this.container = document.body;
+
+  this.bus = new Bus({
+    merchantUrl: global.location.href,
+    channel: options.channel
+  });
+
+  if (this.options.isDropin) {
+    this._open = this._openHeadless;
+  } else {
+    this._attachBusEvents();
   }
-  options = options || {};
 
-  this._clientToken = braintreeApi.parseClientToken(clientToken);
-  this._clientOptions = options;
-
-  this.container = options.container;
-  this.merchantPageDefaultStyles = null;
-  this.paymentMethodNonceInputField = options.paymentMethodNonceInputField;
-  this.frame = null;
-  this.popup = null;
-
-  this.insertFrameFunction = options.insertFrame;
-  this.onSuccess = options.onSuccess;
-  this.onCancelled = options.onCancelled;
-  this.onUnsupported = options.onUnsupported;
-  this.loggedInView = null;
-  this.loggedOutView = null;
-
-  this.insertUI = true;
+  this._initialize();
 }
 
-Client.prototype.getViewerUrl = function () {
-  var assetsUrl = this._clientToken.paypal.assetsUrl;
-  return assetsUrl + '/pwpp/' + constants.VERSION + '/html/braintree-frame.html';
+ModalView.prototype._attachBusEvents = function () {
+  this.bus.on(constants.events.OPEN_MODAL, bind(this.open, this));
 };
 
-Client.prototype.getProxyUrl = function () {
-  var assetsUrl = this._clientToken.paypal.assetsUrl;
-  return assetsUrl + '/pwpp/' + constants.VERSION + '/html/proxy-frame.html';
-};
+ModalView.prototype._initialize = function () {
+  var name = this.options.isHermes ? constants.HERMES_FRAME_NAME : constants.FRAME_NAME;
 
-Client.prototype.initialize = function () {
-  if (!this._clientToken.paypalEnabled) {
-    if (typeof this.onUnsupported === 'function') {
-      this.onUnsupported(new Error('PayPal is not enabled'));
+  this.el = iframer({
+    src: this.options.src,
+    name: name,
+    height: this.options.height || '100%',
+    width: this.options.width || '100%',
+    style: {
+      position: browser.isMobile() ? 'absolute' : 'fixed',
+      top: 0,
+      left: 0,
+      bottom: 0,
+      padding: 0,
+      margin: 0,
+      border: 0,
+      outline: 'none',
+      zIndex: 20001,
+      background: '#FFFFFF'
     }
-    return;
-  }
-  if (!this._isBrowserSecure()) {
-    if (typeof this.onUnsupported === 'function') {
-      this.onUnsupported(new Error('unsupported protocol detected'));
-    }
-    return;
-  }
-  if (this._isAriesCapable()) {
-    if (!this._isAriesSupportedCurrency()) {
-      if (typeof this.onUnsupported === 'function') {
-        this.onUnsupported(new Error('This PayPal integration does not support this currency'));
-      }
-      return;
-    }
-    if (!this._isAriesSupportedCountries()) {
-      if (typeof this.onUnsupported === 'function') {
-        this.onUnsupported(new Error('This PayPal integration does not support this locale'));
-      }
-      return;
-    }
-  }
-  if (this._isMisconfiguredUnvettedMerchant()) {
-    if (typeof this.onUnsupported === 'function') {
-      this.onUnsupported(new Error('Unvetted merchant client token does not include a payee email'));
-    }
-    return;
-  }
-  this._overrideClientTokenProperties();
-  if (browser.isProxyFrameRequired()) {
-    this._insertProxyFrame();
-  }
-  this._setupDomElements();
-  this._setupPaymentMethodNonceInputField();
-  this._setupViews();
-  this._createRpcServer();
+  });
 };
 
-Client.prototype._isSupportedOption = function (option, supported) {
-  var supportedLength = supported.length;
-  var isSupported = false;
-
-  for (var i = 0; i < supportedLength; i++) {
-    if (option.toLowerCase() === supported[i].toLowerCase()) {
-      isSupported = true;
-    }
-  }
-
-  return isSupported;
+ModalView.prototype.isClosed = function () {
+  return !this.container.contains(this.el);
 };
 
-Client.prototype._isAriesSupportedCurrency = function () {
-  return this._isSupportedOption(this._clientOptions.currency, constants.ARIES_SUPPORTED_CURRENCIES);
+ModalView.prototype._openHeadless = function () {
+  this.bus.emit(constants.events.OPEN_MODAL);
 };
 
-Client.prototype._isAriesSupportedCountries = function () {
-  return this._isSupportedOption(getLocale(this._clientOptions.locale).split('_')[1], constants.ARIES_SUPPORTED_COUNTRIES);
-};
-
-Client.prototype._isMisconfiguredUnvettedMerchant = function () {
-  return this._clientToken.paypal.unvettedMerchant && (!this._isAriesCapable() || !this._clientToken.paypal.payeeEmail);
-};
-
-Client.prototype._isBrowserSecure = function () {
-  return braintreeUtil.isBrowserHttps() || browser.isPopupSupported() || this._clientToken.paypal.allowHttp;
-};
-
-Client.prototype._overrideClientTokenProperties = function () {
-  if (this._clientOptions.displayName) {
-    this._clientToken.paypal.displayName = this._clientOptions.displayName;
-  }
-};
-
-Client.prototype._setupDomElements = function () {
-  if (this.insertUI) {
-    this.container = braintreeUtil.normalizeElement(this.container);
-  }
-};
-
-Client.prototype._setupPaymentMethodNonceInputField = function () {
-  if (!this.insertUI) {
-    return;
-  }
-  var inputField = this.paymentMethodNonceInputField;
-  if (!braintreeUtil.isFunction(inputField)) {
-    if (inputField !== undefined) {
-      inputField = braintreeUtil.normalizeElement(inputField);
-    } else {
-      inputField = this._createPaymentMethodNonceInputField();
-    }
-    this.paymentMethodNonceInputField = inputField;
-  }
-};
-
-Client.prototype._setupViews = function () {
-  var assetsUrl = this._clientToken.paypal.assetsUrl;
-  if (this.insertUI) {
-    this.loggedInView = new LoggedInView({
-      container: this.container,
-      assetsUrl: assetsUrl
-    });
-    this.loggedOutView = new LoggedOutView({
-      assetsUrl: assetsUrl,
-      container: this.container,
-      isCheckout: this._isAriesCapable(),
-      locale: this._clientOptions.locale,
-      merchantId: 'merchantId'
-    });
-
-    braintreeUtil.addEventListener(this.loggedOutView.container, 'click', braintreeUtil.bind(this._handleContainerClick, this));
-    braintreeUtil.addEventListener(this.loggedInView.logoutNode, 'click', braintreeUtil.bind(this._handleLogout, this));
-  }
-};
-
-Client.prototype._createRpcServer = function () {
-  var bus = new braintreeRpc.MessageBus(window);
-  var rpc = new braintreeRpc.RPCServer(bus, window);
-
-  rpc.define('getClientToken',
-    braintreeUtil.bind(this._handleGetClientToken, this));
-  rpc.define('getClientOptions',
-    braintreeUtil.bind(this._handleGetClientOptions, this));
-  rpc.define('closePayPalModal',
-    braintreeUtil.bind(this._handleCloseMessage, this));
-  rpc.define('receivePayPalData',
-    braintreeUtil.bind(this._handleSuccessfulAuthentication, this));
-};
-
-Client.prototype._createPaymentMethodNonceInputField = function () {
-  var input = document.createElement('input');
-  input.name = 'payment_method_nonce';
-  input.type = 'hidden';
-  return this.container.appendChild(input);
-};
-
-Client.prototype._createFrame = function () {
-  var frameName;
-  var iframe = document.createElement('iframe');
-
-  if (this._isAriesCapable()) {
-    frameName = constants.ARIES_FRAME_NAME;
-    iframe.style.background = '#FFFFFF';
+ModalView.prototype._open = function () {
+  if (isFunction(this.options.insertFrameFunction)) {
+    this.options.insertFrameFunction(this.el.src);
   } else {
-    frameName = constants.FRAME_NAME;
+    this.container.appendChild(this.el);
   }
 
-  iframe.src = this.getViewerUrl();
-  iframe.id = frameName;
-  iframe.name = frameName;
-  iframe.allowTransparency = true;
-  iframe.height = '100%';
-  iframe.width = '100%';
-  iframe.frameBorder = 0;
-  iframe.style.position = browser.isMobile() ? 'absolute' : 'fixed';
-  iframe.style.top = 0;
-  iframe.style.left = 0;
-  iframe.style.bottom = 0;
-  iframe.style.zIndex = 20001;
-  iframe.style.padding = 0;
-  iframe.style.margin = 0;
-  iframe.style.border = 0;
-  iframe.style.outline = 'none';
-  return iframe;
+  this.bus.emit(constants.events.UI_MODAL_DID_OPEN, {source: constants.PAYPAL_INTEGRATION_NAME});
 };
 
-Client.prototype._removeFrame = function (parent) {
-  parent = parent || document.body;
-  if (this.frame && parent.contains(this.frame)) {
-    parent.removeChild(this.frame);
-    this._unlockMerchantWindowSize();
+ModalView.prototype.open = function () {
+  if (this.isClosed()) {
+    this._open();
   }
 };
 
-Client.prototype._insertFrame = function () {
-  if (this.insertFrameFunction) {
-    this.insertFrameFunction(this.getViewerUrl());
-  } else {
-    this.frame = this._createFrame();
-    document.body.appendChild(this.frame);
-  }
-  this._lockMerchantWindowSize();
-};
+ModalView.prototype.close = function () {
+  if (!this.isClosed()) {
+    this.container.removeChild(this.el);
 
-Client.prototype._handleContainerClick = function (event) {
-  var target = event.target || event.srcElement;
-
-  function isButton (node) {
-    return node.className.match(/paypal-button(?!-widget)/) || node.id === 'braintree-paypal-button';
-  }
-
-  if (!isButton(target) && !isButton(target.parentNode)) {
-    return;
-  }
-
-  if (event.preventDefault) {
-    event.preventDefault();
-  } else {
-    event.returnValue = false;
-  }
-
-  this._open();
-};
-
-Client.prototype._setMerchantPageDefaultStyles = function () {
-  this.merchantPageDefaultStyles = getMerchantPageDefaultStyles();
-};
-
-Client.prototype._open = function () {
-  if (browser.isPopupSupported()) {
-    this._openPopup();
-  } else {
-    this._openModal();
+    this.bus.emit(constants.events.UI_MODAL_DID_CLOSE, {source: constants.PAYPAL_INTEGRATION_NAME});
   }
 };
 
-Client.prototype._close = function () {
-  if (browser.isPopupSupported()) {
-    this._closePopup();
-  } else {
-    this._closeModal();
-  }
+ModalView.prototype.teardown = function () {
+  this.close();
+  this.bus.teardown();
 };
 
-Client.prototype._openModal = function () {
-  this._removeFrame();
-  this._insertFrame();
-};
+module.exports = ModalView;
 
-Client.prototype._isAriesCapable = function () {
-  return !!this._clientOptions.singleUse && !!this._clientOptions.amount && !!this._clientOptions.currency;
-};
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"152":152,"164":164,"223":223,"231":231,"91":91,"96":96}],220:[function(require,module,exports){
+(function (global){
+'use strict';
 
-Client.prototype._openPopup = function () {
-  var name;
-  var opts = [];
-  var popupWidth;
-  var popupHeight;
-  var windowWidth = window.outerWidth || document.documentElement.clientWidth;
-  var windowHeight = window.outerHeight || document.documentElement.clientHeight;
-  var windowTop = typeof window.screenY === 'undefined' ? window.screenTop : window.screenY;
-  var windowLeft = typeof window.screenX === 'undefined' ? window.screenLeft : window.screenX;
+var braintreeUtil = require(82);
+var bind = require(96);
+var isFunction = require(152);
+var Destructor = require(86);
+var Bus = require(164);
+var constants = require(223);
+var getLocalizationData = require(226);
+var translations = require(213);
 
-  if (this._isAriesCapable()) {
-    name = constants.ARIES_POPUP_NAME;
-    popupHeight = constants.ARIES_POPUP_HEIGHT;
-    popupWidth = constants.ARIES_POPUP_WIDTH;
-  } else {
-    name = constants.POPUP_NAME;
-    popupHeight = constants.POPUP_HEIGHT;
-    popupWidth = constants.POPUP_WIDTH;
-  }
+function OverlayView(options) {
+  var localizationData;
 
-  var leftPos = ((windowWidth - popupWidth) / 2) + windowLeft;
-  var topPos = ((windowHeight - popupHeight) / 2) + windowTop;
-
-  opts.push('height=' + popupHeight);
-  opts.push('width=' + popupWidth);
-  opts.push('top=' + topPos);
-  opts.push('left=' + leftPos);
-  opts.push(constants.POPUP_OPTIONS);
-
-  this._addCorrelationIdToClientToken();
-
-  this.popup = window.open(this.getViewerUrl(), name, opts.join(','));
-  if (browser.isOverlaySupported()) {
-    this.overlayView = new OverlayView(this.popup, this._clientToken.paypal.assetsUrl);
-    this.overlayView.render();
-  }
-  this.popup.focus();
-
-  return this.popup;
-};
-
-Client.prototype._addCorrelationIdToClientToken = function () {
-  this._clientToken.correlationId = util.generateUid();
-};
-
-Client.prototype._createProxyFrame = function () {
-  var iframe = document.createElement('iframe');
-
-  iframe.src = this.getProxyUrl();
-  iframe.id = constants.BRIDGE_FRAME_NAME;
-  iframe.name = constants.BRIDGE_FRAME_NAME;
-  iframe.allowTransparency = true;
-  iframe.height = 0;
-  iframe.width = 0;
-  iframe.frameBorder = 0;
-  iframe.style.position = 'static';
-  iframe.style.padding = 0;
-  iframe.style.margin = 0;
-  iframe.style.border = 0;
-  iframe.style.outline = 'none';
-  return iframe;
-};
-
-Client.prototype._insertProxyFrame = function () {
-  this.proxyFrame = this._createProxyFrame();
-  document.body.appendChild(this.proxyFrame);
-};
-
-Client.prototype._closeModal = function () {
-  this._removeFrame();
-};
-
-Client.prototype._closePopup = function () {
-  if (this.popup) {
-    this.popup.close();
-    this.popup = null;
-  }
-  if (this.overlayView && browser.isOverlaySupported()) {
-    this.overlayView.remove();
-  }
-};
-
-Client.prototype._clientTokenData = function () {
-  return {
-    analyticsUrl: this._clientToken.analytics ?
-      this._clientToken.analytics.url : undefined,
-    authorizationFingerprint: this._clientToken.authorizationFingerprint,
-    authUrl: this._clientToken.authUrl,
-    clientApiUrl: this._clientToken.clientApiUrl,
-    displayName: this._clientToken.paypal.displayName,
-    paypalBaseUrl: this._clientToken.paypal.assetsUrl,
-    paypalClientId: this._clientToken.paypal.clientId,
-    paypalPrivacyUrl: this._clientToken.paypal.privacyUrl,
-    paypalUserAgreementUrl: this._clientToken.paypal.userAgreementUrl,
-    unvettedMerchant: this._clientToken.paypal.unvettedMerchant,
-    payeeEmail: this._clientToken.paypal.payeeEmail,
-    correlationId: this._clientToken.correlationId,
-    offline: this._clientOptions.offline || this._clientToken.paypal.environmentNoNetwork
-  };
-};
-
-Client.prototype._handleGetClientToken = function (callback) {
-  callback(this._clientTokenData());
-};
-
-Client.prototype._clientOptionsData = function () {
-  return {
-    demo: this._clientOptions.demo || false,
-    locale: this._clientOptions.locale || 'en_us',
-    onetime: this._clientOptions.singleUse || false,
-    integration: this._clientOptions.integration || 'paypal',
-    enableShippingAddress: this._clientOptions.enableShippingAddress || false,
-    enableAries: this._isAriesCapable(),
-    amount: this._clientOptions.amount || null,
-    currency: this._clientOptions.currency || null,
-    shippingAddressOverride: this._clientOptions.shippingAddressOverride || null
-  };
-};
-
-Client.prototype._handleGetClientOptions = function (callback) {
-  callback(this._clientOptionsData());
-};
-
-Client.prototype._handleSuccessfulAuthentication = function (bundle) {
-  this._close();
-
-  bundle.type = constants.NONCE_TYPE;
-
-  if (braintreeUtil.isFunction(this.paymentMethodNonceInputField)) {
-    this.paymentMethodNonceInputField(bundle.nonce);
-  } else {
-    this._showLoggedInContent(bundle.details.email);
-    this._setNonceInputValue(bundle.nonce);
-  }
-
-  if (braintreeUtil.isFunction(this.onSuccess)) {
-    this.onSuccess(bundle);
-  }
-};
-
-Client.prototype._lockMerchantWindowSize = function () {
-  this._setMerchantPageDefaultStyles();
-  document.documentElement.style.height = '100%';
-  document.documentElement.style.overflow = 'hidden';
-  document.body.style.height = '100%';
-  document.body.style.overflow = 'hidden';
-};
-
-Client.prototype._unlockMerchantWindowSize = function () {
-  if (this.merchantPageDefaultStyles) {
-    document.documentElement.style.height = this.merchantPageDefaultStyles.html.styles.height;
-    document.documentElement.style.overflow = this.merchantPageDefaultStyles.html.styles.overflow;
-    document.body.style.height = this.merchantPageDefaultStyles.body.styles.height;
-    document.body.style.overflow = this.merchantPageDefaultStyles.body.styles.overflow;
-  }
-};
-
-Client.prototype._handleCloseMessage = function () {
-  this._removeFrame();
-};
-
-Client.prototype._showLoggedInContent = function (email) {
-  this.loggedOutView.hide();
-
-  dom.setTextContent(this.loggedInView.emailNode, email);
-  this.loggedInView.show();
-};
-
-Client.prototype._handleLogout = function (event) {
-  if (event.preventDefault) {
-    event.preventDefault();
-  } else {
-    event.returnValue = false;
-  }
-
-  this.loggedInView.hide();
-  this.loggedOutView.show();
-  this._setNonceInputValue('');
-
-  if (braintreeUtil.isFunction(this.onCancelled)) {
-    this.onCancelled();
-  }
-};
-
-Client.prototype._setNonceInputValue = function (value) {
-  this.paymentMethodNonceInputField.value = value;
-};
-
-module.exports = Client;
-
-},{"../shared/constants":168,"../shared/get-locale":170,"../shared/util/browser":175,"../shared/util/dom":176,"../shared/util/util":177,"./logged-in-view":165,"./logged-out-view":166,"./overlay-view":167,"braintree-api":120,"braintree-rpc":153,"braintree-utilities":163}],165:[function(require,module,exports){
-var constants = require('../shared/constants');
-
-function LoggedInView (options) {
   this.options = options;
-  this.container = this.createViewContainer();
-  this.createPayPalName();
-  this.emailNode = this.createEmailNode();
-  this.logoutNode = this.createLogoutNode();
-}
+  this.spriteSrc = this.options.paypalAssetsUrl + '/pwpp/' + constants.VERSION + '/images/pp_overlay_sprite.png';
 
-LoggedInView.prototype.createViewContainer = function () {
-  var container = document.createElement('div');
-  container.id = 'braintree-paypal-loggedin';
-  var cssStyles = [
-    'display: none',
-    'max-width: 500px',
-    'overflow: hidden',
-    'padding: 16px',
-    'background-image: url(' + this.options.assetsUrl + '/pwpp/' + constants.VERSION + '/images/paypal-small.png)',
-    'background-image: url(' + this.options.assetsUrl + '/pwpp/' + constants.VERSION + '/images/paypal-small.svg), none',
-    'background-position: 20px 50%',
-    'background-repeat: no-repeat',
-    'background-size: 13px 15px',
-    'border-top: 1px solid #d1d4d6',
-    'border-bottom: 1px solid #d1d4d6'
-  ].join(';');
-  container.style.cssText = cssStyles;
-  this.options.container.appendChild(container);
+  this.bus = new Bus({
+    merchantUrl: global.location.href,
+    channel: options.channel
+  });
 
-  return container;
-};
+  this.destructor = new Destructor();
 
-LoggedInView.prototype.createPayPalName = function () {
-  var element = document.createElement('span');
-  element.id = 'bt-pp-name';
-  element.innerHTML = 'PayPal';
-  var cssStyles = [
-    'color: #283036',
-    'font-size: 13px',
-    'font-weight: 800',
-    'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif',
-    'margin-left: 36px',
-    '-webkit-font-smoothing: antialiased',
-    '-moz-font-smoothing: antialiased',
-    '-ms-font-smoothing: antialiased',
-    'font-smoothing: antialiased'
-  ].join(';');
-  element.style.cssText = cssStyles;
-  return this.container.appendChild(element);
-};
-
-LoggedInView.prototype.createEmailNode = function () {
-  var element = document.createElement('span');
-  element.id = 'bt-pp-email';
-  var cssStyles = [
-    'color: #6e787f',
-    'font-size: 13px',
-    'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif',
-    'margin-left: 5px',
-    '-webkit-font-smoothing: antialiased',
-    '-moz-font-smoothing: antialiased',
-    '-ms-font-smoothing: antialiased',
-    'font-smoothing: antialiased'
-  ].join(';');
-  element.style.cssText = cssStyles;
-  return this.container.appendChild(element);
-};
-
-LoggedInView.prototype.createLogoutNode = function () {
-  var element = document.createElement('button');
-  element.id = 'bt-pp-cancel';
-  element.innerHTML = 'Cancel';
-  var cssStyles = [
-    'color: #3d95ce',
-    'font-size: 11px',
-    'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif',
-    'line-height: 20px',
-    'margin: 0 0 0 25px',
-    'padding: 0',
-    'background-color: transparent',
-    'border: 0',
-    'cursor: pointer',
-    'text-decoration: underline',
-    'float: right',
-    '-webkit-font-smoothing: antialiased',
-    '-moz-font-smoothing: antialiased',
-    '-ms-font-smoothing: antialiased',
-    'font-smoothing: antialiased'
-  ].join(';');
-  element.style.cssText = cssStyles;
-  return this.container.appendChild(element);
-};
-
-LoggedInView.prototype.show = function () {
-  this.container.style.display = 'block';
-};
-
-LoggedInView.prototype.hide = function () {
-  this.container.style.display = 'none';
-};
-
-module.exports = LoggedInView;
-
-},{"../shared/constants":168}],166:[function(require,module,exports){
-var util = require('braintree-utilities');
-var constants = require('../shared/constants');
-var getLocale = require('../shared/get-locale');
-
-function LoggedOutView (options) {
-  this.options = options;
-
-  this.assetsUrl = this.options.assetsUrl;
-  this.container = this.createViewContainer();
-
-  if (this.options.isCheckout) {
-    this.createCheckoutWithPayPalButton();
-  } else {
-    this.createPayWithPayPalButton();
-  }
-}
-
-LoggedOutView.prototype.createViewContainer = function () {
-  var container = document.createElement('div');
-  container.id = 'braintree-paypal-loggedout';
-
-  this.options.container.appendChild(container);
-
-  return container;
-};
-
-LoggedOutView.prototype.createPayWithPayPalButton = function () {
-  var element = document.createElement('a');
-  element.id = 'braintree-paypal-button';
-  element.href = '#';
-  var cssStyles = [
-    'display: block',
-    'width: 115px',
-    'height: 44px',
-    'overflow: hidden'
-  ].join(';');
-  element.style.cssText = cssStyles;
-
-  var image = new Image();
-  image.src = this.assetsUrl + '/pwpp/' + constants.VERSION + '/images/pay-with-paypal.png';
-  image.setAttribute('alt', 'Pay with PayPal');
-  var imageCssText = [
-    'max-width: 100%',
-    'display: block',
-    'width: 100%',
-    'height: 100%',
-    'outline: none',
-    'border: 0'
-  ].join(';');
-  image.style.cssText = imageCssText;
-
-  element.appendChild(image);
-  this.container.appendChild(element);
-};
-
-LoggedOutView.prototype.createCheckoutWithPayPalButton = function () {
-  var script = document.createElement('script');
-  script.src = '//www.paypalobjects.com/api/button.js';
-  script.async = true;
-  script.setAttribute('data-merchant', this.options.merchantId);
-  script.setAttribute('data-button', 'checkout');
-  script.setAttribute('data-type', 'button');
-  script.setAttribute('data-width', '150');
-  script.setAttribute('data-height', '44');
-  script.setAttribute('data-lc', getLocale(this.options.locale));
-
-  this.container.appendChild(script);
-};
-
-LoggedOutView.prototype.show = function () {
-  this.container.style.display = 'block';
-};
-
-LoggedOutView.prototype.hide = function () {
-  this.container.style.display = 'none';
-};
-
-module.exports = LoggedOutView;
-
-},{"../shared/constants":168,"../shared/get-locale":170,"braintree-utilities":163}],167:[function(require,module,exports){
-var util = require('braintree-utilities');
-var constants = require('../shared/constants');
-
-function OverlayView (popup, assetsUrl) {
-  this.popup = popup;
-  this.assetsUrl = assetsUrl;
-  this.spriteSrc = this.assetsUrl + '/pwpp/' + constants.VERSION + '/images/pp_overlay_sprite.png';
+  localizationData = getLocalizationData(this.options.locale, translations);
+  this.translation = localizationData.translation;
 
   this._create();
   this._setupEvents();
-  this._pollForPopup();
+
+  this.bus.on(Bus.events.UI_POPUP_DID_OPEN, bind(this._handleUIPopupDidOpen, this));
+  this.bus.on(Bus.events.UI_POPUP_DID_CLOSE, bind(this._handleUIPopupDidClose, this));
 }
 
-OverlayView.prototype.render = function () {
+OverlayView.prototype.open = function () {
   if (document.body.contains(this.el)) {
     return;
   }
@@ -7019,9 +13132,21 @@ OverlayView.prototype.render = function () {
   document.body.appendChild(this.el);
 };
 
-OverlayView.prototype.remove = function () {
+OverlayView.prototype.close = function () {
   if (document.body.contains(this.el)) {
     document.body.removeChild(this.el);
+  }
+};
+
+OverlayView.prototype._handleUIPopupDidClose = function (event) {
+  if (event.source === constants.PAYPAL_INTEGRATION_NAME) {
+    this.close();
+  }
+};
+
+OverlayView.prototype._handleUIPopupDidOpen = function (event) {
+  if (event.source === constants.PAYPAL_INTEGRATION_NAME) {
+    this.open();
   }
 };
 
@@ -7086,16 +13211,16 @@ OverlayView.prototype._createMessage = function () {
 };
 
 OverlayView.prototype._createExplanation = function () {
-  var explanation = document.createElement('div');
+  this.explanation = document.createElement('div');
 
-  this._setStyles(explanation, [
+  this._setStyles(this.explanation, [
     'color: #FFF',
     'margin-bottom: 20px'
   ]);
 
-  explanation.innerHTML = 'Don\'t see the secure PayPal browser? We\'ll help you re-launch the window to complete your purchase.';
+  this.explanation.innerHTML = this.translation.overlay_text;
 
-  return explanation;
+  return this.explanation;
 };
 
 OverlayView.prototype._createLogo = function () {
@@ -7119,107 +13244,334 @@ OverlayView.prototype._createFocusLink = function () {
     'cursor: pointer'
   ]);
 
-  this.focusLink.innerHTML = 'Continue';
+  this.focusLink.innerHTML = this.translation.continue_link;
 
   return this.focusLink;
 };
 
 OverlayView.prototype._setStyles = function (el, styles) {
   var cssStyles = styles.join(';');
+
   el.style.cssText = cssStyles;
 };
 
 OverlayView.prototype._setupEvents = function () {
-  util.addEventListener(this.closeIcon, 'click', util.bind(this._handleClose, this));
-  util.addEventListener(this.focusLink, 'click', util.bind(this._handleFocus, this));
+  var self = this;
+  var clickCloseHandler = bind(this._handleClose, this);
+  var clickFocusHandler = bind(this._handleFocus, this);
+
+  braintreeUtil.addEventListener(this.closeIcon, 'click', clickCloseHandler);
+  braintreeUtil.addEventListener(this.focusLink, 'click', clickFocusHandler);
+
+  this.destructor.registerFunctionForTeardown(function () {
+    braintreeUtil.removeEventListener(self.closeIcon, 'click', clickCloseHandler);
+    braintreeUtil.removeEventListener(self.focusLink, 'click', clickFocusHandler);
+  });
 };
 
 OverlayView.prototype._handleClose = function (event) {
   event.preventDefault();
-  this.remove();
-  this.popup.close();
+  this.close();
+
+  if (isFunction(this.options.onClose)) {
+    this.options.onClose();
+  }
 };
 
 OverlayView.prototype._handleFocus = function (event) {
   event.preventDefault();
-  this.popup.focus();
+
+  if (isFunction(this.options.onFocus)) {
+    this.options.onFocus();
+  }
 };
 
-OverlayView.prototype._pollForPopup = function () {
-  var poll = setInterval(util.bind(function () {
-    if (this.popup && this.popup.closed) {
-      clearInterval(poll);
-      this.remove();
-    }
-  }, this), 100);
+OverlayView.prototype.teardown = function () {
+  this.bus.teardown();
+  this.destructor.teardown();
+  this.close();
 };
 
 module.exports = OverlayView;
 
-},{"../shared/constants":168,"braintree-utilities":163}],168:[function(require,module,exports){
-var version = "1.3.2";
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"152":152,"164":164,"213":213,"223":223,"226":226,"82":82,"86":86,"96":96}],221:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var braintreeUtil = require(82);
+var bind = require(96);
+var isFunction = require(152);
+var Destructor = require(86);
+var Bus = require(164);
+var constants = require(223);
+
+function PaymentMethodNonceInputFieldView(options) {
+  this.options = options || {};
+  this.container = this.options.container || document.body;
+  this.el = this.options.el;
+
+  this.destructor = new Destructor();
+
+  this.bus = new Bus({
+    merchantUrl: global.location.href,
+    channel: options.channel
+  });
+
+  this._initialize();
+}
+
+PaymentMethodNonceInputFieldView.prototype._initialize = function () {
+  var self = this;
+
+  if (!isFunction(this.el)) {
+    if (this.el != null) {
+      this.el = braintreeUtil.normalizeElement(this.el);
+
+      this.destructor.registerFunctionForTeardown(function () {
+        self.clear();
+      });
+    } else {
+      this.el = this.create();
+    }
+  }
+
+  this.bus.on(Bus.events.PAYMENT_METHOD_GENERATED, bind(this._handlePaymentMethodGenerated, this));
+  this.bus.on(Bus.events.PAYMENT_METHOD_CANCELLED, bind(this._handlePaymentMethodCancelled, this));
+};
+
+PaymentMethodNonceInputFieldView.prototype.create = function () {
+  var self = this;
+  var input = document.createElement('input');
+
+  input.name = 'payment_method_nonce';
+  input.type = 'hidden';
+  this.container.appendChild(input);
+
+  this.destructor.registerFunctionForTeardown(function () {
+    self.container.removeChild(input);
+  });
+
+  return input;
+};
+
+PaymentMethodNonceInputFieldView.prototype.value = function (value) {
+  if (isFunction(this.el)) {
+    this.el(value);
+  } else {
+    this.el.value = value;
+  }
+};
+
+PaymentMethodNonceInputFieldView.prototype.clear = function () {
+  this.value('');
+};
+
+PaymentMethodNonceInputFieldView.prototype._handlePaymentMethodCancelled = function (event) {
+  if (event.source === constants.PAYPAL_INTEGRATION_NAME) {
+    this.clear();
+  }
+};
+
+PaymentMethodNonceInputFieldView.prototype._handlePaymentMethodGenerated = function (bundle) {
+  if (bundle.type === constants.NONCE_TYPE) {
+    this.value(bundle.nonce);
+  }
+};
+
+PaymentMethodNonceInputFieldView.prototype.teardown = function () {
+  this.destructor.teardown();
+  this.bus.teardown();
+};
+
+module.exports = PaymentMethodNonceInputFieldView;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"152":152,"164":164,"223":223,"82":82,"86":86,"96":96}],222:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var constants = require(223);
+var Bus = require(164);
+var browser = require(227);
+
+function PopupView(options) {
+  this.options = options;
+
+  this.bus = new Bus({
+    merchantUrl: global.location.href,
+    channel: this.options.channel
+  });
+
+  if (options.isHermes) {
+    this.name = constants.HERMES_POPUP_NAME;
+    this.popupHeight = constants.HERMES_POPUP_HEIGHT;
+    this.popupWidth = constants.HERMES_POPUP_WIDTH;
+  } else {
+    this.name = constants.POPUP_NAME;
+    this.popupHeight = constants.POPUP_HEIGHT;
+    this.popupWidth = constants.POPUP_WIDTH;
+  }
+}
+
+PopupView.prototype._getPopupOptions = function () {
+  return [
+    'height=' + this.popupHeight,
+    'width=' + this.popupWidth,
+    'top=' + this._getTopPosition(),
+    'left=' + this._getLeftPosition(),
+    constants.POPUP_OPTIONS
+  ].join(',');
+};
+
+PopupView.prototype._centerPosition = function (windowMetric, popupMetric, offset) {
+  return (windowMetric - popupMetric) / 2 + offset;
+};
+
+PopupView.prototype._getTopPosition = function () {
+  var windowHeight = window.outerHeight || document.documentElement.clientHeight;
+  var windowTop = typeof window.screenY === 'undefined' ? window.screenTop : window.screenY;
+
+  return this._centerPosition(windowHeight, this.popupHeight, windowTop);
+};
+
+PopupView.prototype._getLeftPosition = function () {
+  var windowWidth = window.outerWidth || document.documentElement.clientWidth;
+  var windowLeft = typeof window.screenX === 'undefined' ? window.screenLeft : window.screenX;
+
+  return this._centerPosition(windowWidth, this.popupWidth, windowLeft);
+};
+
+PopupView.prototype.isClosed = function () {
+  if (this.el) {
+    return this.el.closed;
+  }
+};
+
+PopupView.prototype.open = function () {
+  if (!this.el) {
+    this.el = window.open(this.options.src, this.name, this._getPopupOptions());
+    this.focus();
+
+    this.bus.emit(Bus.events.UI_POPUP_DID_OPEN, {source: constants.PAYPAL_INTEGRATION_NAME});
+  }
+};
+
+PopupView.prototype.close = function () {
+  if (this.el) {
+    if (browser.isIE8() && !this.isClosed() || !browser.isIE8()) {
+      this.el.close();
+    }
+
+    this.bus.emit(Bus.events.UI_POPUP_DID_CLOSE, {source: constants.PAYPAL_INTEGRATION_NAME});
+  }
+};
+
+PopupView.prototype.focus = function () {
+  if (this.el) {
+    this.el.focus();
+  }
+};
+
+PopupView.prototype.teardown = function () {
+  this.close();
+  this.bus.teardown();
+};
+
+module.exports = PopupView;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"164":164,"223":223,"227":227}],223:[function(require,module,exports){
+'use strict';
+
+var i;
+var version = "2.15.2";
+var events = [
+  'GET_CLIENT_TOKEN',
+  'GET_CLIENT_OPTIONS',
+  'OPEN_MODAL',
+  'CLOSE_APP',
+  'FOCUS_APP',
+  'UI_MODAL_DID_OPEN',
+  'UI_MODAL_DID_CLOSE'
+];
+
+var configurationTypes = {
+  LEGACY_ONETIME: 'Legacy Onetime',
+  HERMES_ONETIME: 'Hermes Onetime',
+  LEGACY_FUTURE_PAYMENTS: 'Legacy Future Payments',
+  HERMES_BILLING_AGREEMENTS: 'Hermes Billing Agreements'
+};
 
 exports.VERSION = version;
 exports.POPUP_NAME = 'braintree_paypal_popup';
-exports.ARIES_POPUP_NAME = 'PPFrameRedirect';
+exports.HERMES_POPUP_NAME = 'PPFrameRedirect';
 exports.FRAME_NAME = 'braintree-paypal-frame';
-exports.ARIES_FRAME_NAME = 'PPFrameRedirect';
-exports.POPUP_PATH = '/pwpp/' + version  + '/html/braintree-frame.html';
+exports.HERMES_FRAME_NAME = 'PPFrameRedirect';
+exports.POPUP_PATH = '/pwpp/' + version + '/html/braintree-frame.html';
 exports.POPUP_OPTIONS = 'resizable,scrollbars';
 exports.POPUP_HEIGHT = 470;
 exports.POPUP_WIDTH = 410;
-exports.ARIES_POPUP_HEIGHT = 535;
-exports.ARIES_POPUP_WIDTH = 450;
+exports.HERMES_POPUP_HEIGHT = 535;
+exports.HERMES_POPUP_WIDTH = 450;
 exports.BRIDGE_FRAME_NAME = 'bt-proxy-frame';
-exports.ARIES_SUPPORTED_CURRENCIES = ['USD', 'GBP', 'EUR', 'AUD', 'CAD'];
-exports.ARIES_SUPPORTED_COUNTRIES = ['US', 'GB', 'AU', 'CA', 'ES', 'FR', 'DE', 'IT'];
+exports.HERMES_SUPPORTED_CURRENCIES = ['USD', 'GBP', 'EUR', 'AUD', 'CAD', 'DKK', 'NOK', 'PLN', 'SEK', 'CHF', 'TRY', 'BRL'];
+exports.HERMES_SUPPORTED_COUNTRIES = ['US', 'GB', 'AU', 'CA', 'ES', 'FR', 'DE', 'IT', 'NL', 'NO', 'PL', 'CH', 'TR', 'DK', 'BE', 'AT'];
 exports.NONCE_TYPE = 'PayPalAccount';
+exports.PAYPAL_INTEGRATION_NAME = 'PayPal';
+exports.ILLEGAL_XHR_ERROR = 'Illegal XHR request attempted';
+exports.CONFIGURATION_TYPES = configurationTypes;
+exports.events = {};
 
-},{}],169:[function(require,module,exports){
+for (i = 0; i < events.length; i++) {
+  exports.events[events[i]] = 'paypal:' + events[i];
+}
+
+},{}],224:[function(require,module,exports){
 'use strict';
 
 module.exports = {
- us: 'en_us',
- gb: 'en_uk',
- uk: 'en_uk',
- de: 'de_de',
- fr: 'fr_fr',
- it: 'it_it',
- es: 'es_es',
- ca: 'en_ca',
- au: 'en_au',
- at: 'de_de',
- be: 'en_us',
- ch: 'de_de',
- dk: 'da_dk',
- nl: 'nl_nl',
- no: 'no_no',
- pl: 'pl_pl',
- se: 'sv_se',
- tr: 'tr_tr',
- bg: 'en_us',
- cy: 'en_us',
- hr: 'en_us',
- is: 'en_us',
- kh: 'en_us',
- mt: 'en_us',
- my: 'en_us',
- ru: 'ru_ru'
+  us: 'en_us',
+  gb: 'en_uk',
+  uk: 'en_uk',
+  de: 'de_de',
+  fr: 'fr_fr',
+  it: 'it_it',
+  es: 'es_es',
+  ca: 'en_ca',
+  au: 'en_au',
+  at: 'de_de',
+  be: 'en_us',
+  ch: 'de_de',
+  dk: 'da_dk',
+  nl: 'nl_nl',
+  no: 'no_no',
+  pl: 'pl_pl',
+  se: 'sv_se',
+  tr: 'tr_tr',
+  bg: 'en_us',
+  cy: 'en_us',
+  hr: 'en_us',
+  is: 'en_us',
+  kh: 'en_us',
+  mt: 'en_us',
+  my: 'en_us',
+  ru: 'ru_ru'
 };
 
-},{}],170:[function(require,module,exports){
+},{}],225:[function(require,module,exports){
 'use strict';
 
-var countryCodeLookupTable = require('../shared/data/country-code-lookup');
+var countryCodeLookupTable = require(224);
 
 function isFormatted(code) {
   return code.indexOf('_') !== -1 && code.length === 5;
 }
 
 function queryTable(code) {
-  var match;
+  var key, match;
 
-  for (var key in countryCodeLookupTable) {
+  for (key in countryCodeLookupTable) {
     if (countryCodeLookupTable.hasOwnProperty(key)) {
       if (key === code) {
         match = countryCodeLookupTable[key];
@@ -7233,7 +13585,7 @@ function queryTable(code) {
 }
 
 function getLocale(code) {
-  var match;
+  var match, pieces;
 
   code = code ? code.toLowerCase() : 'us';
   code = code.replace(/-/g, '_');
@@ -7241,7 +13593,7 @@ function getLocale(code) {
   match = isFormatted(code) ? code : queryTable(code);
 
   if (match) {
-    var pieces = match.split('_');
+    pieces = match.split('_');
     return [pieces[0], pieces[1].toUpperCase()].join('_');
   }
 
@@ -7250,10 +13602,53 @@ function getLocale(code) {
 
 module.exports = getLocale;
 
-},{"../shared/data/country-code-lookup":169}],171:[function(require,module,exports){
-var userAgent = require('./useragent');
+},{"224":224}],226:[function(require,module,exports){
+'use strict';
 
-var toString = Object.prototype.toString;
+var countryCodeLookupTable = require(224);
+var getLocale = require(225);
+
+function getCountry(code) {
+  var country = code ? code.toLowerCase().replace(/-/g, '_') : 'us';
+
+  if (country.indexOf('_') !== -1) {
+    country = country.split('_')[1];
+  }
+
+  country = countryCodeLookupTable[country] ? country : 'us';
+
+  if (country === 'uk') {
+    country = 'gb';
+  }
+
+  return country;
+}
+
+function getTranslation(locale, translations) {
+  locale = locale.toLowerCase();
+
+  return translations[locale] ? translations[locale] : translations.en_us;
+}
+
+function getLocalizationData(code, translations) {
+  var country = getCountry(code);
+  var locale = getLocale(code);
+  var translation = getTranslation(locale, translations);
+
+  return {
+    country: country,
+    locale: locale,
+    translation: translation
+  };
+}
+
+module.exports = getLocalizationData;
+
+},{"224":224,"225":225}],227:[function(require,module,exports){
+'use strict';
+
+var userAgent = require(230);
+var platform = require(229);
 
 function isAndroid() {
   return userAgent.matchUserAgent('Android') && !isChrome();
@@ -7271,16 +13666,30 @@ function isIE() {
   return userAgent.matchUserAgent('Trident') || userAgent.matchUserAgent('MSIE');
 }
 
+function isIE8() {
+  return userAgent.matchUserAgent(/MSIE 8\.0/);
+}
+
 function isOpera() {
   return userAgent.matchUserAgent('Opera') || userAgent.matchUserAgent('OPR');
 }
 
 function isOperaMini() {
-  return isOpera() && toString.call(window.operamini) === '[object OperaMini]';
+  return isOpera() && Object.prototype.toString.call(window.operamini) === '[object OperaMini]';
 }
 
 function isSafari() {
   return userAgent.matchUserAgent('Safari') && !isChrome() && !isAndroid();
+}
+
+function isIosWebView() {
+  return platform.isIos() && !isChrome() && !isSafari();
+}
+
+function isAndroidWebView() {
+  var androidWebviewRegExp = /Version\/[\w\.]+ Chrome\/[\w\.]+ Mobile/;
+
+  return platform.isAndroid() && userAgent.matchUserAgent(androidWebviewRegExp);
 }
 
 module.exports = {
@@ -7288,14 +13697,19 @@ module.exports = {
   isChrome: isChrome,
   isFirefox: isFirefox,
   isIE: isIE,
+  isIE8: isIE8,
   isOpera: isOpera,
   isOperaMini: isOperaMini,
-  isSafari: isSafari
+  isSafari: isSafari,
+  isIosWebView: isIosWebView,
+  isAndroidWebView: isAndroidWebView
 };
 
-},{"./useragent":174}],172:[function(require,module,exports){
-var userAgent = require('./useragent');
-var platform = require('./platform');
+},{"229":229,"230":230}],228:[function(require,module,exports){
+'use strict';
+
+var userAgent = require(230);
+var platform = require(229);
 
 function isMobile() {
   return !isTablet() &&
@@ -7304,8 +13718,8 @@ function isMobile() {
 }
 
 function isTablet() {
-  return platform.isIpad() || (platform.isAndroid() &&
-      !userAgent.matchUserAgent('Mobile'));
+  return platform.isIpad() || platform.isAndroid() &&
+      !userAgent.matchUserAgent('Mobile');
 }
 
 function isDesktop() {
@@ -7318,8 +13732,10 @@ module.exports = {
   isDesktop: isDesktop
 };
 
-},{"./platform":173,"./useragent":174}],173:[function(require,module,exports){
-var userAgent = require('./useragent');
+},{"229":229,"230":230}],229:[function(require,module,exports){
+'use strict';
+
+var userAgent = require(230);
 
 function isAndroid() {
   return userAgent.matchUserAgent('Android');
@@ -7349,7 +13765,9 @@ module.exports = {
   isIos: isIos
 };
 
-},{"./useragent":174}],174:[function(require,module,exports){
+},{"230":230}],230:[function(require,module,exports){
+'use strict';
+
 var nativeUserAgent = window.navigator.userAgent;
 
 function getNativeUserAgent() {
@@ -7359,6 +13777,7 @@ function getNativeUserAgent() {
 function matchUserAgent(pattern) {
   var userAgent = exports.getNativeUserAgent();
   var matches = userAgent.match(pattern);
+
   if (matches) {
     return true;
   }
@@ -7368,11 +13787,14 @@ function matchUserAgent(pattern) {
 exports.getNativeUserAgent = getNativeUserAgent;
 exports.matchUserAgent = matchUserAgent;
 
-},{}],175:[function(require,module,exports){
-var browser = require('../useragent/browser');
-var device = require('../useragent/device');
-var platform = require('../useragent/platform');
-var userAgent = require('../useragent/useragent');
+},{}],231:[function(require,module,exports){
+'use strict';
+/* globals ActiveXObject */
+
+var browser = require(227);
+var device = require(228);
+var platform = require(229);
+var userAgent = require(230);
 
 var uaString = window.navigator.userAgent;
 var mobileRe = /[Mm]obi|tablet|iOS|Android|IEMobile|Windows\sPhone/;
@@ -7386,7 +13808,7 @@ function isMobileDevice() {
 }
 
 function detectedPostMessage() {
-  return !!window.postMessage;
+  return Boolean(window.postMessage);
 }
 
 function isPopupSupported() {
@@ -7404,51 +13826,66 @@ function isPopupSupported() {
     }
 
     if (platform.isAndroid()) {
+      if (browser.isAndroidWebView()) {
+        return false;
+      }
+
       return true;
     }
 
     if (platform.isIos()) {
-      if ((browser.isSafari() && userAgent.matchUserAgent(/OS (?:8_1|8_0|8)(?!_\d)/i)) ||
-        browser.isChrome()) {
+      // Chrome, Safari Versions 8.0-8.1, or WebViews
+      if (browser.isChrome()) {
         return false;
-      } else {
-        return true;
       }
+
+      if (browser.isSafari() && userAgent.matchUserAgent(/OS (?:8_1|8_0|8)(?!_\d)/i)) {
+        return false;
+      }
+
+      if (browser.isIosWebView()) {
+        return false;
+      }
+
+      return true;
     }
   }
 
   return false;
 }
 
-function isOverlaySupported () {
-  if (browser.isIE() && userAgent.matchUserAgent(/MSIE 8\.0/)) {
+function isOverlaySupported() {
+  if (browser.isIE8()) {
     return false;
-  } else {
-    try {
-      return window.self === window.top;
-    } catch (e) {
-      return false;
-    }
+  }
+
+  try {
+    return window.self === window.top;
+  } catch (e) {
+    return false;
   }
 }
 
-function isProxyFrameRequired () {
-  return browser.isIE() && !isMetroBrowser();
+function isBridgeIframeRequired() {
+  return browser.isIE();
 }
 
 function isMetroBrowser() {
   var supported = null;
   var errorName = '';
+
   try {
-    new ActiveXObject('');
+    new ActiveXObject(''); // eslint-disable-line
   } catch (e) {
     errorName = e.name;
   }
+
   try {
-    supported = !!new ActiveXObject('htmlfile');
+    supported = Boolean(new ActiveXObject('htmlfile'));
   } catch (e) {
     supported = false;
   }
+
   if (errorName !== 'ReferenceError' && supported === false) {
     supported = false;
   } else {
@@ -7463,12 +13900,16 @@ module.exports = {
   detectedPostMessage: detectedPostMessage,
   isPopupSupported: isPopupSupported,
   isOverlaySupported: isOverlaySupported,
-  isProxyFrameRequired: isProxyFrameRequired
+  isBridgeIframeRequired: isBridgeIframeRequired,
+  isMetroBrowser: isMetroBrowser
 };
 
-},{"../useragent/browser":171,"../useragent/device":172,"../useragent/platform":173,"../useragent/useragent":174}],176:[function(require,module,exports){
+},{"227":227,"228":228,"229":229,"230":230}],232:[function(require,module,exports){
+'use strict';
+
 function setTextContent(element, content) {
   var property = 'innerText';
+
   if (document && document.body) {
     if ('textContent' in document.body) {
       property = 'textContent';
@@ -7481,12 +13922,16 @@ module.exports = {
   setTextContent: setTextContent
 };
 
-},{}],177:[function(require,module,exports){
+},{}],233:[function(require,module,exports){
+'use strict';
+
+var constants = require(223);
+
 var trim = typeof String.prototype.trim === 'function' ?
   function (str) { return str.trim(); } :
   function (str) { return str.replace(/^\s+|\s+$/, ''); };
 
-var btoa = typeof window.btoa === 'function' ?
+var b2a = typeof window.btoa === 'function' ?
   function (str) { return window.btoa(str); } :
   function (str) {
     var keyStr =
@@ -7501,8 +13946,8 @@ var btoa = typeof window.btoa === 'function' ?
       chr3 = str.charCodeAt(i++);
 
       enc1 = chr1 >> 2;
-      enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-      enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+      enc2 = (chr1 & 3) << 4 | chr2 >> 4;
+      enc3 = (chr2 & 15) << 2 | chr3 >> 6;
       enc4 = chr3 & 63;
 
       if (isNaN(chr2)) {
@@ -7519,11 +13964,14 @@ var btoa = typeof window.btoa === 'function' ?
   };
 
 function generateUid() {
+  var i, r;
   var uid = '';
-  for (var i = 0; i < 32; i++) {
-    var r = Math.floor(Math.random() * 16);
+
+  for (i = 0; i < 32; i++) {
+    r = Math.floor(Math.random() * 16);
     uid += r.toString(16);
   }
+
   return uid;
 }
 
@@ -7540,27 +13988,31 @@ function htmlEscape(str) {
 }
 
 function parseUrlParams(url) {
+  var arr, i, n, parts, index, key, value, encodedValue;
   var startIndex = url.indexOf('?');
   var values = {};
+
   if (startIndex >= 0) {
     url = url.substr(startIndex + 1);
   }
+
   if (url.length === 0) {
-    return;
+    return null;
   }
 
-  var arr = url.split('&');
-  for (var i = 0, n = arr.length; i < n; i++) {
-    var parts = arr[i];
-    var index = parts.indexOf('=');
-    var key = parts.substr(0, index);
-    var encodedValue = parts.substr(index + 1);
-    var value = decodeURIComponent(encodedValue);
+  arr = url.split('&');
+  for (i = 0, n = arr.length; i < n; i++) {
+    parts = arr[i];
+    index = parts.indexOf('=');
+    key = parts.substr(0, index);
+    encodedValue = parts.substr(index + 1);
+    value = decodeURIComponent(encodedValue);
     value = value.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
     if (value === 'false') {
       value = false;
     }
-    if (value === undefined || value === 'true') {
+    if (value == null || value === 'true') {
       value = true;
     }
     values[key] = value;
@@ -7569,1304 +14021,74 @@ function parseUrlParams(url) {
   return values;
 }
 
-function isFunction(func) {
-  return func && Object.prototype.toString.call(func) === '[object Function]';
-}
-
-module.exports = {
-  trim: trim,
-  btoa: btoa,
-  generateUid: generateUid,
-  castToBoolean: castToBoolean,
-  htmlEscape: htmlEscape,
-  parseUrlParams: parseUrlParams,
-  isFunction: isFunction
-};
-
-},{}],178:[function(require,module,exports){
-arguments[4][25][0].apply(exports,arguments)
-},{"braintree-utilities":188,"dup":25}],179:[function(require,module,exports){
-arguments[4][26][0].apply(exports,arguments)
-},{"braintree-utilities":188,"dup":26}],180:[function(require,module,exports){
-arguments[4][27][0].apply(exports,arguments)
-},{"dup":27}],181:[function(require,module,exports){
-arguments[4][28][0].apply(exports,arguments)
-},{"braintree-utilities":188,"dup":28}],182:[function(require,module,exports){
-arguments[4][29][0].apply(exports,arguments)
-},{"braintree-utilities":188,"dup":29}],183:[function(require,module,exports){
-arguments[4][30][0].apply(exports,arguments)
-},{"./lib/message-bus":178,"./lib/pubsub-client":179,"./lib/pubsub-server":180,"./lib/rpc-client":181,"./lib/rpc-server":182,"dup":30}],184:[function(require,module,exports){
-arguments[4][31][0].apply(exports,arguments)
-},{"dup":31}],185:[function(require,module,exports){
-arguments[4][32][0].apply(exports,arguments)
-},{"dup":32}],186:[function(require,module,exports){
-arguments[4][33][0].apply(exports,arguments)
-},{"dup":33}],187:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],188:[function(require,module,exports){
-arguments[4][19][0].apply(exports,arguments)
-},{"./lib/dom":184,"./lib/events":185,"./lib/fn":186,"./lib/url":187,"dup":19}],189:[function(require,module,exports){
-arguments[4][15][0].apply(exports,arguments)
-},{"dup":15}],190:[function(require,module,exports){
-arguments[4][16][0].apply(exports,arguments)
-},{"dup":16}],191:[function(require,module,exports){
-arguments[4][17][0].apply(exports,arguments)
-},{"dup":17}],192:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],193:[function(require,module,exports){
-arguments[4][19][0].apply(exports,arguments)
-},{"./lib/dom":189,"./lib/events":190,"./lib/fn":191,"./lib/url":192,"dup":19}],194:[function(require,module,exports){
-'use strict';
-
-var RPC_METHOD_NAMES = ['getCreditCards', 'unlockCreditCard', 'sendAnalyticsEvents'];
-
-function APIProxyServer(apiClient) {
-  this.apiClient = apiClient;
-}
-
-APIProxyServer.prototype.attach = function (rpcServer) {
-  var self = this;
-  var i = 0;
-  var len = RPC_METHOD_NAMES.length;
-
-  function attachDefine(name) {
-    rpcServer.define(name, function () {
-      self.apiClient[name].apply(self.apiClient, arguments);
-    });
-  }
-
-  for (i; i < len; i++) {
-    attachDefine(RPC_METHOD_NAMES[i]);
-  }
-};
-
-module.exports = APIProxyServer;
-
-},{}],195:[function(require,module,exports){
-'use strict';
-
-var htmlNode, bodyNode;
-var api = require('braintree-api');
-var bus = require('braintree-bus');
-var rpc = require('braintree-rpc');
-var utils = require('braintree-utilities');
-var APIProxyServer = require('./api-proxy-server');
-var MerchantFormManager = require('./merchant-form-manager');
-var FrameContainer = require('./frame-container');
-var PayPalService = require('../shared/paypal-service');
-var paypalBrowser = require('braintree-paypal/src/shared/util/browser');
-var version = "1.3.4";
-
-function getElementStyle(element, style) {
-  var computedStyle = window.getComputedStyle ? getComputedStyle(element) : element.currentStyle;
-
-  return computedStyle[style];
-}
-
-function getMerchantPageDefaultStyles() {
-  return {
-    html: {
-      height: htmlNode.style.height || '',
-      overflow: getElementStyle(htmlNode, 'overflow'),
-      position: getElementStyle(htmlNode, 'position')
-    },
-    body: {
-      height: bodyNode.style.height || '',
-      overflow: getElementStyle(bodyNode, 'overflow')
-    }
-  };
-}
-
-function isMobile() {
-  var isMobileUserAgent = /Android|iPhone|iPod|iPad/i.test(window.navigator.userAgent);
-  return isMobileUserAgent;
-}
-
-function Client(settings) {
-  var inlineFramePath, modalFramePath, formElement;
-
-  this.encodedClientToken = settings.clientToken;
-  this.paypalOptions = settings.paypal;
-  this.container = null;
-  this.merchantFormManager = null;
-  this.root = settings.root;
-  this.configurationRequests = [];
-  this.braintreeApiClient = api.configure({ clientToken: settings.clientToken, integration: 'dropin' });
-  this.paymentMethodNonceReceivedCallback = settings.paymentMethodNonceReceived;
-  this.clientToken = api.parseClientToken(settings.clientToken);
-
-  this.bus = new rpc.MessageBus(this.root);
-  this.rpcServer = new rpc.RPCServer(this.bus);
-  this.apiProxyServer = new APIProxyServer(this.braintreeApiClient);
-
-  this.apiProxyServer.attach(this.rpcServer);
-
-  inlineFramePath = settings.inlineFramePath || this.clientToken.assetsUrl + '/dropin/' + version + '/inline-frame.html';
-  modalFramePath = settings.modalFramePath || this.clientToken.assetsUrl + '/dropin/' + version + '/modal-frame.html';
-  htmlNode = document.documentElement;
-  bodyNode = document.body;
-
-  this.frames = {
-    inline: this._createFrame(inlineFramePath, 'braintree-dropin-frame'),
-    modal: this._createFrame(modalFramePath, 'braintree-dropin-modal-frame')
-  };
-
-  this.container = utils.normalizeElement(settings.container, 'Unable to find valid container.');
-
-  formElement = utils.normalizeElement(settings.form || this._findClosest(this.container, 'form'));
-
-  this.merchantFormManager = new MerchantFormManager({
-    form: formElement,
-    frames: this.frames,
-    onSubmit: this.paymentMethodNonceReceivedCallback,
-    apiClient: this.braintreeApiClient
-  }).initialize();
-
-  if (this.clientToken.paypalEnabled && (this.clientToken.paypal && (utils.isBrowserHttps() || this.clientToken.paypal.allowHttp))) {
-    this._configurePayPal();
-  }
-
-  this.braintreeApiClient.sendAnalyticsEvents('dropin.web.initialized');
-}
-
-Client.prototype.initialize = function () {
-  var self = this;
-
-  this._initializeModal();
-
-  this.container.appendChild(this.frames.inline.element);
-  bodyNode.appendChild(this.frames.modal.element);
-
-  this.rpcServer.define('receiveSharedCustomerIdentifier', function (sharedCustomerIdentifier) {
-    self.braintreeApiClient.attrs.sharedCustomerIdentifier = sharedCustomerIdentifier;
-    self.braintreeApiClient.attrs.sharedCustomerIdentifierType = 'browser_session_cookie_store';
-
-    for (var i = 0; i < self.configurationRequests.length; i++) {
-      self.configurationRequests[i](self.encodedClientToken);
-    }
-
-    self.configurationRequests = [];
-  });
-
-  bus.on(bus.events.PAYMENT_METHOD_GENERATED, utils.bind(this._handleAltPayData, this));
-
-  this.rpcServer.define('getConfiguration', function (reply) {
-    reply({
-      clientToken: self.encodedClientToken,
-      merchantHttps: utils.isBrowserHttps()
-    });
-  });
-
-  this.rpcServer.define('getPayPalOptions', function (reply) {
-    reply(self.paypalOptions);
-  });
-
-  this.rpcServer.define('selectPaymentMethod', function (paymentMethods) {
-    self.frames.modal.rpcClient.invoke('selectPaymentMethod', [paymentMethods]);
-    self._showModal();
-  });
-
-  this.rpcServer.define('sendAddedPaymentMethod', function (paymentMethod) {
-    self.merchantFormManager.setNoncePayload(paymentMethod);
-
-    self.frames.inline.rpcClient.invoke('receiveNewPaymentMethod', [paymentMethod]);
-  });
-
-  this.rpcServer.define('sendUsedPaymentMethod', function (paymentMethod) {
-    self.frames.inline.rpcClient.invoke('selectPaymentMethod', [paymentMethod]);
-  });
-
-  this.rpcServer.define('sendUnlockedNonce', function (paymentMethod) {
-    self.merchantFormManager.setNoncePayload(paymentMethod);
-  });
-
-  this.rpcServer.define('clearNonce', function () {
-    self.merchantFormManager.clearNoncePayload();
-  });
-
-  this.rpcServer.define('closeDropInModal', function () {
-    self._hideModal();
-  });
-
-  this.rpcServer.define('setInlineFrameHeight', function (height) {
-    self.frames.inline.element.style.height = height + 'px';
-  });
-
-  this.bus.register('ready', function (message) {
-    if (message.source === self.frames.inline.element.contentWindow) {
-      self.frames.inline.rpcClient = new rpc.RPCClient(self.bus, message.source);
-    } else if (message.source === self.frames.modal.element.contentWindow) {
-      self.frames.modal.rpcClient = new rpc.RPCClient(self.bus, message.source);
-    }
-  });
-};
-
-Client.prototype._createFrame = function (endpoint, name) {
-  return new FrameContainer(endpoint, name);
-};
-
-Client.prototype._initializeModal = function () {
-  this.frames.modal.element.style.display = 'none';
-  this.frames.modal.element.style.position = isMobile() ? 'absolute' : 'fixed';
-  this.frames.modal.element.style.top = '0';
-  this.frames.modal.element.style.left = '0';
-  this.frames.modal.element.style.height = '100%';
-  this.frames.modal.element.style.width = '100%';
-};
-
-Client.prototype._lockMerchantWindowSize = function () {
-  setTimeout(function () {
-    htmlNode.style.overflow = 'hidden';
-    bodyNode.style.overflow = 'hidden';
-    bodyNode.style.height = '100%';
-
-    if (isMobile()) {
-      htmlNode.style.position = 'relative';
-      htmlNode.style.height = window.innerHeight + 'px';
-    }
-  }, 160);
-};
-
-Client.prototype._unlockMerchantWindowSize = function () {
-  var defaultStyles = this.merchantPageDefaultStyles;
-
-  bodyNode.style.height = defaultStyles.body.height;
-  bodyNode.style.overflow = defaultStyles.body.overflow;
-
-  htmlNode.style.overflow = defaultStyles.html.overflow;
-
-  if (isMobile()) {
-    htmlNode.style.height = defaultStyles.html.height;
-    htmlNode.style.position = defaultStyles.html.position;
-  }
-};
-
-Client.prototype._showModal = function () {
-  var self = this;
-  var el = this.frames.modal.element;
-
-  this.merchantPageDefaultStyles = getMerchantPageDefaultStyles();
-
-  el.style.display = 'block';
-
-  this.frames.modal.rpcClient.invoke('open', [], function () {
-    setTimeout(function () {
-      self._lockMerchantWindowSize();
-      el.contentWindow.focus();
-    }, 200);
-  });
-};
-
-Client.prototype._hideModal = function () {
-  this._unlockMerchantWindowSize();
-  this.frames.modal.element.style.display = 'none';
-};
-
-Client.prototype._configurePayPal = function () {
-  if (!paypalBrowser.isPopupSupported()) {
-    this.ppClient = new PayPalService({
-      clientToken: this.clientToken,
-      paypal: this.paypalOptions
-    });
-
-    this.rpcServer.define('openPayPalModal', utils.bind(this.ppClient._openModal, this.ppClient));
-  }
-
-  this.rpcServer.define('receivePayPalData', utils.bind(this._handleAltPayData, this));
-};
-
-Client.prototype._handleAltPayData = function (payload) {
-  this.merchantFormManager.setNoncePayload(payload);
-  this.frames.inline.rpcClient.invoke('receiveNewPaymentMethod', [payload]);
-  this.frames.modal.rpcClient.invoke('modalViewClose');
-};
-
-Client.prototype._findClosest = function (node, tagName) {
-  tagName = tagName.toUpperCase();
-
-  do {
-    if (node.nodeName === tagName) {
-      return node;
-    }
-  } while (node = node.parentNode);
-
-  throw 'Unable to find a valid ' + tagName;
-};
-
-module.exports = Client;
-
-},{"../shared/paypal-service":199,"./api-proxy-server":194,"./frame-container":197,"./merchant-form-manager":198,"braintree-api":77,"braintree-bus":105,"braintree-paypal/src/shared/util/browser":175,"braintree-rpc":183,"braintree-utilities":193}],196:[function(require,module,exports){
-'use strict';
-
-var Client = require('./client');
-var VERSION = "1.3.4";
-
-function create(clientToken, options) {
-  options.clientToken = clientToken;
-  var client = new Client(options);
-
-  client.initialize();
-
-  return client;
-}
-
-module.exports = {
-  create: create,
-  VERSION: VERSION
-};
-
-},{"./client":195}],197:[function(require,module,exports){
-'use strict';
-
-function FrameContainer(endpoint, name) {
-  this.element = document.createElement('iframe');
-  this.element.setAttribute('name', name);
-  this.element.setAttribute('allowtransparency', 'true');
-  this.element.setAttribute('width', '100%');
-  this.element.setAttribute('height', '68');
-  this.element.setAttribute('style', '-webkit-transition: height 210ms cubic-bezier(0.390, 0.575, 0.565, 1.000); -moz-transition: height 210ms cubic-bezier(0.390, 0.575, 0.565, 1.000); -ms-transition: height 210ms cubic-bezier(0.390, 0.575, 0.565, 1.000); -o-transition: height 210ms cubic-bezier(0.390, 0.575, 0.565, 1.000); transition: height 210ms cubic-bezier(0.390, 0.575, 0.565, 1.000);');
-  this.element.src = endpoint;
-
-  this.element.setAttribute('frameborder', '0');
-  this.element.setAttribute('allowtransparency', 'true');
-  this.element.style.border = '0';
-  this.element.style.zIndex = '9999';
-}
-
-module.exports = FrameContainer;
-
-},{}],198:[function(require,module,exports){
-'use strict';
-
-var utils = require('braintree-utilities');
-
-function MerchantFormManager(options) {
-  this.form = options.form;
-  this.frames = options.frames;
-  this.onSubmit = options.onSubmit;
-  this.apiClient = options.apiClient;
-}
-
-MerchantFormManager.prototype.initialize = function () {
-  if (this._isSubmitBased()) {
-    this._setElements();
-  }
-
-  this._setEvents();
-
-  return this;
-};
-
-MerchantFormManager.prototype.setNoncePayload = function (payload) {
-  this.noncePayload = payload;
-};
-
-MerchantFormManager.prototype.clearNoncePayload = function () {
-  this.noncePayload = null;
-};
-
-MerchantFormManager.prototype._isSubmitBased = function () {
-  return !this.onSubmit;
-};
-
-MerchantFormManager.prototype._isCallbackBased = function () {
-  return !!this.onSubmit;
-};
-
-MerchantFormManager.prototype._setElements = function () {
-  if (!this.form.payment_method_nonce) {
-    var input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = 'payment_method_nonce';
-    this.form.appendChild(input);
-  }
-
-  this.nonceField = this.form.payment_method_nonce;
-};
-
-MerchantFormManager.prototype._setEvents = function () {
-  var self = this;
-
-  utils.addEventListener(this.form, 'submit', function () {
-    self._handleFormSubmit.apply(self, arguments);
-  });
-};
-
-MerchantFormManager.prototype._handleFormSubmit = function (event) {
-  if (this._shouldSubmit()) { return; }
-
-  if (event && event.preventDefault) {
-    event.preventDefault();
-  } else {
-    event.returnValue = false;
-  }
-
-  if (this.noncePayload && this.noncePayload.nonce) {
-    this._handleNonceReply(event);
-  } else {
-    this.frames.inline.rpcClient.invoke('requestNonce', [], utils.bind(function (payload) {
-      this.setNoncePayload(payload);
-      this._handleNonceReply(event);
-    }, this));
-  }
-};
-
-MerchantFormManager.prototype._shouldSubmit = function () {
-  return this._isCallbackBased() ? false : this.nonceField.value.length > 0;
-};
-
-MerchantFormManager.prototype._handleNonceReply = function (event) {
-  if (this._isCallbackBased()) {
-    this.apiClient.sendAnalyticsEvents('dropin.web.end.callback', utils.bind(function () {
-      var payload = this.noncePayload;
-
-      payload.originalEvent = event;
-
-      this.onSubmit(payload);
-
-      setTimeout(utils.bind(function () {
-        this.frames.inline.rpcClient.invoke('clearLoadingState');
-      }, this), 200);
-    }, this));
-  } else {
-    this._triggerFormSubmission();
-  }
-};
-
-MerchantFormManager.prototype._triggerFormSubmission = function () {
-  this.nonceField.value = this.noncePayload.nonce;
-
-  this.apiClient.sendAnalyticsEvents('dropin.web.end.auto-submit', utils.bind(function () {
-    if (typeof this.form.submit === 'function') {
-      this.form.submit();
-    } else {
-      this.form.querySelector('[type="submit"]').click();
-    }
-  }, this));
-};
-
-module.exports = MerchantFormManager;
-
-},{"braintree-utilities":193}],199:[function(require,module,exports){
-'use strict';
-
-var PaypalClient = require('braintree-paypal/src/external/client');
-
-function PayPalService(options) {
-  var clientToken = options.clientToken;
-  var paypalOptions = options.paypal || {};
-
-  // TODO: use module when ready
-  var client = new PaypalClient(clientToken, {
-    container: document.createElement('div'),
-    displayName: paypalOptions.displayName,
-    locale: paypalOptions.locale,
-    singleUse: paypalOptions.singleUse,
-    amount: paypalOptions.amount,
-    currency: paypalOptions.currency,
-    onSuccess: paypalOptions.onSuccess,
-    enableShippingAddress: paypalOptions.enableShippingAddress,
-    shippingAddressOverride: paypalOptions.shippingAddressOverride
-  });
-
-  client.initialize();
-
-  return client;
-}
-
-module.exports = PayPalService;
-
-},{"braintree-paypal/src/external/client":164}],200:[function(require,module,exports){
-'use strict';
-
-var util = require('braintree-utilities');
-
-function Form(client, htmlForm, nonceInput) {
-  this.client = client;
-  this.htmlForm = htmlForm;
-  this.paymentMethodNonceInput = nonceInput;
-  this.setNonce({});
-  this.hijackForm();
-}
-
-Form.prototype.hijackForm = function () {
-  this.onSubmitHandler = util.bind(this.handleSubmit, this);
-  util.addEventListener(this.htmlForm, 'submit', this.onSubmitHandler);
-};
-
-Form.prototype.handleSubmit = function (event) {
-  var self = this;
-
+function preventDefault(event) {
   if (event.preventDefault) {
     event.preventDefault();
   } else {
     event.returnValue = false;
   }
-
-  if (this.hasExternalNonce()) {
-    this.scrubAllAttributes();
-    this.onNonceReceived(null, this.getNonce());
-    return;
-  }
-
-  this.client.tokenizeCard(this.extractValues(), function (err, nonce, payload) {
-    if (!err) {
-      self.setNonce({
-        nonce: nonce,
-        type: payload.type,
-        details: payload.details
-      });
-    }
-
-    self.onNonceReceived(err, self.getNonce());
-  });
-};
-
-Form.prototype.setNonce = function (payload) {
-  this.nonce = payload;
-};
-
-Form.prototype.getNonce = function () {
-  return this.nonce;
-};
-
-Form.prototype.writeNonceToDOM = function () {
-  this.paymentMethodNonceInput.value = this.getNonce().nonce;
-};
-
-Form.prototype.isBraintreeNode = function (node) {
-  return node.nodeType === 1 && node.attributes['data-braintree-name'];
-};
-
-Form.prototype.hasExternalNonce = function () {
-  var nonce = this.getNonce();
-  var hasExternalSource = nonce && nonce.type != null && nonce.type !== 'CreditCard';
-  var hasNoCardValue = this.htmlForm.querySelector('[data-braintree-name="number"]').value.length < 1;
-
-  return hasNoCardValue && (nonce && nonce.nonce) && hasExternalSource;
-};
-
-Form.prototype.onExternalNonceReceived = function (payload) {
-  this.clearCardNumberInput();
-  this.setNonce(payload);
-};
-
-Form.prototype.onExternalNonceCancelled = function () {
-  this.setNonce(null);
-};
-
-Form.prototype.onNonceReceived = function (err) {
-  var form = this.htmlForm;
-
-  if (err) {
-    throw new Error('Unable to process payments at this time.');
-  }
-
-  util.removeEventListener(form, 'submit', this.onSubmitHandler);
-
-  this.writeNonceToDOM();
-
-  if (form.submit && (typeof form.submit === 'function' || form.submit.call)) {
-    form.submit();
-  } else {
-    setTimeout(function () {
-      form.querySelector('[type="submit"]').click();
-    }, 1);
-  }
-};
-
-Form.prototype.scrubAllAttributes = function () {
-  this.extractValues();
-};
-
-Form.prototype.extractValues = function (node, results) {
-  results = results || {};
-  node = node || this.htmlForm;
-
-  var child, i;
-  var children = node.children;
-
-  for (i = 0; i < children.length; i++) {
-    child = children[i];
-
-    if (this.isBraintreeNode(child)) {
-      var dataAttr = child.getAttribute('data-braintree-name');
-
-      if (dataAttr === 'postal_code') {
-        results.billingAddress = {
-          postalCode: child.value
-        };
-      } else {
-        results[dataAttr] = child.value;
-      }
-
-      this.scrubAttributes(child);
-    } else if (child.children && child.children.length > 0) {
-      this.extractValues(child, results);
-    }
-  }
-
-  return results;
-};
-
-Form.prototype.scrubAttributes = function (node) {
-  try {
-    node.attributes.removeNamedItem('name');
-  } catch (e) {}
-};
-
-Form.prototype.clearCardNumberInput = function () {
-  var input = this.htmlForm.querySelector('[data-braintree-name="number"]');
-  input.value = '';
-};
-
-module.exports = Form;
-
-},{"braintree-utilities":208}],201:[function(require,module,exports){
-'use strict';
-
-module.exports = function getNonceInput(paymentMethodNonceInputField) {
-  var nonceInputName;
-
-  if (typeof paymentMethodNonceInputField === 'object') {
-    return paymentMethodNonceInputField;
-  }
-
-  nonceInputName = 'payment_method_nonce';
-
-  if (typeof paymentMethodNonceInputField === 'string') {
-    nonceInputName = paymentMethodNonceInputField;
-  }
-
-  var nonceInput = document.createElement('input');
-  nonceInput.name = nonceInputName;
-  nonceInput.type = 'hidden';
-
-  return nonceInput;
-};
-
-},{}],202:[function(require,module,exports){
-'use strict';
-
-module.exports = function validateAnnotations(htmlForm) {
-  var inputs = htmlForm.getElementsByTagName('*');
-  var valid = {};
-
-  for (var i = 0; i < inputs.length; i++) {
-    var field = inputs[i].getAttribute('data-braintree-name');
-    valid[field] = true;
-  }
-
-  if (!valid.number) {
-    throw new Error('Unable to find an input with data-braintree-name="number" in your form. Please add one.');
-  }
-
-  if (valid.expiration_date) {
-    if (valid.expiration_month || valid.expiration_year) {
-      throw new Error('You have inputs with data-braintree-name="expiration_date" AND data-braintree-name="expiration_(year|month)". Please use either "expiration_date" or "expiration_year" and "expiration_month".');
-    }
-  } else {
-    if (!valid.expiration_month && !valid.expiration_year) {
-      throw new Error('Unable to find an input with data-braintree-name="expiration_date" in your form. Please add one.');
-    }
-
-    if (!valid.expiration_month) {
-      throw new Error('Unable to find an input with data-braintree-name="expiration_month" in your form. Please add one.');
-    }
-
-    if (!valid.expiration_year) {
-      throw new Error('Unable to find an input with data-braintree-name="expiration_year" in your form. Please add one.');
-    }
-  }
-};
-
-},{}],203:[function(require,module,exports){
-'use strict';
-
-var Form = require('./lib/form');
-var validateAnnotations = require('./lib/validate-annotations');
-var getNonceInput = require('./lib/get-nonce-input');
-
-function setup(client, options) {
-  var nonceInput, form;
-  var htmlForm = document.getElementById(options.id);
-
-  if (!htmlForm) {
-    throw new Error('Unable to find form with id: "' + options.id + '"');
-  }
-
-  validateAnnotations(htmlForm);
-
-  nonceInput = getNonceInput(options.paymentMethodNonceInputField);
-  htmlForm.appendChild(nonceInput);
-
-  form = new Form(client, htmlForm, nonceInput);
-
-  return form;
 }
 
-module.exports = { setup: setup };
+function getOnetimeConfigurationType(merchantConfiguration) {
+  var configurationType;
 
-},{"./lib/form":200,"./lib/get-nonce-input":201,"./lib/validate-annotations":202}],204:[function(require,module,exports){
-arguments[4][15][0].apply(exports,arguments)
-},{"dup":15}],205:[function(require,module,exports){
-arguments[4][16][0].apply(exports,arguments)
-},{"dup":16}],206:[function(require,module,exports){
-arguments[4][17][0].apply(exports,arguments)
-},{"dup":17}],207:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],208:[function(require,module,exports){
-arguments[4][19][0].apply(exports,arguments)
-},{"./lib/dom":204,"./lib/events":205,"./lib/fn":206,"./lib/url":207,"dup":19}],209:[function(require,module,exports){
-arguments[4][65][0].apply(exports,arguments)
-},{"./coinbase-account":210,"./credit-card":211,"./jsonp-driver":212,"./normalize-api-fields":214,"./parse-client-token":215,"./root-data":217,"./sepa-bank-account":218,"./sepa-mandate":219,"./util":220,"braintree-3ds":229,"braintree-utilities":248,"dup":65}],210:[function(require,module,exports){
-arguments[4][3][0].apply(exports,arguments)
-},{"dup":3}],211:[function(require,module,exports){
-arguments[4][4][0].apply(exports,arguments)
-},{"dup":4}],212:[function(require,module,exports){
-arguments[4][5][0].apply(exports,arguments)
-},{"./jsonp":213,"dup":5}],213:[function(require,module,exports){
-arguments[4][6][0].apply(exports,arguments)
-},{"./util":220,"dup":6}],214:[function(require,module,exports){
-arguments[4][7][0].apply(exports,arguments)
-},{"dup":7}],215:[function(require,module,exports){
-arguments[4][8][0].apply(exports,arguments)
-},{"./polyfill":216,"dup":8}],216:[function(require,module,exports){
-arguments[4][9][0].apply(exports,arguments)
-},{"dup":9}],217:[function(require,module,exports){
-arguments[4][10][0].apply(exports,arguments)
-},{"braintree-rpc":237,"dup":10}],218:[function(require,module,exports){
-arguments[4][11][0].apply(exports,arguments)
-},{"dup":11}],219:[function(require,module,exports){
-arguments[4][12][0].apply(exports,arguments)
-},{"dup":12}],220:[function(require,module,exports){
-arguments[4][13][0].apply(exports,arguments)
-},{"dup":13}],221:[function(require,module,exports){
-arguments[4][14][0].apply(exports,arguments)
-},{"./lib/client":209,"./lib/jsonp":213,"./lib/jsonp-driver":212,"./lib/parse-client-token":215,"./lib/util":220,"dup":14}],222:[function(require,module,exports){
-arguments[4][15][0].apply(exports,arguments)
-},{"dup":15}],223:[function(require,module,exports){
-arguments[4][16][0].apply(exports,arguments)
-},{"dup":16}],224:[function(require,module,exports){
-arguments[4][17][0].apply(exports,arguments)
-},{"dup":17}],225:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],226:[function(require,module,exports){
-arguments[4][19][0].apply(exports,arguments)
-},{"./lib/dom":222,"./lib/events":223,"./lib/fn":224,"./lib/url":225,"dup":19}],227:[function(require,module,exports){
-arguments[4][83][0].apply(exports,arguments)
-},{"../shared/receiver":231,"braintree-utilities":226,"dup":83}],228:[function(require,module,exports){
-arguments[4][84][0].apply(exports,arguments)
-},{"./authorization_service":227,"braintree-utilities":226,"dup":84}],229:[function(require,module,exports){
-arguments[4][22][0].apply(exports,arguments)
-},{"./client":228,"./vendor/json2":230,"dup":22}],230:[function(require,module,exports){
-arguments[4][23][0].apply(exports,arguments)
-},{"dup":23}],231:[function(require,module,exports){
-arguments[4][87][0].apply(exports,arguments)
-},{"braintree-utilities":226,"dup":87}],232:[function(require,module,exports){
-arguments[4][25][0].apply(exports,arguments)
-},{"braintree-utilities":242,"dup":25}],233:[function(require,module,exports){
-arguments[4][26][0].apply(exports,arguments)
-},{"braintree-utilities":242,"dup":26}],234:[function(require,module,exports){
-arguments[4][27][0].apply(exports,arguments)
-},{"dup":27}],235:[function(require,module,exports){
-arguments[4][28][0].apply(exports,arguments)
-},{"braintree-utilities":242,"dup":28}],236:[function(require,module,exports){
-arguments[4][29][0].apply(exports,arguments)
-},{"braintree-utilities":242,"dup":29}],237:[function(require,module,exports){
-arguments[4][30][0].apply(exports,arguments)
-},{"./lib/message-bus":232,"./lib/pubsub-client":233,"./lib/pubsub-server":234,"./lib/rpc-client":235,"./lib/rpc-server":236,"dup":30}],238:[function(require,module,exports){
-arguments[4][31][0].apply(exports,arguments)
-},{"dup":31}],239:[function(require,module,exports){
-arguments[4][32][0].apply(exports,arguments)
-},{"dup":32}],240:[function(require,module,exports){
-arguments[4][33][0].apply(exports,arguments)
-},{"dup":33}],241:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],242:[function(require,module,exports){
-arguments[4][19][0].apply(exports,arguments)
-},{"./lib/dom":238,"./lib/events":239,"./lib/fn":240,"./lib/url":241,"dup":19}],243:[function(require,module,exports){
-arguments[4][15][0].apply(exports,arguments)
-},{"dup":15}],244:[function(require,module,exports){
-arguments[4][16][0].apply(exports,arguments)
-},{"dup":16}],245:[function(require,module,exports){
-arguments[4][17][0].apply(exports,arguments)
-},{"dup":17}],246:[function(require,module,exports){
-arguments[4][39][0].apply(exports,arguments)
-},{"dup":39}],247:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],248:[function(require,module,exports){
-arguments[4][41][0].apply(exports,arguments)
-},{"./lib/dom":243,"./lib/events":244,"./lib/fn":245,"./lib/string":246,"./lib/url":247,"dup":41}],249:[function(require,module,exports){
-arguments[4][25][0].apply(exports,arguments)
-},{"braintree-utilities":259,"dup":25}],250:[function(require,module,exports){
-arguments[4][26][0].apply(exports,arguments)
-},{"braintree-utilities":259,"dup":26}],251:[function(require,module,exports){
-arguments[4][27][0].apply(exports,arguments)
-},{"dup":27}],252:[function(require,module,exports){
-arguments[4][28][0].apply(exports,arguments)
-},{"braintree-utilities":259,"dup":28}],253:[function(require,module,exports){
-arguments[4][29][0].apply(exports,arguments)
-},{"braintree-utilities":259,"dup":29}],254:[function(require,module,exports){
-arguments[4][30][0].apply(exports,arguments)
-},{"./lib/message-bus":249,"./lib/pubsub-client":250,"./lib/pubsub-server":251,"./lib/rpc-client":252,"./lib/rpc-server":253,"dup":30}],255:[function(require,module,exports){
-arguments[4][31][0].apply(exports,arguments)
-},{"dup":31}],256:[function(require,module,exports){
-arguments[4][32][0].apply(exports,arguments)
-},{"dup":32}],257:[function(require,module,exports){
-arguments[4][33][0].apply(exports,arguments)
-},{"dup":33}],258:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],259:[function(require,module,exports){
-arguments[4][19][0].apply(exports,arguments)
-},{"./lib/dom":255,"./lib/events":256,"./lib/fn":257,"./lib/url":258,"dup":19}],260:[function(require,module,exports){
-arguments[4][31][0].apply(exports,arguments)
-},{"dup":31}],261:[function(require,module,exports){
-arguments[4][32][0].apply(exports,arguments)
-},{"dup":32}],262:[function(require,module,exports){
-arguments[4][33][0].apply(exports,arguments)
-},{"dup":33}],263:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],264:[function(require,module,exports){
-arguments[4][19][0].apply(exports,arguments)
-},{"./lib/dom":260,"./lib/events":261,"./lib/fn":262,"./lib/url":263,"dup":19}],265:[function(require,module,exports){
-arguments[4][164][0].apply(exports,arguments)
-},{"../shared/constants":270,"../shared/get-locale":272,"../shared/util/browser":277,"../shared/util/dom":278,"../shared/util/util":279,"./logged-in-view":267,"./logged-out-view":268,"./overlay-view":269,"braintree-api":221,"braintree-rpc":254,"braintree-utilities":264,"dup":164}],266:[function(require,module,exports){
-var Client = require('./client');
-var browser = require('../shared/util/browser');
-var VERSION = "1.3.2";
-
-function create(clientToken, options) {
-  if (!browser.detectedPostMessage()) {
-    if (typeof options.onUnsupported === 'function') {
-      options.onUnsupported(new Error('unsupported browser detected'));
-    }
-    return;
+  if (Boolean(merchantConfiguration.amount) && Boolean(merchantConfiguration.currency)) {
+    configurationType = constants.CONFIGURATION_TYPES.HERMES_ONETIME;
+  } else {
+    configurationType = constants.CONFIGURATION_TYPES.LEGACY_ONETIME;
   }
-  var client = new Client(clientToken, options);
-  client.initialize();
-  return client;
+
+  return configurationType;
+}
+
+function getFuturePaymentsConfigurationType(gatewayConfiguration) {
+  var configurationType;
+
+  if (Boolean(gatewayConfiguration.paypal.billingAgreementsEnabled)) {
+    configurationType = constants.CONFIGURATION_TYPES.HERMES_BILLING_AGREEMENTS;
+  } else {
+    configurationType = constants.CONFIGURATION_TYPES.LEGACY_FUTURE_PAYMENTS;
+  }
+
+  return configurationType;
+}
+
+function getConfigurationType(gatewayConfiguration, merchantConfiguration) {
+  var configurationType;
+
+  if (Boolean(merchantConfiguration.singleUse)) {
+    configurationType = getOnetimeConfigurationType(merchantConfiguration);
+  } else {
+    configurationType = getFuturePaymentsConfigurationType(gatewayConfiguration);
+  }
+
+  return configurationType;
+}
+
+function isHermesConfiguration(gatewayConfiguration, merchantConfiguration) {
+  var configurationType = getConfigurationType(gatewayConfiguration, merchantConfiguration);
+
+  return configurationType === constants.CONFIGURATION_TYPES.HERMES_ONETIME || configurationType === constants.CONFIGURATION_TYPES.HERMES_BILLING_AGREEMENTS;
+}
+
+function isOnetimeHermesConfiguration(gatewayConfiguration, merchantConfiguration) {
+  var configurationType = getConfigurationType(gatewayConfiguration, merchantConfiguration);
+
+  return configurationType === constants.CONFIGURATION_TYPES.HERMES_ONETIME;
 }
 
 module.exports = {
-  create: create,
-  _browser: browser,
-  VERSION: VERSION
+  trim: trim,
+  btoa: b2a,
+  generateUid: generateUid,
+  castToBoolean: castToBoolean,
+  htmlEscape: htmlEscape,
+  parseUrlParams: parseUrlParams,
+  preventDefault: preventDefault,
+  isHermesConfiguration: isHermesConfiguration,
+  isOnetimeHermesConfiguration: isOnetimeHermesConfiguration,
+  getConfigurationType: getConfigurationType
 };
 
-},{"../shared/util/browser":277,"./client":265}],267:[function(require,module,exports){
-arguments[4][165][0].apply(exports,arguments)
-},{"../shared/constants":270,"dup":165}],268:[function(require,module,exports){
-arguments[4][166][0].apply(exports,arguments)
-},{"../shared/constants":270,"../shared/get-locale":272,"braintree-utilities":264,"dup":166}],269:[function(require,module,exports){
-arguments[4][167][0].apply(exports,arguments)
-},{"../shared/constants":270,"braintree-utilities":264,"dup":167}],270:[function(require,module,exports){
-arguments[4][168][0].apply(exports,arguments)
-},{"dup":168}],271:[function(require,module,exports){
-arguments[4][169][0].apply(exports,arguments)
-},{"dup":169}],272:[function(require,module,exports){
-arguments[4][170][0].apply(exports,arguments)
-},{"../shared/data/country-code-lookup":271,"dup":170}],273:[function(require,module,exports){
-arguments[4][171][0].apply(exports,arguments)
-},{"./useragent":276,"dup":171}],274:[function(require,module,exports){
-arguments[4][172][0].apply(exports,arguments)
-},{"./platform":275,"./useragent":276,"dup":172}],275:[function(require,module,exports){
-arguments[4][173][0].apply(exports,arguments)
-},{"./useragent":276,"dup":173}],276:[function(require,module,exports){
-arguments[4][174][0].apply(exports,arguments)
-},{"dup":174}],277:[function(require,module,exports){
-arguments[4][175][0].apply(exports,arguments)
-},{"../useragent/browser":273,"../useragent/device":274,"../useragent/platform":275,"../useragent/useragent":276,"dup":175}],278:[function(require,module,exports){
-arguments[4][176][0].apply(exports,arguments)
-},{"dup":176}],279:[function(require,module,exports){
-arguments[4][177][0].apply(exports,arguments)
-},{"dup":177}],280:[function(require,module,exports){
-arguments[4][25][0].apply(exports,arguments)
-},{"braintree-utilities":290,"dup":25}],281:[function(require,module,exports){
-arguments[4][26][0].apply(exports,arguments)
-},{"braintree-utilities":290,"dup":26}],282:[function(require,module,exports){
-arguments[4][27][0].apply(exports,arguments)
-},{"dup":27}],283:[function(require,module,exports){
-arguments[4][28][0].apply(exports,arguments)
-},{"braintree-utilities":290,"dup":28}],284:[function(require,module,exports){
-arguments[4][29][0].apply(exports,arguments)
-},{"braintree-utilities":290,"dup":29}],285:[function(require,module,exports){
-arguments[4][30][0].apply(exports,arguments)
-},{"./lib/message-bus":280,"./lib/pubsub-client":281,"./lib/pubsub-server":282,"./lib/rpc-client":283,"./lib/rpc-server":284,"dup":30}],286:[function(require,module,exports){
-arguments[4][31][0].apply(exports,arguments)
-},{"dup":31}],287:[function(require,module,exports){
-arguments[4][32][0].apply(exports,arguments)
-},{"dup":32}],288:[function(require,module,exports){
-arguments[4][33][0].apply(exports,arguments)
-},{"dup":33}],289:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],290:[function(require,module,exports){
-arguments[4][19][0].apply(exports,arguments)
-},{"./lib/dom":286,"./lib/events":287,"./lib/fn":288,"./lib/url":289,"dup":19}],291:[function(require,module,exports){
-arguments[4][15][0].apply(exports,arguments)
-},{"dup":15}],292:[function(require,module,exports){
-arguments[4][16][0].apply(exports,arguments)
-},{"dup":16}],293:[function(require,module,exports){
-arguments[4][17][0].apply(exports,arguments)
-},{"dup":17}],294:[function(require,module,exports){
-arguments[4][18][0].apply(exports,arguments)
-},{"dup":18}],295:[function(require,module,exports){
-arguments[4][19][0].apply(exports,arguments)
-},{"./lib/dom":291,"./lib/events":292,"./lib/fn":293,"./lib/url":294,"dup":19}],296:[function(require,module,exports){
-function convertToLegacyShippingAddress (address) {
-  var legacyShippingAddress = {};
-
-  if (!address) {
-    return;
-  }
-
-  for (var prop in address) {
-    if (address.hasOwnProperty(prop)) {
-      legacyShippingAddress[toSnakeCase(prop)] = address[prop];
-    }
-  }
-
-  return legacyShippingAddress;
-}
-
-function toSnakeCase (string) {
-  return string.replace(/([A-Z])/g, function ($1) {
-    return '_' + $1.toLowerCase();
-  });
-}
-
-module.exports = { convertToLegacyShippingAddress: convertToLegacyShippingAddress };
-
-},{}],297:[function(require,module,exports){
-'use strict';
-
-module.exports = {
-  ROOT_SUCCESS_CALLBACK: 'onPaymentMethodReceived',
-  ROOT_ERROR_CALLBACK: 'onError',
-  ROOT_LOAD_CALLBACK: 'onLoad'
-};
-
-},{}],298:[function(require,module,exports){
-'use strict';
-
-var api = require('braintree-api');
-var coinbase = require('braintree-coinbase');
-var bus = require('braintree-bus');
-var utils = require('braintree-utilities');
-
-function initialize(clientToken, options) {
-  bus.on(bus.events.PAYMENT_METHOD_GENERATED, function (payload, origin) {
-    bus.emit(bus.events.PAYMENT_METHOD_RECEIVED, payload);
-  });
-
-  options.coinbase = options.coinbase || {};
-  options.apiClient = new api.Client({
-    clientToken: clientToken,
-    integration: 'coinbase'
-  });
-
-  return coinbase.create(options);
-}
-
-module.exports = { initialize: initialize };
-
-},{"braintree-api":14,"braintree-bus":42,"braintree-coinbase":45,"braintree-utilities":295}],299:[function(require,module,exports){
-'use strict';
-
-var api = require('braintree-api');
-var form = require('braintree-form');
-var paypal = require('braintree-paypal');
-var coinbase = require('braintree-coinbase');
-var utils = require('braintree-utilities');
-var constants = require('../constants');
-var bus = require('braintree-bus');
-var sanitizePayload = require('../lib/sanitize-payload');
-var convertToLegacyShippingAddress = require('../compatibility').convertToLegacyShippingAddress;
-
-function getIntegrationCallbackLookup(options, integration) {
-  return function (funcName) {
-    if (integration in options && utils.isFunction(options[integration][funcName])){
-      return options[integration][funcName];
-    }
-    return function noop() {}
-  }
-}
-
-function initialize(clientToken, options) {
-  var formIntegration;
-  var paypalCallbackLookup = getIntegrationCallbackLookup(options, 'paypal');
-  var legacyPaypalSuccessCallback = paypalCallbackLookup('onSuccess');
-  var legacyPaypalCancelledCallback = paypalCallbackLookup('onCancelled');
-
-  var apiClient = new api.Client({
-    clientToken: clientToken,
-    integration: 'custom'
-  });
-
-  formIntegration = form.setup(apiClient, options);
-
-  if (utils.isFunction(options[constants.ROOT_SUCCESS_CALLBACK])) {
-    formIntegration.onNonceReceived = function (err, payload) {
-      options[constants.ROOT_SUCCESS_CALLBACK](sanitizePayload(payload));
-    }
-  }
-
-  if (options.paypal) {
-    if (!options.paypal.paymentMethodNonceInputField) {
-      options.paypal.paymentMethodNonceInputField = formIntegration.paymentMethodNonceInput;
-    }
-
-    options.paypal.onSuccess = function (payload) {
-      formIntegration.onExternalNonceReceived(payload);
-      legacyPaypalSuccessCallback.apply(null, [
-        payload.nonce,
-        payload.details.email,
-        convertToLegacyShippingAddress(payload.details.shippingAddress)
-      ]);
-    }
-
-    options.paypal.onCancelled = function () {
-      formIntegration.onExternalNonceCancelled();
-      legacyPaypalCancelledCallback();
-    }
-
-    paypal.create(clientToken, options.paypal);
-  }
-
-  if (options.coinbase) {
-    options.apiClient = apiClient;
-
-    if (options.paypal) {
-      delete options.paypal;
-    }
-
-    // when coinbase generates a nonce, write it to the Form.js DOM
-    bus.on(bus.events.PAYMENT_METHOD_GENERATED, function (payload, origin) {
-      formIntegration.onExternalNonceReceived(payload);
-    });
-
-    coinbase.create(options);
-  }
-
-  return formIntegration;
-};
-
-module.exports = { initialize: initialize };
-
-},{"../compatibility":296,"../constants":297,"../lib/sanitize-payload":303,"braintree-api":14,"braintree-bus":42,"braintree-coinbase":45,"braintree-form":203,"braintree-paypal":266,"braintree-utilities":295}],300:[function(require,module,exports){
-'use strict';
-
-var dropin = require('braintree-dropin');
-var utils = require('braintree-utilities');
-var bus = require('braintree-bus');
-var constants = require('../constants');
-var sanitizePayload = require('../lib/sanitize-payload');
-
-function _getLegacyCallback(options) {
-  if (utils.isFunction(options.paymentMethodNonceReceived)) {
-    return options.paymentMethodNonceReceived;
-  } else {
-    return null;
-  }
-}
-
-function _hasRootCallback(options) {
-  return utils.isFunction(options[constants.ROOT_SUCCESS_CALLBACK]);
-}
-
-function _hasLoadedCallback(options){
-  return utils.isFunction(options[constants.ROOT_LOAD_CALLBACK]);
-}
-
-function initialize(clientToken, options) {
-  var legacyCallback = _getLegacyCallback(options);
-  var rootCallback = _hasRootCallback(options);
-  var loadedCallback = _hasLoadedCallback(options);
-
-  if (legacyCallback || rootCallback) {
-    options.paymentMethodNonceReceived = function (payload) {
-      if (legacyCallback) {
-        legacyCallback.apply(null, [ payload.originalEvent, payload.nonce ]);
-      }
-
-      delete payload.originalEvent;
-      bus.emit(bus.events.PAYMENT_METHOD_RECEIVED, sanitizePayload(payload));
-    };
-  }
-
-  var create_dropin = dropin.create(clientToken, options);
-
-  if (loadedCallback) {
-    bus.emit(bus.events.ONLOAD);
-  }
-
-  return create_dropin
-}
-
-module.exports = { initialize: initialize };
-
-},{"../constants":297,"../lib/sanitize-payload":303,"braintree-bus":42,"braintree-dropin":196,"braintree-utilities":295}],301:[function(require,module,exports){
-'use strict';
-
-module.exports = {
-  custom: require('./custom'),
-  dropin: require('./dropin'),
-  paypal: require('./paypal'),
-  coinbase: require('./coinbase')
-};
-
-},{"./coinbase":298,"./custom":299,"./dropin":300,"./paypal":302}],302:[function(require,module,exports){
-'use strict';
-
-var paypal = require('braintree-paypal');
-var utils = require('braintree-utilities');
-var constants = require('../constants');
-var bus = require('braintree-bus');
-var convertToLegacyShippingAddress = require('../compatibility').convertToLegacyShippingAddress;
-
-function _getLegacyCallback(options) {
-  if ('onSuccess' in options && utils.isFunction(options.onSuccess)) {
-    return options.onSuccess;
-  } else if ('paypal' in options && utils.isFunction(options.paypal.onSuccess)){
-    return options.paypal.onSuccess;
-  } else {
-    return null;
-  }
-}
-
-function _hasRootCallback(options) {
-  return utils.isFunction(options[constants.ROOT_SUCCESS_CALLBACK]);
-}
-
-function initialize(clientToken, options) {
-  var legacyCallback = _getLegacyCallback(options);
-  var rootCallback = _hasRootCallback(options);
-
-  if (legacyCallback || rootCallback) {
-    options.onSuccess = function (payload) {
-      if (legacyCallback) {
-        legacyCallback.apply(null, [
-          payload.nonce,
-          payload.details.email,
-          convertToLegacyShippingAddress(payload.details.shippingAddress)
-        ]);
-      }
-
-      bus.emit(bus.events.PAYMENT_METHOD_RECEIVED, payload);
-    }
-  }
-
-  return paypal.create(clientToken, options);
-}
-
-module.exports = { initialize: initialize };
-
-},{"../compatibility":296,"../constants":297,"braintree-bus":42,"braintree-paypal":266,"braintree-utilities":295}],303:[function(require,module,exports){
-'use strict';
-
-module.exports = function sanitizePayload(payload) {
-  return {
-    nonce: payload.nonce,
-    details: payload.details,
-    type: payload.type
-  }
-};
-
-},{}],304:[function(require,module,exports){
-(function (global){
-'use strict';
-
-var VERSION = '2.6.0';
-var rpc = require('braintree-rpc');
-var bus = new rpc.MessageBus(global);
-var rpcServer = new rpc.RPCServer(bus);
-
-module.exports = function _listen() {
-  rpcServer.define('getExternalData', function (reply) {
-    reply({
-      sdkVersion: VERSION,
-      merchantAppId: global.location.href
-    });
-  });
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"braintree-rpc":285}],305:[function(require,module,exports){
-'use strict';
-
-var VERSION = '2.6.0';
-var api = require('braintree-api');
-var paypal = require('braintree-paypal');
-var dropin = require('braintree-dropin');
-var Form = require('braintree-form');
-var utils = require('braintree-utilities');
-var integrations = require('./integrations');
-var bus = require('braintree-bus');
-var constants = require('./constants');
-var sanitizePayload = require('./lib/sanitize-payload');
-var _rootSuccessCallback = _noop;
-var _rootLoadedCallback = _noop;
-var _rootErrorCallback = _fallbackError;
-
-function _noop () {};
-
-function _fallbackError(error) {
-  if (error.type === 'CONFIGURATION') {
-    throw new Error(error.message);
-  } else {
-    try {
-      console.error(error);
-    } catch (e) {
-      console.log("ERROR: " + error.message);
-    }
-  }
-}
-
-function setup(clientToken, integration, options) {
-  if (!(integration in integrations)) {
-    throw new Error(integration + ' is an unsupported integration');
-  }
-
-  if (utils.isFunction(options[constants.ROOT_SUCCESS_CALLBACK])) {
-    _rootSuccessCallback = function (payload) {
-      options[constants.ROOT_SUCCESS_CALLBACK](sanitizePayload(payload));
-    }
-  }
-
-  if (utils.isFunction(options[constants.ROOT_ERROR_CALLBACK])) {
-    _rootErrorCallback = options[constants.ROOT_ERROR_CALLBACK];
-  }
-
-  if (utils.isFunction(options[constants.ROOT_LOAD_CALLBACK])) {
-    _rootLoadedCallback = options[constants.ROOT_LOAD_CALLBACK];
-  }
-
-  options.configuration = api.parseClientToken(clientToken);
-
-  bus.on(bus.events.ERROR, _rootErrorCallback);
-  bus.on(bus.events.PAYMENT_METHOD_RECEIVED, _rootSuccessCallback);
-  bus.on(bus.events.ONLOAD, _rootLoadedCallback);
-
-  bus.on(bus.events.CONFIGURATION_REQUEST, function (reply) {
-    reply(options);
-  });
-
-  bus.on(bus.events.WARNING, function (warning) {
-    try { console.warn(warning); } catch (e) {}
-  });
-
-  return integrations[integration].initialize(clientToken, options);
-};
-
-module.exports = {
-  api: api,
-  cse: Braintree,
-  paypal: paypal,
-  dropin: dropin,
-  Form: Form,
-  setup: setup,
-  VERSION: VERSION
-};
-
-},{"./constants":297,"./integrations":301,"./lib/sanitize-payload":303,"braintree-api":14,"braintree-bus":42,"braintree-dropin":196,"braintree-form":203,"braintree-paypal":266,"braintree-utilities":295}]},{},[1])(1)
+},{"223":223}]},{},[1])(1)
 });
