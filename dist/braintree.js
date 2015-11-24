@@ -16,7 +16,6 @@
  */
 
 (function () {
-
 // ASN.1 JavaScript decoder
 // Copyright (c) 2008-2009 Lapo Luchini <lapo@lapo.it>
 
@@ -382,7 +381,6 @@ ASN1.decode = function(stream) {
         stream.pos += len; // skip content
     return new ASN1(streamStart, header, len, tag, sub);
 }
-
 var b64map="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 var b64padchar="=";
 
@@ -455,7 +453,6 @@ function b64toBA(s) {
   }
   return a;
 }
-
 // Copyright (c) 2005  Tom Wu
 // All Rights Reserved.
 // See "LICENSE" for details.
@@ -1015,7 +1012,6 @@ BigInteger.prototype.modPowInt = bnModPowInt;
 // "constants"
 BigInteger.ZERO = nbv(0);
 BigInteger.ONE = nbv(1);
-
 // Depends on jsbn.js and rng.js
 
 // Version 1.1: support utf-8 encoding in pkcs1pad2
@@ -1134,7 +1130,6 @@ RSAKey.prototype.doPublic = RSADoPublic;
 RSAKey.prototype.setPublic = RSASetPublic;
 RSAKey.prototype.encrypt = RSAEncrypt;
 //RSAKey.prototype.encrypt_b64 = RSAEncryptB64;
-
 /** @fileOverview Javascript cryptography implementation.
  *
  * Crush to remove comments, shorten variable names and
@@ -1208,7 +1203,6 @@ var sjcl = {
 if(typeof module != 'undefined' && module.exports){
   module.exports = sjcl;
 }
-
 /** @fileOverview Low-level AES implementation.
  *
  * This file contains a low-level implementation of AES, optimized for
@@ -1417,7 +1411,6 @@ sjcl.cipher.aes.prototype = {
   }
 };
 
-
 /** @fileOverview Arrays of bits, encoded as arrays of Numbers.
  *
  * @author Emily Stark
@@ -1605,7 +1598,6 @@ sjcl.bitArray = {
     return [x[0]^y[0],x[1]^y[1],x[2]^y[2],x[3]^y[3]];
   }
 };
-
 /** @fileOverview Bit array codec implementations.
  *
  * @author Emily Stark
@@ -1635,7 +1627,6 @@ sjcl.codec.hex = {
     return sjcl.bitArray.clamp(out, len*4);
   }
 };
-
 
 /** @fileOverview Bit array codec implementations.
  *
@@ -1676,7 +1667,6 @@ sjcl.codec.utf8String = {
     return out;
   }
 };
-
 /** @fileOverview Bit array codec implementations.
  *
  * @author Emily Stark
@@ -1740,7 +1730,6 @@ sjcl.codec.base64url = {
   fromBits: function (arr) { return sjcl.codec.base64.fromBits(arr,1,1); },
   toBits: function (str) { return sjcl.codec.base64.toBits(str,1); }
 };
-
 /** @fileOverview CBC mode implementation
  *
  * @author Emily Stark
@@ -1856,7 +1845,6 @@ sjcl.beware["CBC mode is dangerous because it doesn't protect message integrity.
     }
   };
 };
-
 /** @fileOverview HMAC implementation.
  *
  * @author Emily Stark
@@ -1896,7 +1884,6 @@ sjcl.misc.hmac.prototype.encrypt = sjcl.misc.hmac.prototype.mac = function (data
   var w = new (this._hash)(this._baseHash[0]).update(data, encoding).finalize();
   return new (this._hash)(this._baseHash[1]).update(w).finalize();
 };
-
 
 /** @fileOverview Javascript SHA-256 implementation.
  *
@@ -2112,7 +2099,6 @@ sjcl.hash.sha256.prototype = {
     h[7] = h[7]+h7 | 0;
   }
 };
-
 
 
 /** @fileOverview Random number generator.
@@ -2515,7 +2501,6 @@ sjcl.random = {
     // no getRandomValues :-(
   }
 })();
-
 (function () {
   for (var key in sjcl.beware) {
     if (sjcl.beware.hasOwnProperty(key)) {
@@ -2737,83 +2722,26 @@ Braintree.EncryptionClient = function (publicKey) {
 };
 
 window.Braintree = Braintree;
-
 })();
-
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.braintree = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (global){
 'use strict';
 
-var VERSION = "2.15.2";
-var api = require(15);
-var paypal = require(210);
-var dropin = require(196);
-var integrations = require(173);
-var constants = require(168);
-var fallbackErrorHandler = require(175);
-var lookupCallbackFor = require(177);
-var uuid = require(82).uuid;
-
-function setup(clientToken, integrationType, merchantConfiguration) {
-  if (!integrations.hasOwnProperty(integrationType)) {
-    throw new Error(integrationType + ' is an unsupported integration');
-  }
-
-  merchantConfiguration = merchantConfiguration || {};
-
-  api._getConfiguration({
-    enableCORS: merchantConfiguration.enableCORS || false,
-    clientToken: clientToken
-  }, function (err, gatewayConfiguration) {
-    var errorFallback;
-
-    if (err) {
-      errorFallback = lookupCallbackFor(merchantConfiguration)(constants.ROOT_ERROR_CALLBACK, fallbackErrorHandler);
-      errorFallback({message: err.errors});
-      return;
-    }
-
-    new integrations[integrationType]({ // eslint-disable-line no-new
-      channel: uuid(),
-      gatewayConfiguration: gatewayConfiguration,
-      integrationType: integrationType,
-      merchantConfiguration: merchantConfiguration,
-      analyticsConfiguration: {
-        sdkVersion: 'braintree/web/' + VERSION,
-        merchantAppId: global.location.host
-      }
-    });
-  });
-}
-
-module.exports = {
-  api: api,
-  cse: global.Braintree,
-  paypal: paypal,
-  dropin: dropin,
-  hostedFields: {VERSION: require(204).VERSION},
-  setup: setup,
-  VERSION: VERSION
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"15":15,"168":168,"173":173,"175":175,"177":177,"196":196,"204":204,"210":210,"82":82}],2:[function(require,module,exports){
-(function (global){
-'use strict';
-
-var bind = require(96);
-var braintree3ds = require(27);
-var parseClientToken = require(9);
-var util = require(14);
-var SEPAMandate = require(12);
-var EuropeBankAccount = require(6);
-var CreditCard = require(5);
-var CoinbaseAccount = require(3);
-var PayPalAccount = require(10);
-var normalizeCreditCardFields = require(8).normalizeCreditCardFields;
-var chooseRequestDriver = require(41).chooseDriver;
-var shouldEnableCORS = require(13);
-var constants = require(4);
+var bind = require(95);
+var braintree3ds = require(26);
+var parseClientToken = require(8);
+var util = require(13);
+var SEPAMandate = require(11);
+var EuropeBankAccount = require(5);
+var CreditCard = require(4);
+var CoinbaseAccount = require(2);
+var PayPalAccount = require(9);
+var normalizeCreditCardFields = require(7).normalizeCreditCardFields;
+var chooseRequestDriver = require(40).chooseDriver;
+var shouldEnableCORS = require(12);
+var getConfiguration = require(6);
+var constants = require(3);
+var uuid = require(57).uuid;
 
 function getAnalyticsConfiguration(options) {
   var analyticsConfiguration = options.analyticsConfiguration || {};
@@ -2827,43 +2755,24 @@ function getAnalyticsConfiguration(options) {
 }
 
 function Client(options) {
-  var parsedClientToken, secure3d, analyticsConfiguration;
+  var analyticsConfiguration = getAnalyticsConfiguration(options);
 
-  this.attrs = {};
-
-  if (options.hasOwnProperty('sharedCustomerIdentifier')) {
-    this.attrs.sharedCustomerIdentifier = options.sharedCustomerIdentifier;
-  }
-
-  parsedClientToken = parseClientToken(options.clientToken);
-  analyticsConfiguration = getAnalyticsConfiguration(options);
-
+  this.options = options;
   this.driver = options.driver || chooseRequestDriver({enableCORS: shouldEnableCORS(options)});
-  this.analyticsUrl = parsedClientToken.analytics ? parsedClientToken.analytics.url : null;
-  this.clientApiUrl = parsedClientToken.clientApiUrl;
   this.customerId = options.customerId;
-  this.challenges = parsedClientToken.challenges;
-  this.integration = options.integration || '';
+  this.integration = options.integrationType || options.integration || '';
   this.sdkVersion = analyticsConfiguration.sdkVersion;
   this.merchantAppId = analyticsConfiguration.merchantAppId;
+  this.sessionId = options.channel || uuid();
 
-  secure3d = braintree3ds.create(this, {
-    container: options.container,
-    clientToken: parsedClientToken
-  });
-  this.verify3DS = bind(secure3d.verify, secure3d);
-
-  this.attrs.sharedCustomerIdentifierType = options.sharedCustomerIdentifierType;
-  this.attrs.braintreeLibraryVersion = this.sdkVersion;
-
-  if (parsedClientToken.merchantAccountId) {
-    this.attrs.merchantAccountId = parsedClientToken.merchantAccountId;
-  }
-
-  if (options.clientKey) {
-    this.attrs.clientKey = options.clientKey;
-  } else if (parsedClientToken.authorizationFingerprint) {
-    this.attrs.authorizationFingerprint = parsedClientToken.authorizationFingerprint;
+  this.authorization = options.authorization || options.clientToken;
+  if (util.isTokenizationKey(this.authorization)) {
+    this.authorizationType = constants.authorizationTypes.TOKENIZATION_KEY;
+    this.gatewayConfiguration = options.gatewayConfiguration;
+  } else {
+    this.gatewayConfiguration = options.gatewayConfiguration || parseClientToken(this.authorization);
+    this.authorizationFingerprint = parseClientToken(this.authorization).authorizationFingerprint;
+    this.authorizationType = constants.authorizationTypes.CLIENT_TOKEN;
   }
 
   if (options.hasOwnProperty('timeout')) {
@@ -2873,24 +2782,79 @@ function Client(options) {
   }
 }
 
+Client.prototype._getGatewayConfiguration = function (callback) {
+  var self = this;
+
+  if (this.gatewayConfiguration) {
+    callback(null, this.gatewayConfiguration);
+    return;
+  }
+
+  getConfiguration({
+    authorization: this.authorization,
+    enableCORS: shouldEnableCORS(this.options)
+  }, function (err, gatewayConfiguration) {
+    if (err) {
+      callback(err, null);
+      return;
+    }
+
+    self.gatewayConfiguration = gatewayConfiguration;
+    callback(null, gatewayConfiguration);
+  });
+};
+
+/* eslint-disable no-invalid-this */
+
+Client.prototype._getAttrs = function (gatewayConfiguration) {
+  var attrs = {};
+
+  if (this.options.hasOwnProperty('sharedCustomerIdentifier')) {
+    attrs.sharedCustomerIdentifier = this.options.sharedCustomerIdentifier;
+  }
+
+  attrs.sharedCustomerIdentifierType = this.options.sharedCustomerIdentifierType;
+  attrs.braintreeLibraryVersion = this.sdkVersion;
+
+  if (gatewayConfiguration.merchantAccountId) {
+    attrs.merchantAccountId = gatewayConfiguration.merchantAccountId;
+  }
+
+  if (this.authorizationType === constants.authorizationTypes.TOKENIZATION_KEY) {
+    attrs.clientKey = this.options.authorization;
+  } else {
+    attrs.authorizationFingerprint = this.authorizationFingerprint;
+  }
+
+  attrs._meta = {
+    sessionId: this.sessionId
+  };
+
+  return attrs;
+};
+
 Client.prototype.getCreditCards = function (callback) {
-  this.driver.get(
-    util.joinUrlFragments([this.clientApiUrl, 'v1', 'payment_methods']),
-    this.attrs,
-    function (d) {
-      var i = 0;
-      var len = d.paymentMethods.length;
-      var creditCards = [];
+  this._getGatewayConfiguration(bind(function (err, gatewayConfiguration) {
+    if (err) { return callback(err); }
 
-      for (i; i < len; i++) {
-        creditCards.push(new CreditCard(d.paymentMethods[i]));
-      }
+    this.driver.get(
+      util.joinUrlFragments([gatewayConfiguration.clientApiUrl, 'v1', 'payment_methods']),
+      this._getAttrs(gatewayConfiguration),
+      function (d) {
+        var i = 0;
+        var len = d.paymentMethods.length;
+        var creditCards = [];
 
-      return creditCards;
-    },
-    callback,
-    this.requestTimeout
-  );
+        for (i; i < len; i++) {
+          creditCards.push(new CreditCard(d.paymentMethods[i]));
+        }
+
+        return creditCards;
+      },
+      callback,
+      this.requestTimeout
+    );
+  }, this));
 };
 
 Client.prototype.tokenizeCoinbase = function (attrs, callback) {
@@ -2931,220 +2895,317 @@ Client.prototype.tokenizeCard = function (attrs, callback) {
 };
 
 Client.prototype.lookup3DS = function (attrs, callback) {
-  var url = util.joinUrlFragments([this.clientApiUrl, 'v1/payment_methods', attrs.nonce, 'three_d_secure/lookup']);
-  var mergedAttrs = util.mergeOptions(this.attrs, {amount: attrs.amount});
-  this.driver.post(url, mergedAttrs, function (d) {return d;},
-    callback,
-    this.requestTimeout
-  );
+  this._getGatewayConfiguration(bind(function (err, gatewayConfiguration) {
+    var url, mergedAttrs;
+
+    if (err) { return callback(err); }
+
+    url = util.joinUrlFragments([gatewayConfiguration.clientApiUrl, 'v1/payment_methods', attrs.nonce, 'three_d_secure/lookup']);
+    mergedAttrs = util.mergeOptions(this._getAttrs(gatewayConfiguration), {amount: attrs.amount});
+    this.driver.post(url, mergedAttrs, function (d) {return d;},
+      callback,
+      this.requestTimeout
+    );
+  }, this));
 };
 
 Client.prototype.createSEPAMandate = function (attrs, callback) {
-  var mergedAttrs = util.mergeOptions(this.attrs, {sepaMandate: attrs});
-  this.driver.post(
-    util.joinUrlFragments([this.clientApiUrl, 'v1', 'sepa_mandates.json']),
-    mergedAttrs,
-    function (d) { return {sepaMandate: new SEPAMandate(d.europeBankAccounts[0].sepaMandates[0]), sepaBankAccount: new EuropeBankAccount(d.europeBankAccounts[0])}; },
-    callback,
-    this.requestTimeout
-  );
+  this._getGatewayConfiguration(bind(function (err, gatewayConfiguration) {
+    var mergedAttrs;
+
+    if (err) { return callback(err); }
+
+    mergedAttrs = util.mergeOptions(this._getAttrs(gatewayConfiguration), {sepaMandate: attrs});
+    this.driver.post(
+      util.joinUrlFragments([gatewayConfiguration.clientApiUrl, 'v1', 'sepa_mandates.json']),
+      mergedAttrs,
+      function (d) { return {sepaMandate: new SEPAMandate(d.europeBankAccounts[0].sepaMandates[0]), sepaBankAccount: new EuropeBankAccount(d.europeBankAccounts[0])}; },
+      callback,
+      this.requestTimeout
+    );
+  }, this));
 };
 
 Client.prototype.getSEPAMandate = function (attrs, callback) {
-  var mergedAttrs = util.mergeOptions(this.attrs, attrs);
-  this.driver.get(
-    util.joinUrlFragments([this.clientApiUrl, 'v1', 'sepa_mandates.json']),
-    mergedAttrs,
-    function (d) { return {sepaMandate: new SEPAMandate(d.sepaMandates[0])}; },
-    callback,
-    this.requestTimeout
-  );
+  this._getGatewayConfiguration(bind(function (err, gatewayConfiguration) {
+    var mergedAttrs;
+
+    if (err) { return callback(err); }
+
+    mergedAttrs = util.mergeOptions(this._getAttrs(gatewayConfiguration), attrs);
+
+    this.driver.get(
+      util.joinUrlFragments([gatewayConfiguration.clientApiUrl, 'v1', 'sepa_mandates.json']),
+      mergedAttrs,
+      function (d) { return {sepaMandate: new SEPAMandate(d.sepaMandates[0])}; },
+      callback,
+      this.requestTimeout
+    );
+  }, this));
 };
 
 Client.prototype.addCoinbase = function (attrs, callback) {
-  var mergedAttrs;
-  delete attrs.share;
+  this._getGatewayConfiguration(bind(function (err, gatewayConfiguration) {
+    var mergedAttrs;
 
-  mergedAttrs = util.mergeOptions(this.attrs, {
-    coinbaseAccount: attrs,
-    _meta: {
-      integration: this.integration || 'custom',
-      source: 'coinbase'
-    }
-  });
+    if (err) { return callback(err); }
 
-  this.driver.post(
-    util.joinUrlFragments([this.clientApiUrl, 'v1', 'payment_methods/coinbase_accounts']),
-    mergedAttrs,
-    function (d) {
-      return new CoinbaseAccount(d.coinbaseAccounts[0]);
-    },
-    callback,
-    this.requestTimeout
-  );
+    delete attrs.share;
+
+    mergedAttrs = util.mergeOptions(this._getAttrs(gatewayConfiguration), {
+      coinbaseAccount: attrs,
+      _meta: {
+        integration: this.integration || 'custom',
+        source: 'coinbase',
+        sessionId: this.sessionId
+      }
+    });
+
+    this.driver.post(
+      util.joinUrlFragments([gatewayConfiguration.clientApiUrl, 'v1', 'payment_methods/coinbase_accounts']),
+      mergedAttrs,
+      function (d) {
+        return new CoinbaseAccount(d.coinbaseAccounts[0]);
+      },
+      callback,
+      this.requestTimeout
+    );
+  }, this));
 };
 
 Client.prototype.addPayPalAccount = function (attrs, callback) {
-  var mergedAttrs;
-  delete attrs.share;
+  this._getGatewayConfiguration(bind(function (err, gatewayConfiguration) {
+    var mergedAttrs;
 
-  mergedAttrs = util.mergeOptions(this.attrs, {
-    paypalAccount: attrs,
-    _meta: {
-      integration: this.integration || 'paypal',
-      source: 'paypal'
-    }
-  });
+    if (err) { return callback(err); }
 
-  this.driver.post(
-    util.joinUrlFragments([this.clientApiUrl, 'v1', 'payment_methods', 'paypal_accounts']),
-    mergedAttrs,
-    function (d) {
-      return new PayPalAccount(d.paypalAccounts[0]);
-    },
-    callback,
-    this.requestTimeout
-  );
+    delete attrs.share;
+
+    mergedAttrs = util.mergeOptions(this._getAttrs(gatewayConfiguration), {
+      paypalAccount: attrs,
+      _meta: {
+        integration: this.integration || 'paypal',
+        source: 'paypal',
+        sessionId: this.sessionId
+      }
+    });
+
+    this.driver.post(
+      util.joinUrlFragments([gatewayConfiguration.clientApiUrl, 'v1', 'payment_methods', 'paypal_accounts']),
+      mergedAttrs,
+      function (d) {
+        return new PayPalAccount(d.paypalAccounts[0]);
+      },
+      callback,
+      this.requestTimeout
+    );
+  }, this));
 };
 
 Client.prototype.addCreditCard = function (attrs, callback) {
-  var mergedAttrs, creditCard;
-  var share = attrs.share;
-  delete attrs.share;
+  this._getGatewayConfiguration(bind(function (err, gatewayConfiguration) {
+    var mergedAttrs, creditCard, share;
 
-  creditCard = normalizeCreditCardFields(attrs);
+    if (err) { return callback(err); }
 
-  mergedAttrs = util.mergeOptions(this.attrs, {
-    share: share,
-    creditCard: creditCard,
-    _meta: {
-      integration: this.integration || 'custom',
-      source: 'form'
-    }
-  });
+    share = attrs.share;
+    delete attrs.share;
 
-  this.driver.post(
-    util.joinUrlFragments([this.clientApiUrl, 'v1', 'payment_methods/credit_cards']),
-    mergedAttrs,
-    function (d) {
-      return new CreditCard(d.creditCards[0]);
-    },
-    callback,
-    this.requestTimeout
-  );
+    creditCard = normalizeCreditCardFields(attrs);
+
+    mergedAttrs = util.mergeOptions(this._getAttrs(gatewayConfiguration), {
+      share: share,
+      creditCard: creditCard,
+      _meta: {
+        integration: this.integration || 'custom',
+        source: 'form',
+        sessionId: this.sessionId
+      }
+    });
+
+    this.driver.post(
+      util.joinUrlFragments([gatewayConfiguration.clientApiUrl, 'v1', 'payment_methods/credit_cards']),
+      mergedAttrs,
+      function (d) {
+        return new CreditCard(d.creditCards[0]);
+      },
+      callback,
+      this.requestTimeout
+    );
+  }, this));
 };
 
 Client.prototype.sendAnalyticsEvents = function (events, callback) {
-  var attrs, event;
-  var url = this.analyticsUrl;
-  var eventObjects = [];
-  events = util.isArray(events) ? events : [events];
+  this._getGatewayConfiguration(bind(function (err, gatewayConfiguration) {
+    var attrs, event, url, eventObjects;
 
-  if (!url) {
-    if (callback) {
-      callback(null, {});
+    if (err) { return callback(err); }
+
+    url = gatewayConfiguration.analytics.url;
+    eventObjects = [];
+    events = util.isArray(events) ? events : [events];
+
+    if (!url) {
+      if (callback) {
+        callback(null, {});
+      }
+      return;
     }
-    return;
-  }
 
-  for (event in events) {
-    if (events.hasOwnProperty(event)) {
-      eventObjects.push({kind: events[event]});
+    for (event in events) {
+      if (events.hasOwnProperty(event)) {
+        eventObjects.push({kind: events[event]});
+      }
     }
-  }
 
-  attrs = util.mergeOptions(this.attrs, {
-    analytics: eventObjects,
-    _meta: {
-      merchantAppId: this.merchantAppId,
-      platform: 'web',
-      platformVersion: global.navigator.userAgent,
-      integrationType: this.integration,
-      sdkVersion: this.sdkVersion
-    }
-  });
+    attrs = util.mergeOptions(this._getAttrs(gatewayConfiguration), {
+      analytics: eventObjects,
+      _meta: {
+        merchantAppId: this.merchantAppId,
+        platform: 'web',
+        platformVersion: global.navigator.userAgent,
+        integrationType: this.integration,
+        sdkVersion: this.sdkVersion,
+        sessionId: this.sessionId
+      }
+    });
 
-  this.driver.post(url, attrs, function (d) { return d; }, callback, constants.ANALYTICS_TIMEOUT_MS);
+    this.driver.post(url, attrs, function (d) { return d; }, callback, constants.ANALYTICS_TIMEOUT_MS);
+  }, this));
 };
 
 Client.prototype.decryptBrowserswitchPayload = function (encryptedPayload, callback) {
-  var attrs = util.mergeOptions(this.attrs, {asymmetric_encrypted_payload: encryptedPayload});
-  var url = util.joinUrlFragments([this.clientApiUrl, '/v1/paypal_browser_switch/decrypt']);
-  this.driver.post(
-    url,
-    attrs,
-    function (d) { return d; },
-    callback,
-    this.requestTimeout
-  );
+  this._getGatewayConfiguration(bind(function (err, gatewayConfiguration) {
+    var attrs, url;
+
+    if (err) { return callback(err); }
+
+    attrs = util.mergeOptions(this._getAttrs(gatewayConfiguration), {asymmetric_encrypted_payload: encryptedPayload});
+    url = util.joinUrlFragments([gatewayConfiguration.clientApiUrl, '/v1/paypal_browser_switch/decrypt']);
+    this.driver.post(
+      url,
+      attrs,
+      function (d) { return d; },
+      callback,
+      this.requestTimeout
+    );
+  }, this));
 };
 
-Client.prototype.encryptBrowserswitchReturnPayload = function(payload, aesKey, callback) {
-  var attrs = util.mergeOptions(this.attrs, {
-    payload: payload,
-    aesKey: aesKey
-  });
-  var url = util.joinUrlFragments([this.clientApiUrl, '/v1/paypal_browser_switch/encrypt']);
-  this.driver.post(
-    url,
-    attrs,
-    function (d) { return d; },
-    callback,
-    this.requestTimeout
-  );
+Client.prototype.encryptBrowserswitchReturnPayload = function (payload, aesKey, callback) {
+  this._getGatewayConfiguration(bind(function (err, gatewayConfiguration) {
+    var attrs, url;
+
+    if (err) { return callback(err); }
+
+    attrs = util.mergeOptions(this._getAttrs(gatewayConfiguration), {
+      payload: payload,
+      aesKey: aesKey
+    });
+    url = util.joinUrlFragments([gatewayConfiguration.clientApiUrl, '/v1/paypal_browser_switch/encrypt']);
+    this.driver.post(
+      url,
+      attrs,
+      function (d) { return d; },
+      callback,
+      this.requestTimeout
+    );
+  }, this));
 };
 
 Client.prototype.exchangePaypalTokenForConsentCode = function (tokensObj, callback) {
-  var attrs = util.mergeOptions(this.attrs, tokensObj);
-  if (this.attrs.merchantAccountId) {
-    attrs.merchant_account_id = this.attrs.merchantAccountId;
-  }
-  var url = util.joinUrlFragments([this.clientApiUrl, '/v1/paypal_account_service/merchant_consent']);
-  this.driver.post(
-    url,
-    attrs,
-    function (d) { return d; },
-    callback,
-    this.requestTimeout
-  );
+  this._getGatewayConfiguration(bind(function (err, gatewayConfiguration) {
+    var attrs, url;
+
+    if (err) { return callback(err); }
+
+    attrs = util.mergeOptions(this._getAttrs(gatewayConfiguration), tokensObj);
+    if (gatewayConfiguration.merchantAccountId) {
+      attrs.merchant_account_id = gatewayConfiguration.merchantAccountId;
+    }
+    url = util.joinUrlFragments([gatewayConfiguration.clientApiUrl, '/v1/paypal_account_service/merchant_consent']);
+    this.driver.post(
+      url,
+      attrs,
+      function (d) { return d; },
+      callback,
+      this.requestTimeout
+    );
+  }, this));
 };
 
 Client.prototype.getAmexRewardsBalance = function (attrs, callback) {
-  var mergedAttrs = util.mergeOptions(this.attrs, attrs);
-  if (mergedAttrs.nonce) {
-    mergedAttrs.payment_method_nonce = mergedAttrs.nonce;
-    delete mergedAttrs.nonce;
-  }
+  this._getGatewayConfiguration(bind(function (err, gatewayConfiguration) {
+    var mergedAttrs;
 
-  this.driver.get(
-    util.joinUrlFragments([this.clientApiUrl, 'v1/payment_methods/amex_rewards_balance']),
-    mergedAttrs,
-    function (d) { return d; },
-    callback,
-    this.requestTimeout
-  );
+    if (err) { return callback(err); }
+
+    mergedAttrs = util.mergeOptions(this._getAttrs(gatewayConfiguration), attrs);
+    if (mergedAttrs.nonce) {
+      mergedAttrs.payment_method_nonce = mergedAttrs.nonce;
+      delete mergedAttrs.nonce;
+    }
+
+    this.driver.get(
+      util.joinUrlFragments([gatewayConfiguration.clientApiUrl, 'v1/payment_methods/amex_rewards_balance']),
+      mergedAttrs,
+      function (d) { return d; },
+      callback,
+      this.requestTimeout
+    );
+  }, this));
 };
 
 Client.prototype.getAmexExpressCheckoutNonceProfile = function (attrs, callback) {
-  var mergedAttrs = util.mergeOptions(this.attrs, attrs);
-  if (mergedAttrs.nonce) {
-    mergedAttrs.payment_method_nonce = mergedAttrs.nonce;
-    delete mergedAttrs.nonce;
+  this._getGatewayConfiguration(bind(function (err, gatewayConfiguration) {
+    var mergedAttrs;
+
+    if (err) { return callback(err); }
+
+    mergedAttrs = util.mergeOptions(this._getAttrs(gatewayConfiguration), attrs);
+    if (mergedAttrs.nonce) {
+      mergedAttrs.payment_method_nonce = mergedAttrs.nonce;
+      delete mergedAttrs.nonce;
+    }
+
+    this.driver.get(
+      util.joinUrlFragments([gatewayConfiguration.clientApiUrl, 'v1/payment_methods/amex_express_checkout_cards', mergedAttrs.payment_method_nonce]),
+      mergedAttrs,
+      function (d) { return d; },
+      callback,
+      this.requestTimeout
+    );
+  }, this));
+};
+
+Client.prototype.verify3DS = function () {
+  var args = arguments;
+
+  if (this._secure3d) {
+    return this._secure3d.verify.apply(this._secure3d, args);
   }
 
-  this.driver.get(
-    util.joinUrlFragments([this.clientApiUrl, 'v1/payment_methods/amex_express_checkout_cards', mergedAttrs.payment_method_nonce]),
-    mergedAttrs,
-    function (d) { return d; },
-    callback,
-    this.requestTimeout
-  );
+  this._getGatewayConfiguration(bind(function (err, gatewayConfiguration) {
+    var callback;
+
+    if (err) {
+      callback = args[args.length - 1];
+      return callback(err);
+    }
+
+    this._secure3d = braintree3ds.create(this, {
+      container: this.options.container,
+      clientToken: gatewayConfiguration
+    });
+
+    return this._secure3d.verify.apply(this._secure3d, args);
+  }, this));
 };
 
 module.exports = Client;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"10":10,"12":12,"13":13,"14":14,"27":27,"3":3,"4":4,"41":41,"5":5,"6":6,"8":8,"9":9,"96":96}],3:[function(require,module,exports){
+},{"11":11,"12":12,"13":13,"2":2,"26":26,"3":3,"4":4,"40":40,"5":5,"57":57,"6":6,"7":7,"8":8,"9":9,"95":95}],2:[function(require,module,exports){
 'use strict';
 
 var ATTRIBUTES = [
@@ -3165,20 +3226,30 @@ function CoinbaseAccount(attributes) {
 
 module.exports = CoinbaseAccount;
 
-},{}],4:[function(require,module,exports){
-module.exports={
-  "apiUrls": {
-    "production": "https://api.braintreegateway.com:443",
-    "sandbox": "https://api.sandbox.braintreegateway.com:443"
-  },
-  "errors": {
-    "UNKNOWN_ERROR": "Unknown error",
-    "INVALID_TIMEOUT": "Timeout must be a number"
-  },
-  "ANALYTICS_TIMEOUT_MS": 4000
+},{}],3:[function(require,module,exports){
+'use strict';
+
+var apiUrls = {
+  production: 'https://api.braintreegateway.com:443',
+  sandbox: 'https://api.sandbox.braintreegateway.com:443'
 };
 
-},{}],5:[function(require,module,exports){
+/* eslint-enable no-undef,block-scoped-var */
+
+module.exports = {
+  apiUrls: apiUrls,
+  errors: {
+    UNKNOWN_ERROR: 'Unknown error',
+    INVALID_TIMEOUT: 'Timeout must be a number'
+  },
+  ANALYTICS_TIMEOUT_MS: 4000,
+  authorizationTypes: {
+    CLIENT_TOKEN: 'CLIENT_TOKEN',
+    TOKENIZATION_KEY: 'TOKENIZATION_KEY'
+  }
+};
+
+},{}],4:[function(require,module,exports){
 'use strict';
 
 var ATTRIBUTES = [
@@ -3209,7 +3280,7 @@ function CreditCard(attributes) {
 
 module.exports = CreditCard;
 
-},{}],6:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 
 function EuropeBankAccount(attributes) {
@@ -3230,17 +3301,17 @@ function EuropeBankAccount(attributes) {
 
 module.exports = EuropeBankAccount;
 
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
-var parseClientToken = require(9);
-var util = require(14);
-var chooseRequestDriver = require(41).chooseDriver;
-var shouldEnableCORS = require(13);
-var constants = require(4);
+var parseClientToken = require(8);
+var util = require(13);
+var chooseRequestDriver = require(40).chooseDriver;
+var shouldEnableCORS = require(12);
+var constants = require(3);
 
-function _tokenizeClientKey(clientKey) {
-  var tokens = clientKey.split('_');
+function _tokenizeTokenizationKey(tokenizationKey) {
+  var tokens = tokenizationKey.split('_');
   var environment = tokens[0];
   var merchantId = tokens.slice(2).join('_');
 
@@ -3251,29 +3322,29 @@ function _tokenizeClientKey(clientKey) {
 }
 
 function getConfiguration(options, callback) {
-  var configUrl, clientKeyParts, parsedClientToken;
+  var configUrl, tokenizationKeyParts, parsedClientToken;
   var driver = chooseRequestDriver({enableCORS: shouldEnableCORS(options)});
-  var clientKey = options.clientKey;
   var attrs = {};
 
-  if (clientKey) {
-    attrs.clientKey = clientKey;
-    clientKeyParts = _tokenizeClientKey(clientKey);
-    configUrl = constants.apiUrls[clientKeyParts.environment] + '/merchants/' + clientKeyParts.merchantId + '/client_api/v1/configuration';
+  if (util.isTokenizationKey(options.authorization)) {
+    attrs.clientKey = options.authorization;
+    tokenizationKeyParts = _tokenizeTokenizationKey(options.authorization);
+    configUrl = constants.apiUrls[tokenizationKeyParts.environment] + '/merchants/' + tokenizationKeyParts.merchantId + '/client_api/v1/configuration';
   } else {
-    parsedClientToken = parseClientToken(options.clientToken);
+    parsedClientToken = parseClientToken(options.authorization);
+    attrs.authorizationFingerprint = parsedClientToken.authorizationFingerprint;
+    configUrl = parsedClientToken.configUrl;
+  }
 
-    if (parsedClientToken.authorizationFingerprint) {
-      attrs.authorizationFingerprint = parsedClientToken.authorizationFingerprint;
-      configUrl = parsedClientToken.configUrl;
-    }
+  if (options.sessionId) {
+    attrs._meta = {sessionId: options.sessionId};
   }
 
   driver.get(
     configUrl,
     attrs,
     function (d) {
-      return util.mergeOptions(parsedClientToken, d);
+      return d;
     },
     callback,
     options.timeout
@@ -3282,7 +3353,7 @@ function getConfiguration(options, callback) {
 
 module.exports = getConfiguration;
 
-},{"13":13,"14":14,"4":4,"41":41,"9":9}],8:[function(require,module,exports){
+},{"12":12,"13":13,"3":3,"40":40,"8":8}],7:[function(require,module,exports){
 'use strict';
 
 function normalizeCreditCardFields(attrs) {
@@ -3321,11 +3392,11 @@ module.exports = {
   normalizeCreditCardFields: normalizeCreditCardFields
 };
 
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
-var braintreeUtils = require(58);
-require(11);
+var braintreeUtils = require(57);
+require(10);
 
 function parseClientToken(rawClientToken) {
   var clientToken;
@@ -3357,7 +3428,7 @@ function parseClientToken(rawClientToken) {
 
 module.exports = parseClientToken;
 
-},{"11":11,"58":58}],10:[function(require,module,exports){
+},{"10":10,"57":57}],9:[function(require,module,exports){
 'use strict';
 
 var ATTRIBUTES = [
@@ -3378,7 +3449,7 @@ function PayPalAccount(attributes) {
 
 module.exports = PayPalAccount;
 
-},{}],11:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3416,7 +3487,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],12:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 function SEPAMandate(attributes) {
@@ -3439,7 +3510,7 @@ function SEPAMandate(attributes) {
 
 module.exports = SEPAMandate;
 
-},{}],13:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict';
 
 module.exports = function (options) {
@@ -3454,7 +3525,7 @@ module.exports = function (options) {
   return false;
 };
 
-},{}],14:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 function joinUrlFragments(fragments) {
@@ -3497,19 +3568,24 @@ function mergeOptions(obj1, obj2) {
   return obj3;
 }
 
+function isTokenizationKey(str) {
+  return /^[a-zA-Z0-9_]+_[a-zA-Z0-9]+_[a-zA-Z0-9_]+$/.test(str);
+}
+
 module.exports = {
   joinUrlFragments: joinUrlFragments,
   isArray: isArray,
-  mergeOptions: mergeOptions
+  mergeOptions: mergeOptions,
+  isTokenizationKey: isTokenizationKey
 };
 
-},{}],15:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
-var Client = require(2);
-var util = require(14);
-var parseClientToken = require(9);
-var getConfiguration = require(7);
+var Client = require(1);
+var util = require(13);
+var parseClientToken = require(8);
+var getConfiguration = require(6);
 
 function configure(options) {
   return new Client(options);
@@ -3523,7 +3599,7 @@ module.exports = {
   _getConfiguration: getConfiguration
 };
 
-},{"14":14,"2":2,"7":7,"9":9}],16:[function(require,module,exports){
+},{"1":1,"13":13,"6":6,"8":8}],15:[function(require,module,exports){
 'use strict';
 
 var nativeIndexOf = Array.prototype.indexOf;
@@ -3548,7 +3624,7 @@ module.exports = {
   indexOf: indexOf
 };
 
-},{}],17:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 'use strict';
 
 function _escape(string) {
@@ -3577,7 +3653,7 @@ module.exports = {
   decodeUtf8: decodeUtf8
 };
 
-},{}],18:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict';
 
 function normalizeElement (element, errorMessage) {
@@ -3601,7 +3677,7 @@ module.exports = {
   normalizeElement: normalizeElement
 };
 
-},{}],19:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 
 function addEventListener(element, type, listener, useCapture) {
@@ -3634,7 +3710,7 @@ module.exports = {
   preventDefault: preventDefault
 };
 
-},{}],20:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 'use strict';
 
 var toString = Object.prototype.toString;
@@ -3654,7 +3730,7 @@ module.exports = {
   isFunction: isFunction
 };
 
-},{}],21:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 function getMaxCharLength(width) {
@@ -3707,10 +3783,10 @@ module.exports = {
   getMaxCharLength: getMaxCharLength
 };
 
-},{}],22:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 'use strict';
 
-var array = require(16);
+var array = require(15);
 
 function isBrowserHttps() {
   return window.location.protocol === 'https:';
@@ -3809,7 +3885,7 @@ module.exports = {
   isWhitelistedDomain: isWhitelistedDomain
 };
 
-},{"16":16}],23:[function(require,module,exports){
+},{"15":15}],22:[function(require,module,exports){
 'use strict';
 
 // RFC 4122 v4 (pseudo-random) UUID
@@ -3823,15 +3899,15 @@ function generate() {
 
 module.exports = generate;
 
-},{}],24:[function(require,module,exports){
-var dom = require(18);
-var url = require(22);
-var fn = require(20);
-var events = require(19);
-var string = require(21);
-var array = require(16);
-var base64 = require(17);
-var uuid = require(23);
+},{}],23:[function(require,module,exports){
+var dom = require(17);
+var url = require(21);
+var fn = require(19);
+var events = require(18);
+var string = require(20);
+var array = require(15);
+var base64 = require(16);
+var uuid = require(22);
 
 module.exports = {
   string: string,
@@ -3851,12 +3927,13 @@ module.exports = {
   uuid: uuid
 };
 
-},{"16":16,"17":17,"18":18,"19":19,"20":20,"21":21,"22":22,"23":23}],25:[function(require,module,exports){
+},{"15":15,"16":16,"17":17,"18":18,"19":19,"20":20,"21":21,"22":22}],24:[function(require,module,exports){
 'use strict';
 
-var utils = require(24);
-var Receiver = require(32);
-var version = "1.3.1";
+var utils = require(23);
+var isFunction = require(151);
+var Receiver = require(31);
+var version = "1.3.3";
 
 var htmlNode, bodyNode;
 
@@ -3894,14 +3971,14 @@ AuthenticationService.prototype.get = function (response, callback) {
   var self = this,
   url = this.constructAuthorizationURL(response);
 
-  if (this.container && utils.isFunction(this.container)) {
+  if (this.container && isFunction(this.container)) {
     this.container(url + '&no_style=1');
   } else {
     this.insertIframe(url);
   }
 
   new Receiver(function (response) {
-    if (!utils.isFunction(self.container)) {
+    if (!isFunction(self.container)) {
       self.removeIframe();
     }
     callback(response);
@@ -3986,12 +4063,14 @@ AuthenticationService.prototype.constructAuthorizationURL = function (response) 
 
 module.exports = AuthenticationService;
 
-},{"24":24,"32":32}],26:[function(require,module,exports){
+},{"151":151,"23":23,"31":31}],25:[function(require,module,exports){
 'use strict';
 
-var utils = require(24);
-var AuthenticationService = require(25);
-var Loader = require(28);
+var utils = require(23);
+var bind = require(95);
+var isFunction = require(151);
+var AuthenticationService = require(24);
+var Loader = require(27);
 
 function noop() {}
 
@@ -4003,18 +4082,18 @@ function Client(api, options) {
   this.nonce = null;
 
   this._loader = null;
-  this._boundHandleUserClose = utils.bind(this._handleUserClose, this);
+  this._boundHandleUserClose = bind(this._handleUserClose, this);
 }
 
 Client.prototype.verify = function (data, callback) {
-  if (!utils.isFunction(callback)) {
+  if (!isFunction(callback)) {
     this.api.sendAnalyticsEvents('3ds.web.no_callback');
     throw new Error('No suitable callback argument was given');
   }
-  if (utils.isFunction(data.onUserClose)) {
+  if (isFunction(data.onUserClose)) {
     this._onUserClose = data.onUserClose;
   }
-  if (utils.isFunction(data.onLookupComplete)) {
+  if (isFunction(data.onLookupComplete)) {
     this._onLookupComplete = data.onLookupComplete;
   }
   if (data.useDefaultLoader === undefined || data.useDefaultLoader === true) {
@@ -4045,7 +4124,7 @@ Client.prototype.verify = function (data, callback) {
 };
 
 Client.prototype.startVerification = function (data, merchantCallback) {
-  this.api.lookup3DS(data, utils.bind(this.handleLookupResponse(merchantCallback), this));
+  this.api.lookup3DS(data, bind(this.handleLookupResponse(merchantCallback), this));
 };
 
 Client.prototype.handleLookupResponse = function (merchantCallback) {
@@ -4060,7 +4139,7 @@ Client.prototype.handleLookupResponse = function (merchantCallback) {
     } else if (lookupResponse.lookup && lookupResponse.lookup.acsUrl && lookupResponse.lookup.acsUrl.length > 0) {
       self.nonce = lookupResponse.paymentMethod.nonce;
       authenticationService = new AuthenticationService(this.clientToken.assetsUrl, this.container);
-      authenticationService.get(lookupResponse.lookup, utils.bind(this.handleAuthenticationResponse(merchantCallback), this));
+      authenticationService.get(lookupResponse.lookup, bind(this.handleAuthenticationResponse(merchantCallback), this));
 
       this._detachListeners();
       this._attachListeners();
@@ -4145,10 +4224,10 @@ Client.prototype._onLookupComplete = function () {
 
 module.exports = Client;
 
-},{"24":24,"25":25,"28":28}],27:[function(require,module,exports){
+},{"151":151,"23":23,"24":24,"27":27,"95":95}],26:[function(require,module,exports){
 'use strict';
 
-var Client = require(26);
+var Client = require(25);
 
 module.exports = {
   create: function (clientToken, options) {
@@ -4157,12 +4236,12 @@ module.exports = {
   }
 };
 
-},{"26":26}],28:[function(require,module,exports){
+},{"25":25}],27:[function(require,module,exports){
 'use strict';
 
-var LoaderDisplay = require(29);
-var LoaderMessage = require(30);
-var LoaderSpinner = require(31);
+var LoaderDisplay = require(28);
+var LoaderMessage = require(29);
+var LoaderSpinner = require(30);
 
 function Loader() {
   this._element = document.createElement('div');
@@ -4212,7 +4291,7 @@ Loader.prototype._initialize = function () {
 
 module.exports = Loader;
 
-},{"29":29,"30":30,"31":31}],29:[function(require,module,exports){
+},{"28":28,"29":29,"30":30}],28:[function(require,module,exports){
 'use strict';
 
 function LoaderDisplay(displayObject) {
@@ -4246,7 +4325,7 @@ LoaderDisplay.prototype._initialize = function () {
 
 module.exports = LoaderDisplay;
 
-},{}],30:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 'use strict';
 
 function LoaderMessage(text) {
@@ -4272,7 +4351,7 @@ LoaderMessage.prototype.dispose = function () {
 
 module.exports = LoaderMessage;
 
-},{}],31:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 'use strict';
 
 function LoaderSpinner() {
@@ -4316,10 +4395,10 @@ LoaderSpinner.prototype.dispose = function () {
 
 module.exports = LoaderSpinner;
 
-},{}],32:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 'use strict';
 
-var utils = require(24);
+var utils = require(23);
 
 function Receiver (callback) {
   this.postMessageReceiver(callback);
@@ -4372,14 +4451,14 @@ Receiver.prototype.stopListening = function () {
 
 module.exports = Receiver;
 
-},{"24":24}],33:[function(require,module,exports){
+},{"23":23}],32:[function(require,module,exports){
 (function (global){
 'use strict';
 
-var util = require(40);
-var prepBody = require(39);
-var parseBody = require(38);
-var constants = require(35);
+var util = require(39);
+var prepBody = require(38);
+var parseBody = require(37);
+var constants = require(34);
 var isXHRAvailable = global.XMLHttpRequest && 'withCredentials' in new global.XMLHttpRequest();
 
 function getRequestObject() {
@@ -4449,12 +4528,12 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"35":35,"38":38,"39":39,"40":40}],34:[function(require,module,exports){
+},{"34":34,"37":37,"38":38,"39":39}],33:[function(require,module,exports){
 'use strict';
 
-var JSONPDriver = require(36);
-var AJAXDriver = require(33);
-var util = require(40);
+var JSONPDriver = require(35);
+var AJAXDriver = require(32);
+var util = require(39);
 
 function chooseRequestDriver(options) {
   var ua = util.getUserAgent();
@@ -4471,7 +4550,7 @@ function chooseRequestDriver(options) {
 
 module.exports = chooseRequestDriver;
 
-},{"33":33,"36":36,"40":40}],35:[function(require,module,exports){
+},{"32":32,"35":35,"39":39}],34:[function(require,module,exports){
 module.exports={
   "errors": {
     "UNKNOWN_ERROR": "Unknown error",
@@ -4479,11 +4558,11 @@ module.exports={
   }
 };
 
-},{}],36:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 'use strict';
 
-var JSONP = require(37);
-var constants = require(35);
+var JSONP = require(36);
+var constants = require(34);
 var timeoutWatchers = [];
 
 function deserialize(response, mapper) {
@@ -4536,11 +4615,11 @@ module.exports = {
   post: post
 };
 
-},{"35":35,"37":37}],37:[function(require,module,exports){
+},{"34":34,"36":36}],36:[function(require,module,exports){
 (function (global){
 'use strict';
 
-var util = require(40);
+var util = require(39);
 
 /*
 * Lightweight JSONP fetcher
@@ -4610,7 +4689,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"40":40}],38:[function(require,module,exports){
+},{"39":39}],37:[function(require,module,exports){
 'use strict';
 
 module.exports = function (body) {
@@ -4621,10 +4700,10 @@ module.exports = function (body) {
   return body;
 };
 
-},{}],39:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 'use strict';
 
-var isString = require(49);
+var isString = require(48);
 
 module.exports = function (method, body) {
   if (!isString(method)) {
@@ -4638,12 +4717,12 @@ module.exports = function (method, body) {
   return body;
 };
 
-},{"49":49}],40:[function(require,module,exports){
+},{"48":48}],39:[function(require,module,exports){
 (function (global){
 'use strict';
 
-var isEmpty = require(42);
-var isObject = require(48);
+var isEmpty = require(41);
+var isObject = require(47);
 
 function isArray(value) {
   return value && typeof value === 'object' && typeof value.length === 'number' &&
@@ -4717,13 +4796,13 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"42":42,"48":48}],41:[function(require,module,exports){
+},{"41":41,"47":47}],40:[function(require,module,exports){
 'use strict';
 
-var AJAXDriver = require(33);
-var JSONPDriver = require(36);
-var chooseDriver = require(34);
-var util = require(40);
+var AJAXDriver = require(32);
+var JSONPDriver = require(35);
+var chooseDriver = require(33);
+var util = require(39);
 
 module.exports = {
   AJAXDriver: AJAXDriver,
@@ -4732,7 +4811,7 @@ module.exports = {
   util: util
 };
 
-},{"33":33,"34":34,"36":36,"40":40}],42:[function(require,module,exports){
+},{"32":32,"33":33,"35":35,"39":39}],41:[function(require,module,exports){
 /**
  * lodash 3.0.4 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -4741,11 +4820,11 @@ module.exports = {
  * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
  * Available under MIT license <https://lodash.com/license>
  */
-var isArguments = require(43),
-    isArray = require(44),
-    isFunction = require(45),
-    isString = require(49),
-    keys = require(46);
+var isArguments = require(42),
+    isArray = require(43),
+    isFunction = require(44),
+    isString = require(48),
+    keys = require(45);
 
 /**
  * Checks if `value` is object-like.
@@ -4853,7 +4932,7 @@ function isEmpty(value) {
 
 module.exports = isEmpty;
 
-},{"43":43,"44":44,"45":45,"46":46,"49":49}],43:[function(require,module,exports){
+},{"42":42,"43":43,"44":44,"45":45,"48":48}],42:[function(require,module,exports){
 /**
  * lodash 3.0.4 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -4961,7 +5040,7 @@ function isArguments(value) {
 
 module.exports = isArguments;
 
-},{}],44:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 /**
  * lodash 3.0.4 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -5143,7 +5222,7 @@ function isNative(value) {
 
 module.exports = isArray;
 
-},{}],45:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 /**
  * lodash 3.0.6 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -5217,7 +5296,7 @@ function isObject(value) {
 
 module.exports = isFunction;
 
-},{}],46:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 /**
  * lodash 3.1.2 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -5226,9 +5305,9 @@ module.exports = isFunction;
  * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
  * Available under MIT license <https://lodash.com/license>
  */
-var getNative = require(47),
-    isArguments = require(43),
-    isArray = require(44);
+var getNative = require(46),
+    isArguments = require(42),
+    isArray = require(43);
 
 /** Used to detect unsigned integer values. */
 var reIsUint = /^\d+$/;
@@ -5455,7 +5534,7 @@ function keysIn(object) {
 
 module.exports = keys;
 
-},{"43":43,"44":44,"47":47}],47:[function(require,module,exports){
+},{"42":42,"43":43,"46":46}],46:[function(require,module,exports){
 /**
  * lodash 3.9.1 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -5594,7 +5673,7 @@ function isNative(value) {
 
 module.exports = getNative;
 
-},{}],48:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 /**
  * lodash 3.0.2 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -5633,7 +5712,7 @@ function isObject(value) {
 
 module.exports = isObject;
 
-},{}],49:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 /**
  * lodash 3.0.1 (Custom Build) <https://lodash.com/>
  * Build: `lodash modern modularize exports="npm" -o ./`
@@ -5688,7 +5767,9 @@ function isString(value) {
 
 module.exports = isString;
 
-},{}],50:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
+arguments[4][15][0].apply(exports,arguments)
+},{"15":15}],50:[function(require,module,exports){
 arguments[4][16][0].apply(exports,arguments)
 },{"16":16}],51:[function(require,module,exports){
 arguments[4][17][0].apply(exports,arguments)
@@ -5700,16 +5781,14 @@ arguments[4][19][0].apply(exports,arguments)
 arguments[4][20][0].apply(exports,arguments)
 },{"20":20}],55:[function(require,module,exports){
 arguments[4][21][0].apply(exports,arguments)
-},{"21":21}],56:[function(require,module,exports){
+},{"21":21,"49":49}],56:[function(require,module,exports){
 arguments[4][22][0].apply(exports,arguments)
-},{"22":22,"50":50}],57:[function(require,module,exports){
+},{"22":22}],57:[function(require,module,exports){
 arguments[4][23][0].apply(exports,arguments)
-},{"23":23}],58:[function(require,module,exports){
-arguments[4][24][0].apply(exports,arguments)
-},{"24":24,"50":50,"51":51,"52":52,"53":53,"54":54,"55":55,"56":56,"57":57}],59:[function(require,module,exports){
+},{"23":23,"49":49,"50":50,"51":51,"52":52,"53":53,"54":54,"55":55,"56":56}],58:[function(require,module,exports){
 'use strict';
 
-var utils = require(73);
+var utils = require(72);
 
 function MessageBus(host, channel) {
   this.host = host || window;
@@ -5739,10 +5818,12 @@ MessageBus.prototype.receive = function (event) {
 };
 
 MessageBus.prototype.send = function (source, type, data) {
-  source.postMessage(JSON.stringify({
-    type: this._namespaceEvent(type),
-    data: data
-  }), '*');
+  try {
+    source.postMessage(JSON.stringify({
+      type: this._namespaceEvent(type),
+      data: data
+    }), '*');
+  } catch (e) {}
 };
 
 MessageBus.prototype.register = function (type, handler) {
@@ -5776,10 +5857,10 @@ MessageBus.Message.prototype.reply = function (type, data) {
 
 module.exports = MessageBus;
 
-},{"73":73}],60:[function(require,module,exports){
+},{"72":72}],59:[function(require,module,exports){
 'use strict';
 
-var utils = require(73);
+var utils = require(72);
 
 function PubsubClient(bus, target) {
   this.bus = bus;
@@ -5825,7 +5906,7 @@ PubsubClient.prototype.unsubscribe = function (channel, handler) {
 
 module.exports = PubsubClient;
 
-},{"73":73}],61:[function(require,module,exports){
+},{"72":72}],60:[function(require,module,exports){
 'use strict';
 
 function PubsubServer(bus) {
@@ -5884,10 +5965,10 @@ PubsubServer.prototype.unsubscribe = function (channel, handler) {
 
 module.exports = PubsubServer;
 
-},{}],62:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 'use strict';
 
-var utils = require(73);
+var utils = require(72);
 
 function RPCClient(bus, target) {
   this.bus = bus;
@@ -5917,10 +5998,10 @@ RPCClient.prototype.invoke = function (method, args, callback) {
 
 module.exports = RPCClient;
 
-},{"73":73}],63:[function(require,module,exports){
+},{"72":72}],62:[function(require,module,exports){
 'use strict';
 
-var utils = require(73);
+var utils = require(72);
 
 function RPCServer(bus) {
   this.bus = bus;
@@ -5959,12 +6040,12 @@ RPCServer.prototype.define = function (method, handler) {
 
 module.exports = RPCServer;
 
-},{"73":73}],64:[function(require,module,exports){
-var MessageBus = require(59);
-var PubsubClient = require(60);
-var PubsubServer = require(61);
-var RPCClient = require(62);
-var RPCServer = require(63);
+},{"72":72}],63:[function(require,module,exports){
+var MessageBus = require(58);
+var PubsubClient = require(59);
+var PubsubServer = require(60);
+var RPCClient = require(61);
+var RPCServer = require(62);
 
 module.exports = {
   MessageBus: MessageBus,
@@ -5974,7 +6055,9 @@ module.exports = {
   RPCServer: RPCServer
 };
 
-},{"59":59,"60":60,"61":61,"62":62,"63":63}],65:[function(require,module,exports){
+},{"58":58,"59":59,"60":60,"61":61,"62":62}],64:[function(require,module,exports){
+arguments[4][15][0].apply(exports,arguments)
+},{"15":15}],65:[function(require,module,exports){
 arguments[4][16][0].apply(exports,arguments)
 },{"16":16}],66:[function(require,module,exports){
 arguments[4][17][0].apply(exports,arguments)
@@ -5986,13 +6069,13 @@ arguments[4][19][0].apply(exports,arguments)
 arguments[4][20][0].apply(exports,arguments)
 },{"20":20}],70:[function(require,module,exports){
 arguments[4][21][0].apply(exports,arguments)
-},{"21":21}],71:[function(require,module,exports){
+},{"21":21,"64":64}],71:[function(require,module,exports){
 arguments[4][22][0].apply(exports,arguments)
-},{"22":22,"65":65}],72:[function(require,module,exports){
+},{"22":22}],72:[function(require,module,exports){
 arguments[4][23][0].apply(exports,arguments)
-},{"23":23}],73:[function(require,module,exports){
-arguments[4][24][0].apply(exports,arguments)
-},{"24":24,"65":65,"66":66,"67":67,"68":68,"69":69,"70":70,"71":71,"72":72}],74:[function(require,module,exports){
+},{"23":23,"64":64,"65":65,"66":66,"67":67,"68":68,"69":69,"70":70,"71":71}],73:[function(require,module,exports){
+arguments[4][15][0].apply(exports,arguments)
+},{"15":15}],74:[function(require,module,exports){
 arguments[4][16][0].apply(exports,arguments)
 },{"16":16}],75:[function(require,module,exports){
 arguments[4][17][0].apply(exports,arguments)
@@ -6004,19 +6087,17 @@ arguments[4][19][0].apply(exports,arguments)
 arguments[4][20][0].apply(exports,arguments)
 },{"20":20}],79:[function(require,module,exports){
 arguments[4][21][0].apply(exports,arguments)
-},{"21":21}],80:[function(require,module,exports){
+},{"21":21,"73":73}],80:[function(require,module,exports){
 arguments[4][22][0].apply(exports,arguments)
-},{"22":22,"74":74}],81:[function(require,module,exports){
+},{"22":22}],81:[function(require,module,exports){
 arguments[4][23][0].apply(exports,arguments)
-},{"23":23}],82:[function(require,module,exports){
-arguments[4][24][0].apply(exports,arguments)
-},{"24":24,"74":74,"75":75,"76":76,"77":77,"78":78,"79":79,"80":80,"81":81}],83:[function(require,module,exports){
+},{"23":23,"73":73,"74":74,"75":75,"76":76,"77":77,"78":78,"79":79,"80":80}],82:[function(require,module,exports){
 'use strict';
 
 module.exports = ClassList
 
-var indexOf = require(84),
-    trim = require(85),
+var indexOf = require(83),
+    trim = require(84),
     arr = Array.prototype
 
 /**
@@ -6130,7 +6211,7 @@ ClassList.prototype.toString = function () {
   return arr.join.call(this, ' ')
 }
 
-},{"84":84,"85":85}],84:[function(require,module,exports){
+},{"83":83,"84":84}],83:[function(require,module,exports){
 module.exports = function(arr, obj){
   if (arr.indexOf) return arr.indexOf(obj);
   for (var i = 0; i < arr.length; ++i) {
@@ -6138,7 +6219,7 @@ module.exports = function(arr, obj){
   }
   return -1;
 };
-},{}],85:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 
 exports = module.exports = trim;
 
@@ -6154,13 +6235,13 @@ exports.right = function(str){
   return str.replace(/\s*$/, '');
 };
 
-},{}],86:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 'use strict';
 
-var batchExecuteFunctions = require(87);
+var batchExecuteFunctions = require(86);
 // Reach into lib for isFunction. This lib requires a DOM and cannot be
 // tested otherwise
-var fnUtil = require(88);
+var fnUtil = require(87);
 
 function Destructor() {
   this._teardownRegistry = [];
@@ -6184,7 +6265,7 @@ Destructor.prototype.teardown = function (callback) {
 
 module.exports = Destructor;
 
-},{"87":87,"88":88}],87:[function(require,module,exports){
+},{"86":86,"87":87}],86:[function(require,module,exports){
 'use strict';
 
 function call(fn, callback) {
@@ -6234,9 +6315,9 @@ module.exports = function (functions, callback) {
   }
 };
 
-},{}],88:[function(require,module,exports){
-arguments[4][20][0].apply(exports,arguments)
-},{"20":20}],89:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
+arguments[4][19][0].apply(exports,arguments)
+},{"19":19}],88:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -6310,7 +6391,7 @@ FormNapper.prototype.detach = function () {
 module.exports = FormNapper;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],90:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 'use strict';
 (function (root, factory) {
   if (typeof exports === 'object' && typeof module !== 'undefined') {
@@ -6573,13 +6654,13 @@ module.exports = FormNapper;
   return framebus;
 });
 
-},{}],91:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 'use strict';
 
-var assign = require(156);
-var isString = require(155);
-var setAttributes = require(93);
-var defaultAttributes = require(92);
+var assign = require(155);
+var isString = require(154);
+var setAttributes = require(92);
+var defaultAttributes = require(91);
 
 module.exports = function createFrame(options) {
   var iframe = document.createElement('iframe');
@@ -6599,7 +6680,7 @@ module.exports = function createFrame(options) {
   return iframe;
 };
 
-},{"155":155,"156":156,"92":92,"93":93}],92:[function(require,module,exports){
+},{"154":154,"155":155,"91":91,"92":92}],91:[function(require,module,exports){
 module.exports={
   "src": "about:blank",
   "frameBorder": 0,
@@ -6607,7 +6688,7 @@ module.exports={
   "scrolling": "no"
 }
 
-},{}],93:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 module.exports = function setAttributes(element, attributes) {
   var value;
 
@@ -6624,13 +6705,13 @@ module.exports = function setAttributes(element, attributes) {
   }
 };
 
-},{}],94:[function(require,module,exports){
-var LazyWrapper = require(99),
-    LodashWrapper = require(100),
-    baseLodash = require(113),
-    isArray = require(151),
-    isObjectLike = require(139),
-    wrapperClone = require(148);
+},{}],93:[function(require,module,exports){
+var LazyWrapper = require(98),
+    LodashWrapper = require(99),
+    baseLodash = require(112),
+    isArray = require(150),
+    isObjectLike = require(138),
+    wrapperClone = require(147);
 
 /** Used for native method references. */
 var objectProto = Object.prototype;
@@ -6751,8 +6832,8 @@ lodash.prototype = baseLodash.prototype;
 
 module.exports = lodash;
 
-},{"100":100,"113":113,"139":139,"148":148,"151":151,"99":99}],95:[function(require,module,exports){
-var getNative = require(130);
+},{"112":112,"138":138,"147":147,"150":150,"98":98,"99":99}],94:[function(require,module,exports){
+var getNative = require(129);
 
 /* Native method references for those with the same name as other `lodash` methods. */
 var nativeNow = getNative(Date, 'now');
@@ -6777,10 +6858,10 @@ var now = nativeNow || function() {
 
 module.exports = now;
 
-},{"130":130}],96:[function(require,module,exports){
-var createWrapper = require(126),
-    replaceHolders = require(144),
-    restParam = require(98);
+},{"129":129}],95:[function(require,module,exports){
+var createWrapper = require(125),
+    replaceHolders = require(143),
+    restParam = require(97);
 
 /** Used to compose bitmasks for wrapper metadata. */
 var BIND_FLAG = 1,
@@ -6835,11 +6916,11 @@ bind.placeholder = {};
 
 module.exports = bind;
 
-},{"126":126,"144":144,"98":98}],97:[function(require,module,exports){
-var baseFlatten = require(109),
-    createWrapper = require(126),
-    functions = require(158),
-    restParam = require(98);
+},{"125":125,"143":143,"97":97}],96:[function(require,module,exports){
+var baseFlatten = require(108),
+    createWrapper = require(125),
+    functions = require(157),
+    restParam = require(97);
 
 /** Used to compose bitmasks for wrapper metadata. */
 var BIND_FLAG = 1;
@@ -6887,7 +6968,7 @@ var bindAll = restParam(function(object, methodNames) {
 
 module.exports = bindAll;
 
-},{"109":109,"126":126,"158":158,"98":98}],98:[function(require,module,exports){
+},{"108":108,"125":125,"157":157,"97":97}],97:[function(require,module,exports){
 /** Used as the `TypeError` message for "Functions" methods. */
 var FUNC_ERROR_TEXT = 'Expected a function';
 
@@ -6947,9 +7028,9 @@ function restParam(func, start) {
 
 module.exports = restParam;
 
-},{}],99:[function(require,module,exports){
-var baseCreate = require(108),
-    baseLodash = require(113);
+},{}],98:[function(require,module,exports){
+var baseCreate = require(107),
+    baseLodash = require(112);
 
 /** Used as references for `-Infinity` and `Infinity`. */
 var POSITIVE_INFINITY = Number.POSITIVE_INFINITY;
@@ -6975,9 +7056,9 @@ LazyWrapper.prototype.constructor = LazyWrapper;
 
 module.exports = LazyWrapper;
 
-},{"108":108,"113":113}],100:[function(require,module,exports){
-var baseCreate = require(108),
-    baseLodash = require(113);
+},{"107":107,"112":112}],99:[function(require,module,exports){
+var baseCreate = require(107),
+    baseLodash = require(112);
 
 /**
  * The base constructor for creating `lodash` wrapper objects.
@@ -6998,7 +7079,7 @@ LodashWrapper.prototype.constructor = LodashWrapper;
 
 module.exports = LodashWrapper;
 
-},{"108":108,"113":113}],101:[function(require,module,exports){
+},{"107":107,"112":112}],100:[function(require,module,exports){
 /**
  * Copies the values of `source` to `array`.
  *
@@ -7020,7 +7101,7 @@ function arrayCopy(source, array) {
 
 module.exports = arrayCopy;
 
-},{}],102:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 /**
  * A specialized version of `_.forEach` for arrays without support for callback
  * shorthands and `this` binding.
@@ -7044,7 +7125,7 @@ function arrayEach(array, iteratee) {
 
 module.exports = arrayEach;
 
-},{}],103:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 /**
  * Appends the elements of `values` to `array`.
  *
@@ -7066,8 +7147,8 @@ function arrayPush(array, values) {
 
 module.exports = arrayPush;
 
-},{}],104:[function(require,module,exports){
-var keys = require(159);
+},{}],103:[function(require,module,exports){
+var keys = require(158);
 
 /**
  * A specialized version of `_.assign` for customizing assigned values without
@@ -7100,9 +7181,9 @@ function assignWith(object, source, customizer) {
 
 module.exports = assignWith;
 
-},{"159":159}],105:[function(require,module,exports){
-var baseCopy = require(107),
-    keys = require(159);
+},{"158":158}],104:[function(require,module,exports){
+var baseCopy = require(106),
+    keys = require(158);
 
 /**
  * The base implementation of `_.assign` without support for argument juggling,
@@ -7121,16 +7202,16 @@ function baseAssign(object, source) {
 
 module.exports = baseAssign;
 
-},{"107":107,"159":159}],106:[function(require,module,exports){
-var arrayCopy = require(101),
-    arrayEach = require(102),
-    baseAssign = require(105),
-    baseForOwn = require(111),
-    initCloneArray = require(131),
-    initCloneByTag = require(132),
-    initCloneObject = require(133),
-    isArray = require(151),
-    isObject = require(154);
+},{"106":106,"158":158}],105:[function(require,module,exports){
+var arrayCopy = require(100),
+    arrayEach = require(101),
+    baseAssign = require(104),
+    baseForOwn = require(110),
+    initCloneArray = require(130),
+    initCloneByTag = require(131),
+    initCloneObject = require(132),
+    isArray = require(150),
+    isObject = require(153);
 
 /** `Object#toString` result references. */
 var argsTag = '[object Arguments]',
@@ -7251,7 +7332,7 @@ function baseClone(value, isDeep, customizer, key, object, stackA, stackB) {
 
 module.exports = baseClone;
 
-},{"101":101,"102":102,"105":105,"111":111,"131":131,"132":132,"133":133,"151":151,"154":154}],107:[function(require,module,exports){
+},{"100":100,"101":101,"104":104,"110":110,"130":130,"131":131,"132":132,"150":150,"153":153}],106:[function(require,module,exports){
 /**
  * Copies properties of `source` to `object`.
  *
@@ -7276,8 +7357,8 @@ function baseCopy(source, props, object) {
 
 module.exports = baseCopy;
 
-},{}],108:[function(require,module,exports){
-var isObject = require(154);
+},{}],107:[function(require,module,exports){
+var isObject = require(153);
 
 /**
  * The base implementation of `_.create` without support for assigning
@@ -7301,12 +7382,12 @@ var baseCreate = (function() {
 
 module.exports = baseCreate;
 
-},{"154":154}],109:[function(require,module,exports){
-var arrayPush = require(103),
-    isArguments = require(150),
-    isArray = require(151),
-    isArrayLike = require(134),
-    isObjectLike = require(139);
+},{"153":153}],108:[function(require,module,exports){
+var arrayPush = require(102),
+    isArguments = require(149),
+    isArray = require(150),
+    isArrayLike = require(133),
+    isObjectLike = require(138);
 
 /**
  * The base implementation of `_.flatten` with added support for restricting
@@ -7344,8 +7425,8 @@ function baseFlatten(array, isDeep, isStrict, result) {
 
 module.exports = baseFlatten;
 
-},{"103":103,"134":134,"139":139,"150":150,"151":151}],110:[function(require,module,exports){
-var createBaseFor = require(121);
+},{"102":102,"133":133,"138":138,"149":149,"150":150}],109:[function(require,module,exports){
+var createBaseFor = require(120);
 
 /**
  * The base implementation of `baseForIn` and `baseForOwn` which iterates
@@ -7363,9 +7444,9 @@ var baseFor = createBaseFor();
 
 module.exports = baseFor;
 
-},{"121":121}],111:[function(require,module,exports){
-var baseFor = require(110),
-    keys = require(159);
+},{"120":120}],110:[function(require,module,exports){
+var baseFor = require(109),
+    keys = require(158);
 
 /**
  * The base implementation of `_.forOwn` without support for callback
@@ -7382,8 +7463,8 @@ function baseForOwn(object, iteratee) {
 
 module.exports = baseForOwn;
 
-},{"110":110,"159":159}],112:[function(require,module,exports){
-var isFunction = require(152);
+},{"109":109,"158":158}],111:[function(require,module,exports){
+var isFunction = require(151);
 
 /**
  * The base implementation of `_.functions` which creates an array of
@@ -7411,7 +7492,7 @@ function baseFunctions(object, props) {
 
 module.exports = baseFunctions;
 
-},{"152":152}],113:[function(require,module,exports){
+},{"151":151}],112:[function(require,module,exports){
 /**
  * The function whose prototype all chaining wrappers inherit from.
  *
@@ -7423,7 +7504,7 @@ function baseLodash() {
 
 module.exports = baseLodash;
 
-},{}],114:[function(require,module,exports){
+},{}],113:[function(require,module,exports){
 /**
  * The base implementation of `_.property` without support for deep paths.
  *
@@ -7439,9 +7520,9 @@ function baseProperty(key) {
 
 module.exports = baseProperty;
 
-},{}],115:[function(require,module,exports){
-var identity = require(161),
-    metaMap = require(141);
+},{}],114:[function(require,module,exports){
+var identity = require(160),
+    metaMap = require(140);
 
 /**
  * The base implementation of `setData` without support for hot loop detection.
@@ -7458,8 +7539,8 @@ var baseSetData = !metaMap ? identity : function(func, data) {
 
 module.exports = baseSetData;
 
-},{"141":141,"161":161}],116:[function(require,module,exports){
-var identity = require(161);
+},{"140":140,"160":160}],115:[function(require,module,exports){
+var identity = require(160);
 
 /**
  * A specialized version of `baseCallback` which only supports `this` binding
@@ -7499,7 +7580,7 @@ function bindCallback(func, thisArg, argCount) {
 
 module.exports = bindCallback;
 
-},{"161":161}],117:[function(require,module,exports){
+},{"160":160}],116:[function(require,module,exports){
 (function (global){
 /** Native method references. */
 var ArrayBuffer = global.ArrayBuffer,
@@ -7523,7 +7604,7 @@ function bufferClone(buffer) {
 module.exports = bufferClone;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],118:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 /* Native method references for those with the same name as other `lodash` methods. */
 var nativeMax = Math.max;
 
@@ -7559,7 +7640,7 @@ function composeArgs(args, partials, holders) {
 
 module.exports = composeArgs;
 
-},{}],119:[function(require,module,exports){
+},{}],118:[function(require,module,exports){
 /* Native method references for those with the same name as other `lodash` methods. */
 var nativeMax = Math.max;
 
@@ -7597,10 +7678,10 @@ function composeArgsRight(args, partials, holders) {
 
 module.exports = composeArgsRight;
 
-},{}],120:[function(require,module,exports){
-var bindCallback = require(116),
-    isIterateeCall = require(136),
-    restParam = require(98);
+},{}],119:[function(require,module,exports){
+var bindCallback = require(115),
+    isIterateeCall = require(135),
+    restParam = require(97);
 
 /**
  * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
@@ -7640,8 +7721,8 @@ function createAssigner(assigner) {
 
 module.exports = createAssigner;
 
-},{"116":116,"136":136,"98":98}],121:[function(require,module,exports){
-var toObject = require(147);
+},{"115":115,"135":135,"97":97}],120:[function(require,module,exports){
+var toObject = require(146);
 
 /**
  * Creates a base function for `_.forIn` or `_.forInRight`.
@@ -7669,9 +7750,9 @@ function createBaseFor(fromRight) {
 
 module.exports = createBaseFor;
 
-},{"147":147}],122:[function(require,module,exports){
+},{"146":146}],121:[function(require,module,exports){
 (function (global){
-var createCtorWrapper = require(123);
+var createCtorWrapper = require(122);
 
 /**
  * Creates a function that wraps `func` and invokes it with the `this`
@@ -7695,9 +7776,9 @@ function createBindWrapper(func, thisArg) {
 module.exports = createBindWrapper;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"123":123}],123:[function(require,module,exports){
-var baseCreate = require(108),
-    isObject = require(154);
+},{"122":122}],122:[function(require,module,exports){
+var baseCreate = require(107),
+    isObject = require(153);
 
 /**
  * Creates a function that produces an instance of `Ctor` regardless of
@@ -7734,16 +7815,16 @@ function createCtorWrapper(Ctor) {
 
 module.exports = createCtorWrapper;
 
-},{"108":108,"154":154}],124:[function(require,module,exports){
+},{"107":107,"153":153}],123:[function(require,module,exports){
 (function (global){
-var arrayCopy = require(101),
-    composeArgs = require(118),
-    composeArgsRight = require(119),
-    createCtorWrapper = require(123),
-    isLaziable = require(137),
-    reorder = require(143),
-    replaceHolders = require(144),
-    setData = require(145);
+var arrayCopy = require(100),
+    composeArgs = require(117),
+    composeArgsRight = require(118),
+    createCtorWrapper = require(122),
+    isLaziable = require(136),
+    reorder = require(142),
+    replaceHolders = require(143),
+    setData = require(144);
 
 /** Used to compose bitmasks for wrapper metadata. */
 var BIND_FLAG = 1,
@@ -7849,9 +7930,9 @@ function createHybridWrapper(func, bitmask, thisArg, partials, holders, partials
 module.exports = createHybridWrapper;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"101":101,"118":118,"119":119,"123":123,"137":137,"143":143,"144":144,"145":145}],125:[function(require,module,exports){
+},{"100":100,"117":117,"118":118,"122":122,"136":136,"142":142,"143":143,"144":144}],124:[function(require,module,exports){
 (function (global){
-var createCtorWrapper = require(123);
+var createCtorWrapper = require(122);
 
 /** Used to compose bitmasks for wrapper metadata. */
 var BIND_FLAG = 1;
@@ -7896,14 +7977,14 @@ function createPartialWrapper(func, bitmask, thisArg, partials) {
 module.exports = createPartialWrapper;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"123":123}],126:[function(require,module,exports){
-var baseSetData = require(115),
-    createBindWrapper = require(122),
-    createHybridWrapper = require(124),
-    createPartialWrapper = require(125),
-    getData = require(127),
-    mergeData = require(140),
-    setData = require(145);
+},{"122":122}],125:[function(require,module,exports){
+var baseSetData = require(114),
+    createBindWrapper = require(121),
+    createHybridWrapper = require(123),
+    createPartialWrapper = require(124),
+    getData = require(126),
+    mergeData = require(139),
+    setData = require(144);
 
 /** Used to compose bitmasks for wrapper metadata. */
 var BIND_FLAG = 1,
@@ -7984,9 +8065,9 @@ function createWrapper(func, bitmask, thisArg, partials, holders, argPos, ary, a
 
 module.exports = createWrapper;
 
-},{"115":115,"122":122,"124":124,"125":125,"127":127,"140":140,"145":145}],127:[function(require,module,exports){
-var metaMap = require(141),
-    noop = require(162);
+},{"114":114,"121":121,"123":123,"124":124,"126":126,"139":139,"144":144}],126:[function(require,module,exports){
+var metaMap = require(140),
+    noop = require(161);
 
 /**
  * Gets metadata for `func`.
@@ -8001,8 +8082,8 @@ var getData = !metaMap ? noop : function(func) {
 
 module.exports = getData;
 
-},{"141":141,"162":162}],128:[function(require,module,exports){
-var realNames = require(142);
+},{"140":140,"161":161}],127:[function(require,module,exports){
+var realNames = require(141);
 
 /**
  * Gets the name of `func`.
@@ -8028,8 +8109,8 @@ function getFuncName(func) {
 
 module.exports = getFuncName;
 
-},{"142":142}],129:[function(require,module,exports){
-var baseProperty = require(114);
+},{"141":141}],128:[function(require,module,exports){
+var baseProperty = require(113);
 
 /**
  * Gets the "length" property value of `object`.
@@ -8045,8 +8126,8 @@ var getLength = baseProperty('length');
 
 module.exports = getLength;
 
-},{"114":114}],130:[function(require,module,exports){
-var isNative = require(153);
+},{"113":113}],129:[function(require,module,exports){
+var isNative = require(152);
 
 /**
  * Gets the native function at `key` of `object`.
@@ -8063,7 +8144,7 @@ function getNative(object, key) {
 
 module.exports = getNative;
 
-},{"153":153}],131:[function(require,module,exports){
+},{"152":152}],130:[function(require,module,exports){
 /** Used for native method references. */
 var objectProto = Object.prototype;
 
@@ -8091,8 +8172,8 @@ function initCloneArray(array) {
 
 module.exports = initCloneArray;
 
-},{}],132:[function(require,module,exports){
-var bufferClone = require(117);
+},{}],131:[function(require,module,exports){
+var bufferClone = require(116);
 
 /** `Object#toString` result references. */
 var boolTag = '[object Boolean]',
@@ -8156,7 +8237,7 @@ function initCloneByTag(object, tag, isDeep) {
 
 module.exports = initCloneByTag;
 
-},{"117":117}],133:[function(require,module,exports){
+},{"116":116}],132:[function(require,module,exports){
 /**
  * Initializes an object clone.
  *
@@ -8174,9 +8255,9 @@ function initCloneObject(object) {
 
 module.exports = initCloneObject;
 
-},{}],134:[function(require,module,exports){
-var getLength = require(129),
-    isLength = require(138);
+},{}],133:[function(require,module,exports){
+var getLength = require(128),
+    isLength = require(137);
 
 /**
  * Checks if `value` is array-like.
@@ -8191,7 +8272,7 @@ function isArrayLike(value) {
 
 module.exports = isArrayLike;
 
-},{"129":129,"138":138}],135:[function(require,module,exports){
+},{"128":128,"137":137}],134:[function(require,module,exports){
 /** Used to detect unsigned integer values. */
 var reIsUint = /^\d+$/;
 
@@ -8217,10 +8298,10 @@ function isIndex(value, length) {
 
 module.exports = isIndex;
 
-},{}],136:[function(require,module,exports){
-var isArrayLike = require(134),
-    isIndex = require(135),
-    isObject = require(154);
+},{}],135:[function(require,module,exports){
+var isArrayLike = require(133),
+    isIndex = require(134),
+    isObject = require(153);
 
 /**
  * Checks if the provided arguments are from an iteratee call.
@@ -8247,11 +8328,11 @@ function isIterateeCall(value, index, object) {
 
 module.exports = isIterateeCall;
 
-},{"134":134,"135":135,"154":154}],137:[function(require,module,exports){
-var LazyWrapper = require(99),
-    getData = require(127),
-    getFuncName = require(128),
-    lodash = require(94);
+},{"133":133,"134":134,"153":153}],136:[function(require,module,exports){
+var LazyWrapper = require(98),
+    getData = require(126),
+    getFuncName = require(127),
+    lodash = require(93);
 
 /**
  * Checks if `func` has a lazy counterpart.
@@ -8276,7 +8357,7 @@ function isLaziable(func) {
 
 module.exports = isLaziable;
 
-},{"127":127,"128":128,"94":94,"99":99}],138:[function(require,module,exports){
+},{"126":126,"127":127,"93":93,"98":98}],137:[function(require,module,exports){
 /**
  * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
  * of an array-like value.
@@ -8298,7 +8379,7 @@ function isLength(value) {
 
 module.exports = isLength;
 
-},{}],139:[function(require,module,exports){
+},{}],138:[function(require,module,exports){
 /**
  * Checks if `value` is object-like.
  *
@@ -8312,11 +8393,11 @@ function isObjectLike(value) {
 
 module.exports = isObjectLike;
 
-},{}],140:[function(require,module,exports){
-var arrayCopy = require(101),
-    composeArgs = require(118),
-    composeArgsRight = require(119),
-    replaceHolders = require(144);
+},{}],139:[function(require,module,exports){
+var arrayCopy = require(100),
+    composeArgs = require(117),
+    composeArgsRight = require(118),
+    replaceHolders = require(143);
 
 /** Used to compose bitmasks for wrapper metadata. */
 var BIND_FLAG = 1,
@@ -8403,9 +8484,9 @@ function mergeData(data, source) {
 
 module.exports = mergeData;
 
-},{"101":101,"118":118,"119":119,"144":144}],141:[function(require,module,exports){
+},{"100":100,"117":117,"118":118,"143":143}],140:[function(require,module,exports){
 (function (global){
-var getNative = require(130);
+var getNative = require(129);
 
 /** Native method references. */
 var WeakMap = getNative(global, 'WeakMap');
@@ -8416,15 +8497,15 @@ var metaMap = WeakMap && new WeakMap;
 module.exports = metaMap;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"130":130}],142:[function(require,module,exports){
+},{"129":129}],141:[function(require,module,exports){
 /** Used to lookup unminified function names. */
 var realNames = {};
 
 module.exports = realNames;
 
-},{}],143:[function(require,module,exports){
-var arrayCopy = require(101),
-    isIndex = require(135);
+},{}],142:[function(require,module,exports){
+var arrayCopy = require(100),
+    isIndex = require(134);
 
 /* Native method references for those with the same name as other `lodash` methods. */
 var nativeMin = Math.min;
@@ -8453,7 +8534,7 @@ function reorder(array, indexes) {
 
 module.exports = reorder;
 
-},{"101":101,"135":135}],144:[function(require,module,exports){
+},{"100":100,"134":134}],143:[function(require,module,exports){
 /** Used as the internal argument placeholder. */
 var PLACEHOLDER = '__lodash_placeholder__';
 
@@ -8483,9 +8564,9 @@ function replaceHolders(array, placeholder) {
 
 module.exports = replaceHolders;
 
-},{}],145:[function(require,module,exports){
-var baseSetData = require(115),
-    now = require(95);
+},{}],144:[function(require,module,exports){
+var baseSetData = require(114),
+    now = require(94);
 
 /** Used to detect when a function becomes hot. */
 var HOT_COUNT = 150,
@@ -8526,12 +8607,12 @@ var setData = (function() {
 
 module.exports = setData;
 
-},{"115":115,"95":95}],146:[function(require,module,exports){
-var isArguments = require(150),
-    isArray = require(151),
-    isIndex = require(135),
-    isLength = require(138),
-    keysIn = require(160);
+},{"114":114,"94":94}],145:[function(require,module,exports){
+var isArguments = require(149),
+    isArray = require(150),
+    isIndex = require(134),
+    isLength = require(137),
+    keysIn = require(159);
 
 /** Used for native method references. */
 var objectProto = Object.prototype;
@@ -8569,8 +8650,8 @@ function shimKeys(object) {
 
 module.exports = shimKeys;
 
-},{"135":135,"138":138,"150":150,"151":151,"160":160}],147:[function(require,module,exports){
-var isObject = require(154);
+},{"134":134,"137":137,"149":149,"150":150,"159":159}],146:[function(require,module,exports){
+var isObject = require(153);
 
 /**
  * Converts `value` to an object if it's not one.
@@ -8585,10 +8666,10 @@ function toObject(value) {
 
 module.exports = toObject;
 
-},{"154":154}],148:[function(require,module,exports){
-var LazyWrapper = require(99),
-    LodashWrapper = require(100),
-    arrayCopy = require(101);
+},{"153":153}],147:[function(require,module,exports){
+var LazyWrapper = require(98),
+    LodashWrapper = require(99),
+    arrayCopy = require(100);
 
 /**
  * Creates a clone of `wrapper`.
@@ -8605,9 +8686,9 @@ function wrapperClone(wrapper) {
 
 module.exports = wrapperClone;
 
-},{"100":100,"101":101,"99":99}],149:[function(require,module,exports){
-var baseClone = require(106),
-    bindCallback = require(116);
+},{"100":100,"98":98,"99":99}],148:[function(require,module,exports){
+var baseClone = require(105),
+    bindCallback = require(115);
 
 /**
  * Creates a deep clone of `value`. If `customizer` is provided it's invoked
@@ -8662,9 +8743,9 @@ function cloneDeep(value, customizer, thisArg) {
 
 module.exports = cloneDeep;
 
-},{"106":106,"116":116}],150:[function(require,module,exports){
-var isArrayLike = require(134),
-    isObjectLike = require(139);
+},{"105":105,"115":115}],149:[function(require,module,exports){
+var isArrayLike = require(133),
+    isObjectLike = require(138);
 
 /** Used for native method references. */
 var objectProto = Object.prototype;
@@ -8698,10 +8779,10 @@ function isArguments(value) {
 
 module.exports = isArguments;
 
-},{"134":134,"139":139}],151:[function(require,module,exports){
-var getNative = require(130),
-    isLength = require(138),
-    isObjectLike = require(139);
+},{"133":133,"138":138}],150:[function(require,module,exports){
+var getNative = require(129),
+    isLength = require(137),
+    isObjectLike = require(138);
 
 /** `Object#toString` result references. */
 var arrayTag = '[object Array]';
@@ -8740,8 +8821,8 @@ var isArray = nativeIsArray || function(value) {
 
 module.exports = isArray;
 
-},{"130":130,"138":138,"139":139}],152:[function(require,module,exports){
-var isObject = require(154);
+},{"129":129,"137":137,"138":138}],151:[function(require,module,exports){
+var isObject = require(153);
 
 /** `Object#toString` result references. */
 var funcTag = '[object Function]';
@@ -8780,9 +8861,9 @@ function isFunction(value) {
 
 module.exports = isFunction;
 
-},{"154":154}],153:[function(require,module,exports){
-var isFunction = require(152),
-    isObjectLike = require(139);
+},{"153":153}],152:[function(require,module,exports){
+var isFunction = require(151),
+    isObjectLike = require(138);
 
 /** Used to detect host constructors (Safari > 5). */
 var reIsHostCtor = /^\[object .+?Constructor\]$/;
@@ -8830,7 +8911,7 @@ function isNative(value) {
 
 module.exports = isNative;
 
-},{"139":139,"152":152}],154:[function(require,module,exports){
+},{"138":138,"151":151}],153:[function(require,module,exports){
 /**
  * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
  * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
@@ -8860,8 +8941,8 @@ function isObject(value) {
 
 module.exports = isObject;
 
-},{}],155:[function(require,module,exports){
-var isObjectLike = require(139);
+},{}],154:[function(require,module,exports){
+var isObjectLike = require(138);
 
 /** `Object#toString` result references. */
 var stringTag = '[object String]';
@@ -8897,10 +8978,10 @@ function isString(value) {
 
 module.exports = isString;
 
-},{"139":139}],156:[function(require,module,exports){
-var assignWith = require(104),
-    baseAssign = require(105),
-    createAssigner = require(120);
+},{"138":138}],155:[function(require,module,exports){
+var assignWith = require(103),
+    baseAssign = require(104),
+    createAssigner = require(119);
 
 /**
  * Assigns own enumerable properties of source object(s) to the destination
@@ -8942,10 +9023,10 @@ var assign = createAssigner(function(object, source, customizer) {
 
 module.exports = assign;
 
-},{"104":104,"105":105,"120":120}],157:[function(require,module,exports){
-var baseAssign = require(105),
-    baseCreate = require(108),
-    isIterateeCall = require(136);
+},{"103":103,"104":104,"119":119}],156:[function(require,module,exports){
+var baseAssign = require(104),
+    baseCreate = require(107),
+    isIterateeCall = require(135);
 
 /**
  * Creates an object that inherits from the given `prototype` object. If a
@@ -8991,9 +9072,9 @@ function create(prototype, properties, guard) {
 
 module.exports = create;
 
-},{"105":105,"108":108,"136":136}],158:[function(require,module,exports){
-var baseFunctions = require(112),
-    keysIn = require(160);
+},{"104":104,"107":107,"135":135}],157:[function(require,module,exports){
+var baseFunctions = require(111),
+    keysIn = require(159);
 
 /**
  * Creates an array of function property names from all enumerable properties,
@@ -9016,11 +9097,11 @@ function functions(object) {
 
 module.exports = functions;
 
-},{"112":112,"160":160}],159:[function(require,module,exports){
-var getNative = require(130),
-    isArrayLike = require(134),
-    isObject = require(154),
-    shimKeys = require(146);
+},{"111":111,"159":159}],158:[function(require,module,exports){
+var getNative = require(129),
+    isArrayLike = require(133),
+    isObject = require(153),
+    shimKeys = require(145);
 
 /* Native method references for those with the same name as other `lodash` methods. */
 var nativeKeys = getNative(Object, 'keys');
@@ -9063,12 +9144,12 @@ var keys = !nativeKeys ? shimKeys : function(object) {
 
 module.exports = keys;
 
-},{"130":130,"134":134,"146":146,"154":154}],160:[function(require,module,exports){
-var isArguments = require(150),
-    isArray = require(151),
-    isIndex = require(135),
-    isLength = require(138),
-    isObject = require(154);
+},{"129":129,"133":133,"145":145,"153":153}],159:[function(require,module,exports){
+var isArguments = require(149),
+    isArray = require(150),
+    isIndex = require(134),
+    isLength = require(137),
+    isObject = require(153);
 
 /** Used for native method references. */
 var objectProto = Object.prototype;
@@ -9129,7 +9210,7 @@ function keysIn(object) {
 
 module.exports = keysIn;
 
-},{"135":135,"138":138,"150":150,"151":151,"154":154}],161:[function(require,module,exports){
+},{"134":134,"137":137,"149":149,"150":150,"153":153}],160:[function(require,module,exports){
 /**
  * This method returns the first argument provided to it.
  *
@@ -9151,7 +9232,7 @@ function identity(value) {
 
 module.exports = identity;
 
-},{}],162:[function(require,module,exports){
+},{}],161:[function(require,module,exports){
 /**
  * A no-operation function that returns `undefined` regardless of the
  * arguments it receives.
@@ -9172,7 +9253,7 @@ function noop() {
 
 module.exports = noop;
 
-},{}],163:[function(require,module,exports){
+},{}],162:[function(require,module,exports){
 function nodeListToArray(nodeList) {
   try {
     return Array.prototype.slice.call(nodeList);
@@ -9189,12 +9270,12 @@ if (typeof module !== 'undefined') {
   module.exports = nodeListToArray;
 }
 
-},{}],164:[function(require,module,exports){
+},{}],163:[function(require,module,exports){
 'use strict';
 
-var bus = require(90);
-var events = require(166);
-var checkOrigin = require(165).checkOrigin;
+var bus = require(89);
+var events = require(165);
+var checkOrigin = require(164).checkOrigin;
 
 function BraintreeBus(options) {
   options = options || {};
@@ -9315,7 +9396,7 @@ BraintreeBus.events = events;
 
 module.exports = BraintreeBus;
 
-},{"165":165,"166":166,"90":90}],165:[function(require,module,exports){
+},{"164":164,"165":165,"89":89}],164:[function(require,module,exports){
 'use strict';
 
 var BT_ORIGIN_REGEX = /^https:\/\/([a-zA-Z0-9-]+\.)*(braintreepayments|braintreegateway|paypal)\.com(:\d{1,5})?$/;
@@ -9343,7 +9424,7 @@ module.exports = {
   checkOrigin: checkOrigin
 };
 
-},{}],166:[function(require,module,exports){
+},{}],165:[function(require,module,exports){
 'use strict';
 
 var i, evnt;
@@ -9375,7 +9456,7 @@ for (i = 0; i < eventList.length; i++) {
 
 module.exports = eventEnum;
 
-},{}],167:[function(require,module,exports){
+},{}],166:[function(require,module,exports){
 'use strict';
 /* eslint-disable consistent-return */
 
@@ -9404,7 +9485,7 @@ function toSnakeCase(string) {
 
 module.exports = {convertToLegacyShippingAddress: convertToLegacyShippingAddress};
 
-},{}],168:[function(require,module,exports){
+},{}],167:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -9417,22 +9498,23 @@ module.exports = {
   }
 };
 
-},{}],169:[function(require,module,exports){
+},{}],168:[function(require,module,exports){
 (function (global){
 'use strict';
 
-var clone = require(149);
-var api = require(15);
-var Bus = require(164);
-var Destructor = require(86);
-var bind = require(96);
-var constants = require(168);
-var sanitizePayload = require(179);
-var lookupCallbackFor = require(177);
-var fallbackErrorHandler = require(175);
-var nodeType = require(178);
+var clone = require(148);
+var api = require(14);
+var Bus = require(163);
+var Destructor = require(85);
+var bind = require(95);
+var constants = require(167);
+var sanitizePayload = require(178);
+var lookupCallbackFor = require(176);
+var fallbackErrorHandler = require(174);
+var nodeType = require(177);
 var isJQueryElement = nodeType.isJQueryElement;
 var isHTMLElement = nodeType.isHTMLElement;
+var dataCollector = require(192);
 
 function noop() {}
 
@@ -9464,7 +9546,7 @@ function BaseIntegration(configuration) {
     channel: this.configuration.channel,
     merchantUrl: global.location.href
   });
-  this._createApiClient();
+  this.apiClient = new api.Client(this.configuration);
   this._configureCallbacks();
   this._configureAnalytics();
   this._attachEvents();
@@ -9473,20 +9555,6 @@ function BaseIntegration(configuration) {
 
 BaseIntegration.prototype._emitInitializing = function () {
   this.bus.emit(Bus.events.ASYNC_DEPENDENCY_INITIALIZING);
-};
-
-BaseIntegration.prototype._createApiClient = function () {
-  var apiClientOptions = {
-    clientToken: this.configuration.gatewayConfiguration,
-    integration: this.configuration.integrationType,
-    analyticsConfiguration: this.configuration.analyticsConfiguration
-  };
-
-  if (this.configuration.merchantConfiguration.enableCORS) {
-    apiClientOptions.enableCORS = true;
-  }
-
-  this.apiClient = new api.Client(apiClientOptions);
 };
 
 BaseIntegration.prototype._configureCallbacks = function () {
@@ -9523,8 +9591,9 @@ BaseIntegration.prototype._configureAnalytics = function () {
 };
 
 BaseIntegration.prototype._attachEvents = function () {
-  var replyConfiguration;
-  var configuration = this.configuration;
+  var replyConfiguration = clone(this.configuration, function (value) {
+    if (isJQueryElement(value) || isHTMLElement(value)) { return {}; }
+  });
 
   this.bus.on(Bus.events.ERROR, this.onError);
   this.bus.on(Bus.events.PAYMENT_METHOD_RECEIVED, this.onSuccess);
@@ -9532,16 +9601,6 @@ BaseIntegration.prototype._attachEvents = function () {
   this.bus.on(Bus.events.WARNING, function (warning) {
     try { console.warn(warning); } catch (e) { /* ignored */ } // eslint-disable-line no-console
   });
-
-  replyConfiguration = {
-    enableCORS: configuration.merchantConfiguration.enableCORS,
-    configuration: configuration.gatewayConfiguration,
-    integration: configuration.integrationType,
-    analyticsConfiguration: configuration.analyticsConfiguration,
-    merchantConfiguration: clone(configuration.merchantConfiguration, function (value) {
-      if (isJQueryElement(value) || isHTMLElement(value)) { return {}; }
-    })
-  };
 
   this.bus.on(Bus.events.CONFIGURATION_REQUEST, function (reply) {
     reply(replyConfiguration);
@@ -9552,6 +9611,29 @@ BaseIntegration.prototype._attachEvents = function () {
   this._handleDependencyReady = bind(_handleDependencyReady, this);
   this.bus.on(Bus.events.ASYNC_DEPENDENCY_INITIALIZING, this._handleDependencyInitializing);
   this.bus.on(Bus.events.ASYNC_DEPENDENCY_READY, this._handleDependencyReady);
+};
+
+BaseIntegration.prototype._addDeviceData = function (instance) {
+  var dataCollectorInstance;
+
+  if (this.configuration.merchantConfiguration.dataCollector == null) { return; }
+
+  try {
+    dataCollectorInstance = dataCollector.setup(this.configuration.merchantConfiguration.dataCollector);
+  } catch (e) {
+    this.bus.emit(Bus.events.ERROR, {
+      type: 'CONFIGURATION',
+      message: e.message
+    });
+  }
+
+  if (dataCollectorInstance == null) { return; }
+
+  this.destructor.registerFunctionForTeardown(function () {
+    dataCollectorInstance.teardown();
+  });
+
+  instance.deviceData = dataCollectorInstance.deviceData;
 };
 
 BaseIntegration.prototype.teardown = function (merchantCallback) {
@@ -9599,6 +9681,7 @@ BaseIntegration.prototype._onIntegrationReady = function (instance) {
 
   this.returnedInstance.teardown = bind(this.teardown, this);
 
+  this._addDeviceData(instance);
   this.isReady = true;
   this.onReady(this.returnedInstance);
 };
@@ -9606,38 +9689,28 @@ BaseIntegration.prototype._onIntegrationReady = function (instance) {
 module.exports = BaseIntegration;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"149":149,"15":15,"164":164,"168":168,"175":175,"177":177,"178":178,"179":179,"86":86,"96":96}],170:[function(require,module,exports){
+},{"14":14,"148":148,"163":163,"167":167,"174":174,"176":176,"177":177,"178":178,"192":192,"85":85,"95":95}],169:[function(require,module,exports){
 'use strict';
 
-var clone = require(149);
-var create = require(157);
-var bind = require(96);
-var api = require(15);
+var assign = require(155);
+var create = require(156);
+var bind = require(95);
 var coinbase = require(180);
-var Bus = require(164);
-var BaseIntegration = require(169);
+var Bus = require(163);
+var BaseIntegration = require(168);
 
 function CoinbaseIntegration() {
-  var coinbaseConfiguration, coinbaseIntegration;
+  var coinbaseIntegration;
 
   BaseIntegration.apply(this, arguments);
 
-  coinbaseConfiguration = clone(this.configuration.merchantConfiguration);
-
   this._attachBusEvents();
 
-  coinbaseConfiguration.channel = this.configuration.channel;
-  coinbaseConfiguration.configuration = clone(this.configuration.gatewayConfiguration);
-  coinbaseConfiguration.coinbase = clone(coinbaseConfiguration.coinbase || {});
-  coinbaseConfiguration.apiClient = new api.Client({
-    enableCORS: this.configuration.merchantConfiguration.enableCORS || false,
-    clientToken: this.configuration.gatewayConfiguration,
-    integration: 'coinbase'
-  });
+  coinbaseIntegration = coinbase.create(assign({}, this.configuration, {
+    apiClient: this.apiClient
+  }));
 
-  coinbaseIntegration = coinbase.create(coinbaseConfiguration);
-
-  if (coinbaseConfiguration != null) {
+  if (coinbaseIntegration != null) {
     this.destructor.registerFunctionForTeardown(function (done) {
       coinbaseIntegration.teardown(done);
     });
@@ -9660,26 +9733,26 @@ CoinbaseIntegration.prototype._onPaymentMethodGenerated = function (payload) {
 
 module.exports = CoinbaseIntegration;
 
-},{"149":149,"15":15,"157":157,"164":164,"169":169,"180":180,"96":96}],171:[function(require,module,exports){
+},{"155":155,"156":156,"163":163,"168":168,"180":180,"95":95}],170:[function(require,module,exports){
 'use strict';
 
-var clone = require(149);
-var create = require(157);
-var form = require(198);
-var paypal = require(210);
+var clone = require(148);
+var create = require(156);
+var form = require(201);
+var paypal = require(213);
 var coinbase = require(180);
-var bind = require(96);
-var isFunction = require(152);
-var hostedFields = require(204);
-var FormNapper = require(89);
-var constants = require(168);
-var Bus = require(164);
-var convertToLegacyShippingAddress = require(167).convertToLegacyShippingAddress;
-var BaseIntegration = require(169);
-var nodeType = require(178);
+var bind = require(95);
+var isFunction = require(151);
+var hostedFields = require(207);
+var FormNapper = require(88);
+var constants = require(167);
+var Bus = require(163);
+var convertToLegacyShippingAddress = require(166).convertToLegacyShippingAddress;
+var BaseIntegration = require(168);
+var nodeType = require(177);
 var isJQueryElement = nodeType.isJQueryElement;
 var isHTMLElement = nodeType.isHTMLElement;
-var NonceManager = require(176);
+var NonceManager = require(175);
 
 function CustomIntegration() {
   BaseIntegration.apply(this, arguments);
@@ -9762,18 +9835,20 @@ CustomIntegration.prototype._setupForm = function () {
 };
 
 CustomIntegration.prototype._setupPayPal = function () {
-  var paypalCallbackLookup, legacyPaypalSuccessCallback, legacyPaypalCancelledCallback, dummyInput, paypalConfiguration;
-  var merchantConfiguration = this.configuration.merchantConfiguration;
+  var configuration, paypalCallbackLookup, legacyPaypalSuccessCallback, legacyPaypalCancelledCallback, dummyInput, paypalConfiguration, merchantConfiguration;
 
-  if (!merchantConfiguration.paypal) { return; }
+  if (!this.configuration.merchantConfiguration.paypal) { return; }
 
-  paypalConfiguration = clone(merchantConfiguration.paypal, function (value) {
+  configuration = clone(this.configuration, function (value) {
     if (isJQueryElement(value)) {
       return value[0];
     } else if (isHTMLElement(value)) {
       return value;
     }
   });
+
+  merchantConfiguration = configuration.merchantConfiguration;
+  paypalConfiguration = merchantConfiguration.paypal;
 
   paypalCallbackLookup = getIntegrationCallbackLookup(merchantConfiguration, 'paypal');
   legacyPaypalSuccessCallback = paypalCallbackLookup('onSuccess');
@@ -9801,7 +9876,7 @@ CustomIntegration.prototype._setupPayPal = function () {
     paypalConfiguration.enableCORS = true;
   }
 
-  this.paypalIntegration = paypal.create(this.configuration.gatewayConfiguration, paypalConfiguration, this.configuration.channel);
+  this.paypalIntegration = paypal.create(configuration);
 
   if (this.paypalIntegration != null) {
     this.destructor.registerFunctionForTeardown(bind(function () {
@@ -9817,11 +9892,8 @@ CustomIntegration.prototype._setupCoinbase = function () {
 
   if (navigator.userAgent.match(/MSIE 8\.0/)) { return; }
 
-  coinbaseConfiguration = clone(this.configuration.merchantConfiguration);
-  coinbaseConfiguration.channel = this.configuration.channel;
-  coinbaseConfiguration.configuration = this.configuration.gatewayConfiguration;
+  coinbaseConfiguration = clone(this.configuration);
   coinbaseConfiguration.apiClient = this.apiClient;
-  delete coinbaseConfiguration.paypal;
 
   coinbaseIntegration = coinbase.create(coinbaseConfiguration);
 
@@ -9863,17 +9935,18 @@ function getIntegrationCallbackLookup(options, integration) {
 
 module.exports = CustomIntegration;
 
-},{"149":149,"152":152,"157":157,"164":164,"167":167,"168":168,"169":169,"176":176,"178":178,"180":180,"198":198,"204":204,"210":210,"89":89,"96":96}],172:[function(require,module,exports){
+},{"148":148,"151":151,"156":156,"163":163,"166":166,"167":167,"168":168,"175":175,"177":177,"180":180,"201":201,"207":207,"213":213,"88":88,"95":95}],171:[function(require,module,exports){
 'use strict';
 
-var create = require(157);
-var dropin = require(196);
-var bind = require(96);
-var isFunction = require(152);
-var Bus = require(164);
-var constants = require(168);
-var sanitizePayload = require(179);
-var BaseIntegration = require(169);
+var clone = require(148);
+var create = require(156);
+var dropin = require(199);
+var bind = require(95);
+var isFunction = require(151);
+var Bus = require(163);
+var constants = require(167);
+var sanitizePayload = require(178);
+var BaseIntegration = require(168);
 
 function _getLegacyCallback(options) {
   if (isFunction(options.paymentMethodNonceReceived)) {
@@ -9888,11 +9961,12 @@ function _hasRootCallback(options) {
 }
 
 function DropinIntegration() {
-  var merchantConfiguration, legacyCallback, hasRootCallback, dropinIntegration;
+  var merchantConfiguration, legacyCallback, hasRootCallback, dropinIntegration, configuration;
 
   BaseIntegration.apply(this, arguments);
 
-  merchantConfiguration = this.configuration.merchantConfiguration;
+  configuration = clone(this.configuration);
+  merchantConfiguration = configuration.merchantConfiguration;
   legacyCallback = _getLegacyCallback(merchantConfiguration);
   hasRootCallback = _hasRootCallback(merchantConfiguration);
 
@@ -9906,7 +9980,7 @@ function DropinIntegration() {
     }, this);
   }
 
-  dropinIntegration = dropin.create(this.configuration);
+  dropinIntegration = dropin.create(configuration);
   this.destructor.registerFunctionForTeardown(function (done) {
     dropinIntegration.teardown(done);
   });
@@ -9920,27 +9994,28 @@ DropinIntegration.prototype = create(BaseIntegration.prototype, {
 
 module.exports = DropinIntegration;
 
-},{"152":152,"157":157,"164":164,"168":168,"169":169,"179":179,"196":196,"96":96}],173:[function(require,module,exports){
+},{"148":148,"151":151,"156":156,"163":163,"167":167,"168":168,"178":178,"199":199,"95":95}],172:[function(require,module,exports){
 'use strict';
 
 module.exports = {
-  custom: require(171),
-  dropin: require(172),
-  paypal: require(174),
-  coinbase: require(170)
+  custom: require(170),
+  dropin: require(171),
+  paypal: require(173),
+  coinbase: require(169)
 };
 
-},{"170":170,"171":171,"172":172,"174":174}],174:[function(require,module,exports){
+},{"169":169,"170":170,"171":171,"173":173}],173:[function(require,module,exports){
 'use strict';
 
-var create = require(157);
-var paypal = require(210);
-var bind = require(96);
-var isFunction = require(152);
-var constants = require(168);
-var Bus = require(164);
-var convertToLegacyShippingAddress = require(167).convertToLegacyShippingAddress;
-var BaseIntegration = require(169);
+var clone = require(148);
+var create = require(156);
+var paypal = require(213);
+var bind = require(95);
+var isFunction = require(151);
+var constants = require(167);
+var Bus = require(163);
+var convertToLegacyShippingAddress = require(166).convertToLegacyShippingAddress;
+var BaseIntegration = require(168);
 
 function _getLegacyCallback(options) {
   if ('onSuccess' in options && isFunction(options.onSuccess)) {
@@ -9956,17 +10031,25 @@ function _hasRootCallback(options) {
   return isFunction(options[constants.ROOT_SUCCESS_CALLBACK]);
 }
 
-function PayPalIntegration() {
-  var merchantConfiguration, legacyCallback, hasRootCallback;
+function PayPalIntegration(configuration) {
+  var merchantConfiguration, legacyCallback, hasRootCallback, key;
 
-  BaseIntegration.apply(this, arguments);
+  configuration = clone(configuration);
+  configuration.merchantConfiguration.paypal = configuration.merchantConfiguration.paypal || {};
+  for (key in configuration.merchantConfiguration) {
+    if (configuration.merchantConfiguration.hasOwnProperty(key) && key !== 'paypal') {
+      configuration.merchantConfiguration.paypal[key] = configuration.merchantConfiguration[key];
+    }
+  }
+
+  BaseIntegration.call(this, configuration);
 
   merchantConfiguration = this.configuration.merchantConfiguration;
   legacyCallback = _getLegacyCallback(merchantConfiguration);
   hasRootCallback = _hasRootCallback(merchantConfiguration);
 
   if (legacyCallback || hasRootCallback) {
-    merchantConfiguration.onSuccess = bind(function (payload) {
+    merchantConfiguration.paypal.onSuccess = bind(function (payload) {
       if (legacyCallback) {
         legacyCallback(
           payload.nonce,
@@ -9979,7 +10062,7 @@ function PayPalIntegration() {
     }, this);
   }
 
-  this.paypalIntegration = paypal.create(this.configuration.gatewayConfiguration, merchantConfiguration, this.configuration.channel);
+  this.paypalIntegration = paypal.create(this.configuration);
 
   this.destructor.registerFunctionForTeardown(bind(function () {
     this.paypalIntegration.teardown(); // eslint-disable-line no-invalid-this
@@ -10014,7 +10097,7 @@ PayPalIntegration.prototype._onIntegrationReady = function () {
 
 module.exports = PayPalIntegration;
 
-},{"152":152,"157":157,"164":164,"167":167,"168":168,"169":169,"210":210,"96":96}],175:[function(require,module,exports){
+},{"148":148,"151":151,"156":156,"163":163,"166":166,"167":167,"168":168,"213":213,"95":95}],174:[function(require,module,exports){
 'use strict';
 
 module.exports = function fallbackError(error) {
@@ -10031,11 +10114,11 @@ module.exports = function fallbackError(error) {
   }
 };
 
-},{}],176:[function(require,module,exports){
+},{}],175:[function(require,module,exports){
 'use strict';
 
-var Bus = require(164);
-var hostedFields = require(204);
+var Bus = require(163);
+var hostedFields = require(207);
 
 var ANALYTICS_STRING = 'web.custom.hosted-fields.via.';
 var INPUT_NAME = 'payment_method_nonce';
@@ -10050,6 +10133,12 @@ function NonceManager(configuration) {
 
   this._attachEvents();
 }
+
+NonceManager.prototype._shouldStrictlyValidate = function (payload) {
+  if (payload != null) { return false; }
+
+  return this.paymentMethod == null || this.paymentMethod.type === 'CreditCard';
+};
 
 NonceManager.prototype._clearNonce = function () {
   this.paymentMethod = null;
@@ -10083,7 +10172,7 @@ NonceManager.prototype.handleSubmitRequest = function () {
 
     self.paymentMethod = payload || self.paymentMethod;
 
-    if (self.paymentMethod == null) {
+    if (self._shouldStrictlyValidate(payload)) {
       self.bus.emit(hostedFields.events.VALIDATE_STRICT);
       self.bus.emit(Bus.events.ERROR, {
         type: 'VALIDATION',
@@ -10111,10 +10200,10 @@ NonceManager.prototype.teardown = function () {
 
 module.exports = NonceManager;
 
-},{"164":164,"204":204}],177:[function(require,module,exports){
+},{"163":163,"207":207}],176:[function(require,module,exports){
 'use strict';
 
-var isFunction = require(152);
+var isFunction = require(151);
 
 function noop() {}
 
@@ -10130,15 +10219,15 @@ module.exports = function lookupCallbackFor(model) {
   };
 };
 
-},{"152":152}],178:[function(require,module,exports){
+},{"151":151}],177:[function(require,module,exports){
 'use strict';
 
 function isJQueryElement(element) {
-  return typeof element === 'object' && 'jquery' in element && element.length !== 0;
+  return Boolean(element) && typeof element === 'object' && 'jquery' in element && element.length !== 0;
 }
 
 function isHTMLElement(element) {
-  return element && element.nodeType === 1;
+  return Boolean(element) && element.nodeType === 1;
 }
 
 module.exports = {
@@ -10146,7 +10235,7 @@ module.exports = {
   isHTMLElement: isHTMLElement
 };
 
-},{}],179:[function(require,module,exports){
+},{}],178:[function(require,module,exports){
 'use strict';
 
 module.exports = function sanitizePayload(payload) {
@@ -10157,7 +10246,72 @@ module.exports = function sanitizePayload(payload) {
   };
 };
 
-},{}],180:[function(require,module,exports){
+},{}],179:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var VERSION = "2.17.1";
+var api = require(14);
+var paypal = require(213);
+var dropin = require(199);
+var integrations = require(172);
+var constants = require(167);
+var fallbackErrorHandler = require(174);
+var lookupCallbackFor = require(176);
+var utils = require(81);
+var dataCollector = require(192);
+
+function setup(authorization, integrationType, merchantConfiguration) {
+  var channel;
+
+  if (!integrations.hasOwnProperty(integrationType)) {
+    throw new Error(integrationType + ' is an unsupported integration');
+  }
+
+  merchantConfiguration = merchantConfiguration || {};
+  channel = utils.uuid();
+
+  api._getConfiguration({
+    enableCORS: merchantConfiguration.enableCORS || false,
+    authorization: authorization,
+    sessionId: channel
+  }, function (err, gatewayConfiguration) {
+    var errorFallback;
+
+    if (err) {
+      errorFallback = lookupCallbackFor(merchantConfiguration)(constants.ROOT_ERROR_CALLBACK, fallbackErrorHandler);
+      errorFallback({message: err.errors});
+      return;
+    }
+
+    new integrations[integrationType]({ // eslint-disable-line no-new
+      channel: channel,
+      authorization: authorization,
+      gatewayConfiguration: gatewayConfiguration,
+      integrationType: integrationType,
+      merchantConfiguration: merchantConfiguration,
+      analyticsConfiguration: {
+        sdkVersion: 'braintree/web/' + VERSION,
+        merchantAppId: global.location.host
+      },
+      isMerchantPageHttps: utils.isBrowserHttps()
+    });
+  });
+}
+
+module.exports = {
+  api: api,
+  data: dataCollector,
+  cse: global.Braintree,
+  paypal: paypal,
+  dropin: dropin,
+  hostedFields: {VERSION: require(207).VERSION},
+  setup: setup,
+  VERSION: VERSION
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"14":14,"167":167,"172":172,"174":174,"176":176,"192":192,"199":199,"207":207,"213":213,"81":81}],180:[function(require,module,exports){
 'use strict';
 
 var Coinbase = require(183);
@@ -10219,7 +10373,7 @@ module.exports = {
 },{}],182:[function(require,module,exports){
 'use strict';
 
-var busEvents = require(164).events;
+var busEvents = require(163).events;
 
 function tokenize(err, payload, coinbase) {
   if (err) {
@@ -10235,27 +10389,28 @@ function tokenize(err, payload, coinbase) {
 
 module.exports = {tokenize: tokenize};
 
-},{"164":164}],183:[function(require,module,exports){
+},{"163":163}],183:[function(require,module,exports){
 (function (global){
 'use strict';
 
-var bind = require(96);
-var utils = require(82);
-var Destructor = require(86);
+var bind = require(95);
+var utils = require(81);
+var Destructor = require(85);
 var DOMComposer = require(187);
 var urlComposer = require(190);
 var callbacks = require(182);
 var constants = require(184);
 var detector = require(185);
-var Bus = require(164);
+var Bus = require(163);
+var api = require(14);
 
-function _getPopupParams(options) {
+function _getPopupParams(configuration) {
   return {
-    clientId: options.configuration.coinbase.clientId,
-    redirectUrl: options.configuration.coinbase.redirectUrl,
-    scopes: options.configuration.coinbase.scopes || constants.SCOPES,
+    clientId: configuration.gatewayConfiguration.coinbase.clientId,
+    redirectUrl: configuration.gatewayConfiguration.coinbase.redirectUrl,
+    scopes: configuration.gatewayConfiguration.coinbase.scopes || constants.SCOPES,
     meta: {
-      authorizations_merchant_account: options.configuration.coinbase.merchantAccount || '' // eslint-disable-line camelcase
+      authorizations_merchant_account: configuration.gatewayConfiguration.coinbase.merchantAccount || '' // eslint-disable-line camelcase
     }
   };
 }
@@ -10266,13 +10421,13 @@ function _error(bus) {
   };
 }
 
-function _optionsAreValid(options, bus) {
-  var cbOptions = (options || {}).coinbase;
+function _optionsAreValid(configuration, bus) {
+  var cbOptions = (configuration.merchantConfiguration || {}).coinbase;
   var busError = _error(bus);
 
-  if (options.apiClient == null) {
-    busError('settings.apiClient is required for coinbase', constants.CONFIGURATION_ERROR);
-  } else if (!options.configuration.coinbaseEnabled) {
+  if (configuration.apiClient == null) {
+    busError('apiClient is required for coinbase', constants.CONFIGURATION_ERROR);
+  } else if (!configuration.gatewayConfiguration.coinbaseEnabled) {
     busError('Coinbase is not enabled for your merchant account', constants.CONFIGURATION_ERROR);
   } else if (!cbOptions || !cbOptions.container && !cbOptions.button) {
     busError('Either options.coinbase.container or options.coinbase.button is required for Coinbase integrations', constants.CONFIGURATION_ERROR);
@@ -10287,40 +10442,37 @@ function _optionsAreValid(options, bus) {
   return false;
 }
 
-function Coinbase(options) {
+function Coinbase(configuration) {
   var context, busOptions;
   var self = this;
 
+  this.configuration = configuration;
   this.destructor = new Destructor();
 
-  this.channel = options.channel;
-
-  busOptions = {channel: this.channel};
+  busOptions = {channel: configuration.channel};
 
   try {
-    if (options.coinbase.container) {
+    if (configuration.coinbase.container) {
       busOptions.merchantUrl = global.location.href;
     }
   } catch (e) { /* ignored */ }
 
-  this.bus = options.bus || new Bus(busOptions);
+  this.bus = configuration.bus || new Bus(busOptions);
 
-  this.canCreateIntegration = _optionsAreValid(options, this.bus);
+  this.canCreateIntegration = _optionsAreValid(configuration, this.bus);
   if (!this.canCreateIntegration) {
     return;
   }
 
-  this.buttonId = options.coinbase.button || constants.BUTTON_ID;
-  this.apiClient = options.apiClient;
-  this.assetsUrl = options.configuration.assetsUrl;
-  this.environment = options.configuration.coinbase.environment;
+  this.buttonId = configuration.merchantConfiguration.coinbase.button || constants.BUTTON_ID;
+  this.apiClient = configuration.apiClient || new api.Client(configuration);
   this._onOAuthSuccess = bind(this._onOAuthSuccess, this);
   this._handleButtonClick = bind(this._handleButtonClick, this);
-  this.popupParams = _getPopupParams(options);
+  this.popupParams = _getPopupParams(configuration);
   this.redirectDoneInterval = null;
 
-  if (options.coinbase.container) {
-    context = utils.normalizeElement(options.coinbase.container);
+  if (configuration.merchantConfiguration.coinbase.container) {
+    context = utils.normalizeElement(configuration.merchantConfiguration.coinbase.container);
     this._insertFrame(context);
   } else {
     global.braintreeCoinbasePopupCallback = this._onOAuthSuccess;
@@ -10340,7 +10492,7 @@ function Coinbase(options) {
 
 Coinbase.prototype._insertFrame = function (container) {
   var self = this;
-  var frame = DOMComposer.createFrame({channel: this.channel});
+  var frame = DOMComposer.createFrame({channel: this.configuration.channel});
 
   this.bus.emit(Bus.events.ASYNC_DEPENDENCY_INITIALIZING);
 
@@ -10351,7 +10503,7 @@ Coinbase.prototype._insertFrame = function (container) {
 
   // Delayed to make sure browser caches are busted.
   setTimeout(function () {
-    frame.src = self.assetsUrl + '/coinbase/' + constants.VERSION + '/coinbase-frame.html#' + self.channel;
+    frame.src = self.configuration.gatewayConfiguration.assetsUrl + '/coinbase/' + constants.VERSION + '/coinbase-frame.html#' + self.configuration.channel;
   }, 0);
 };
 
@@ -10446,7 +10598,7 @@ Coinbase.prototype._openPopup = function () {
 Coinbase.prototype._getOAuthBaseUrl = function () {
   var baseUrl;
 
-  if (this.environment === 'shared_sandbox') {
+  if (this.configuration.gatewayConfiguration.coinbase.environment === 'shared_sandbox') {
     baseUrl = constants.SANDBOX_OAUTH_BASE_URL;
   } else {
     baseUrl = constants.PRODUCTION_OAUTH_BASE_URL;
@@ -10496,7 +10648,7 @@ Coinbase.prototype.teardown = function (done) {
 module.exports = Coinbase;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"164":164,"182":182,"184":184,"185":185,"187":187,"190":190,"82":82,"86":86,"96":96}],184:[function(require,module,exports){
+},{"14":14,"163":163,"182":182,"184":184,"185":185,"187":187,"190":190,"81":81,"85":85,"95":95}],184:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -10507,7 +10659,7 @@ module.exports = {
   POPUP_NAME: 'coinbase',
   BUTTON_ID: 'bt-coinbase-button',
   SCOPES: 'send',
-  VERSION: "2.15.2",
+  VERSION: "2.17.1",
   INTEGRATION_NAME: 'Coinbase',
   CONFIGURATION_ERROR: 'CONFIGURATION',
   UNSUPPORTED_BROWSER_ERROR: 'UNSUPPORTED_BROWSER',
@@ -10590,7 +10742,7 @@ module.exports = {
 'use strict';
 
 var constants = require(184);
-var iframer = require(91);
+var iframer = require(90);
 
 function createFrame() {
   return iframer({
@@ -10608,7 +10760,7 @@ function createFrame() {
 
 module.exports = {create: createFrame};
 
-},{"184":184,"91":91}],189:[function(require,module,exports){
+},{"184":184,"90":90}],189:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -10686,7 +10838,256 @@ module.exports = {
 },{"184":184}],191:[function(require,module,exports){
 'use strict';
 
-var RPC_METHOD_NAMES = ['getCreditCards', 'unlockCreditCard', 'sendAnalyticsEvents'];
+function setup() {
+  return new Fraudnet();
+}
+
+function Fraudnet() {
+  this.sessionId = _generateSessionId();
+  this._beaconId = _generateBeaconId(this.sessionId);
+
+  this._parameterBlock = _createParameterBlock(this.sessionId, this._beaconId);
+  this._thirdPartyBlock = _createThirdPartyBlock();
+}
+
+Fraudnet.prototype.teardown = function () {
+  this._thirdPartyBlock.parentNode.removeChild(this._thirdPartyBlock);
+};
+
+function _generateSessionId() {
+  var i;
+  var id = '';
+
+  for (i = 0; i < 32; i++) {
+    id += Math.floor(Math.random() * 16).toString(16);
+  }
+
+  return id;
+}
+
+function _generateBeaconId(sessionId) {
+  var timestamp = new Date().getTime() / 1000;
+
+  return 'https://b.stats.paypal.com/counter.cgi' +
+    '?i=127.0.0.1' +
+    '&p=' + sessionId +
+    '&t=' + timestamp +
+    '&a=14';
+}
+
+function _createParameterBlock(sessionId, beaconId) {
+  var el = document.body.appendChild(document.createElement('script'));
+
+  el.type = 'application/json';
+  el.setAttribute('fncls', 'fnparams-dede7cc5-15fd-4c75-a9f4-36c430ee3a99');
+  el.text = JSON.stringify({
+    f: sessionId,
+    s: 'BRAINTREE_SIGNIN',
+    b: beaconId
+  });
+
+  return el;
+}
+
+function _createThirdPartyBlock() {
+  var dom, doc;
+  var scriptBaseURL = 'https://www.paypalobjects.com/webstatic/r/fb/';
+  var iframe = document.createElement('iframe');
+
+  iframe.src = 'about:blank';
+  iframe.title = '';
+  iframe.role = 'presentation'; // a11y
+  (iframe.frameElement || iframe).style.cssText = 'width: 0; height: 0; border: 0';
+  document.body.appendChild(iframe);
+
+  try {
+    doc = iframe.contentWindow.document;
+  } catch (e) {
+    dom = document.domain;
+    iframe.src = 'javascript:var d=document.open();d.domain="' + dom + '";void(0);'; // eslint-disable-line
+    doc = iframe.contentWindow.document;
+  }
+
+  doc.open()._l = function () {
+    var js = this.createElement('script');
+
+    if (dom) {
+      this.domain = dom;
+    }
+    js.id = 'js-iframe-async';
+    js.src = scriptBaseURL + 'fb-all-prod.pp.min.js';
+    this.body.appendChild(js);
+  };
+
+  function listener() { doc._l(); }
+
+  if (iframe.addEventListener) {
+    iframe.addEventListener('load', listener, false);
+  } else if (iframe.attachEvent) {
+    iframe.attachEvent('onload', listener);
+  } else {
+    doc.write('<body onload="document._l();">');
+  }
+
+  doc.close();
+
+  return iframe;
+}
+
+module.exports = {
+  setup: setup
+};
+
+},{}],192:[function(require,module,exports){
+'use strict';
+/* eslint-disable camelcase */
+
+var kount = require(193);
+var fraudnet = require(191);
+
+function setup(options) {
+  var data, kountInstance, fraudnetInstance;
+  var instances = [];
+
+  function teardown() {
+    var i;
+
+    for (i = 0; i < instances.length; i++) {
+      instances[i].teardown();
+    }
+  }
+
+  if (options.kount != null) {
+    kountInstance = kount.setup(options.kount);
+    data = kountInstance.deviceData;
+    instances.push(kountInstance);
+  } else {
+    data = {};
+  }
+
+  if (options.paypal === true) {
+    fraudnetInstance = fraudnet.setup();
+    data.correlation_id = fraudnetInstance.sessionId;
+    instances.push(fraudnetInstance);
+  }
+
+  return {
+    deviceData: JSON.stringify(data),
+    teardown: teardown
+  };
+}
+
+module.exports = {
+  setup: setup
+};
+
+},{"191":191,"193":193}],193:[function(require,module,exports){
+(function (global){
+'use strict';
+/* eslint-disable camelcase */
+
+var sjcl = global.Braintree.sjcl;
+var IFRAME_ID = 'braintreeDataFrame';
+var BRAINTREE_KOUNT_ID = '600000';
+var environmentUrls = {
+  qa: 'https://assets.qa.braintreepayments.com/data',
+  sandbox: 'https://assets.braintreegateway.com/sandbox/data',
+  production: 'https://assets.braintreegateway.com/data'
+};
+
+function setup(o) {
+  var options = o != null ? o : {};
+
+  return new Kount(options);
+}
+
+function Kount(options) {
+  sjcl.random.startCollectors();
+
+  this._currentEnvironment = this._initializeEnvironment(options);
+  this._deviceSessionId = this._generateDeviceSessionId();
+  this.deviceData = this._getDeviceData();
+
+  this._iframe = this._setupIFrame();
+}
+
+Kount.prototype.teardown = function () {
+  sjcl.random.stopCollectors();
+  this._removeIframe();
+};
+
+Kount.prototype._removeIframe = function () {
+  this._iframe.parentNode.removeChild(this._iframe);
+};
+
+Kount.prototype._getDeviceData = function () {
+  return {
+    device_session_id: this._deviceSessionId,
+    fraud_merchant_id: this._currentEnvironment.id
+  };
+};
+
+Kount.prototype._generateDeviceSessionId = function () {
+  var bits, hexString;
+
+  bits = sjcl.random.randomWords(4, 0);
+  hexString = sjcl.codec.hex.fromBits(bits);
+
+  return hexString;
+};
+
+Kount.prototype._setupIFrame = function () {
+  var params;
+  var self = this;
+  var iframe = document.getElementById(IFRAME_ID);
+
+  if (iframe != null) {
+    return iframe;
+  }
+
+  params = '?m=' + this._currentEnvironment.id + '&s=' + this._deviceSessionId;
+
+  iframe = document.createElement('iframe');
+  iframe.width = 1;
+  iframe.id = IFRAME_ID;
+  iframe.height = 1;
+  iframe.frameBorder = 0;
+  iframe.scrolling = 'no';
+
+  document.body.appendChild(iframe);
+  setTimeout(function () {
+    iframe.src = self._currentEnvironment.url + '/logo.htm' + params;
+    iframe.innerHTML = '<img src="' + self._currentEnvironment.url + '/logo.gif' + params + '" />';
+  }, 10);
+
+  return iframe;
+};
+
+Kount.prototype._initializeEnvironment = function (options) {
+  var url = environmentUrls[options.environment];
+
+  if (url == null) {
+    throw new Error(options.environment + ' is not a valid environment for kount.environment');
+  }
+
+  return {
+    url: url,
+    name: options.environment,
+    id: options.merchantId == null ? BRAINTREE_KOUNT_ID : options.merchantId
+  };
+};
+
+module.exports = {
+  setup: setup,
+  Kount: Kount,
+  environmentUrls: environmentUrls
+};
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],194:[function(require,module,exports){
+'use strict';
+
+var RPC_METHOD_NAMES = ['unlockCreditCard'];
 
 function APIProxyServer(apiClient) {
   this.apiClient = apiClient;
@@ -10710,25 +11111,24 @@ APIProxyServer.prototype.attach = function (rpcServer) {
 
 module.exports = APIProxyServer;
 
-},{}],192:[function(require,module,exports){
+},{}],195:[function(require,module,exports){
 (function (global){
 'use strict';
 
 var htmlNode, bodyNode;
-var api = require(15);
-var BraintreeBus = require(164);
-var Destructor = require(86);
-var rpc = require(64);
-var utils = require(82);
+var api = require(14);
+var BraintreeBus = require(163);
+var Destructor = require(85);
+var rpc = require(63);
+var utils = require(81);
 var normalizeElement = utils.normalizeElement;
-var bind = require(96);
-var isBrowserHttps = utils.isBrowserHttps;
-var APIProxyServer = require(191);
-var MerchantFormManager = require(195);
-var FrameContainer = require(194);
-var constants = require(197);
-var version = "2.15.2";
-var PayPalModalView = require(214);
+var bind = require(95);
+var APIProxyServer = require(194);
+var MerchantFormManager = require(198);
+var FrameContainer = require(197);
+var constants = require(200);
+var version = "2.17.1";
+var PayPalModalView = require(217);
 
 function getElementStyle(element, style) {
   var computedStyle = window.getComputedStyle ? getComputedStyle(element) : element.currentStyle;
@@ -10756,43 +11156,30 @@ function isMobile() {
   return isMobileUserAgent;
 }
 
-function Client(settings) {
+function Client(configuration) {
   var inlineFramePath, modalFramePath, formElement;
   var self = this;
 
-  this.channel = settings.channel;
+  this.configuration = configuration;
   this.destructor = new Destructor();
-  this.merchantConfiguration = settings.merchantConfiguration;
-  this.encodedClientToken = settings.gatewayConfiguration;
-  this.analyticsConfiguration = settings.analyticsConfiguration;
-  this.paypalOptions = settings.merchantConfiguration.paypal || {};
   this.container = null;
   this.merchantFormManager = null;
-  this.root = settings.root;
   this.configurationRequests = [];
-  this.braintreeApiClient = api.configure({
-    clientToken: settings.gatewayConfiguration,
-    analyticsConfiguration: this.analyticsConfiguration,
-    integration: 'dropin',
-    enableCORS: this.merchantConfiguration.enableCORS
-  });
-
-  this.paymentMethodNonceReceivedCallback = settings.merchantConfiguration.paymentMethodNonceReceived;
-  this.clientToken = api.parseClientToken(settings.gatewayConfiguration);
+  this.braintreeApiClient = new api.Client(this.configuration);
 
   this.braintreeBus = new BraintreeBus({
     merchantUrl: global.location.href,
-    channel: settings.channel
+    channel: this.configuration.channel
   });
 
-  this.bus = new rpc.MessageBus(this.root, this.channel);
+  this.bus = new rpc.MessageBus(this.configuration.root, this.configuration.channel);
   this.rpcServer = new rpc.RPCServer(this.bus);
   this.apiProxyServer = new APIProxyServer(this.braintreeApiClient);
 
   this.apiProxyServer.attach(this.rpcServer);
 
-  inlineFramePath = settings.inlineFramePath || this.clientToken.assetsUrl + '/dropin/' + version + '/inline-frame.html';
-  modalFramePath = settings.modalFramePath || this.clientToken.assetsUrl + '/dropin/' + version + '/modal-frame.html';
+  inlineFramePath = this.configuration.inlineFramePath || this.configuration.gatewayConfiguration.assetsUrl + '/dropin/' + version + '/inline-frame.html';
+  modalFramePath = this.configuration.modalFramePath || this.configuration.gatewayConfiguration.assetsUrl + '/dropin/' + version + '/modal-frame.html';
   htmlNode = document.documentElement;
   bodyNode = document.body;
 
@@ -10801,14 +11188,13 @@ function Client(settings) {
     modal: this._createFrame(modalFramePath, constants.MODAL_FRAME_NAME)
   };
 
-  this.container = normalizeElement(settings.merchantConfiguration.container, 'Unable to find valid container.');
-
-  formElement = normalizeElement(settings.merchantConfiguration.form || this._findClosest(this.container, 'form'));
+  this.container = normalizeElement(this.configuration.merchantConfiguration.container, 'Unable to find valid container.');
+  formElement = normalizeElement(this.configuration.merchantConfiguration.form || this._findClosest(this.container, 'form'));
 
   this.merchantFormManager = new MerchantFormManager({
     form: formElement,
     frames: this.frames,
-    onSubmit: this.paymentMethodNonceReceivedCallback,
+    onSubmit: this.configuration.merchantConfiguration.paymentMethodNonceReceived,
     apiClient: this.braintreeApiClient
   }).initialize();
 
@@ -10816,7 +11202,7 @@ function Client(settings) {
     self.merchantFormManager.teardown();
   });
 
-  if (settings.gatewayConfiguration.paypalEnabled) {
+  if (this.configuration.gatewayConfiguration.paypalEnabled) {
     this._configurePayPal();
   }
 
@@ -10856,13 +11242,7 @@ Client.prototype.initialize = function () {
   this.braintreeBus.on(BraintreeBus.events.PAYMENT_METHOD_GENERATED, bind(this._handleAltPayData, this));
 
   this.rpcServer.define('getConfiguration', function (reply) {
-    reply({
-      enableCORS: self.merchantConfiguration.enableCORS,
-      clientToken: self.encodedClientToken,
-      paypalOptions: self.paypalOptions,
-      analyticsConfiguration: self.analyticsConfiguration,
-      merchantHttps: isBrowserHttps()
-    });
+    reply(self.configuration);
   });
 
   this.rpcServer.define('selectPaymentMethod', function (paymentMethods) {
@@ -10975,11 +11355,13 @@ Client.prototype._hideModal = function (done) {
 };
 
 Client.prototype._configurePayPal = function () {
+  var paypalOptions = this.configuration.merchantConfiguration.paypal || {};
+
   this.paypalModalView = new PayPalModalView({
-    channel: this.channel,
-    insertFrameFunction: this.paypalOptions.insertFrame,
-    paypalAssetsUrl: this.clientToken.paypal.assetsUrl,
-    isHermes: Boolean(this.paypalOptions.singleUse) && Boolean(this.paypalOptions.amount) && Boolean(this.paypalOptions.currency)
+    channel: this.configuration.channel,
+    insertFrameFunction: paypalOptions.insertFrame,
+    paypalAssetsUrl: this.configuration.gatewayConfiguration.paypal.assetsUrl,
+    isHermes: Boolean(paypalOptions.singleUse) && Boolean(paypalOptions.amount) && Boolean(paypalOptions.currency)
   });
 };
 
@@ -11024,11 +11406,11 @@ Client.prototype.teardown = function (done) {
 module.exports = Client;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"15":15,"164":164,"191":191,"194":194,"195":195,"197":197,"214":214,"64":64,"82":82,"86":86,"96":96}],193:[function(require,module,exports){
+},{"14":14,"163":163,"194":194,"197":197,"198":198,"200":200,"217":217,"63":63,"81":81,"85":85,"95":95}],196:[function(require,module,exports){
 'use strict';
 
-var Client = require(192);
-var VERSION = "2.15.2";
+var Client = require(195);
+var VERSION = "2.17.1";
 
 function create(options) {
   var client = new Client(options);
@@ -11043,12 +11425,12 @@ module.exports = {
   VERSION: VERSION
 };
 
-},{"192":192}],194:[function(require,module,exports){
+},{"195":195}],197:[function(require,module,exports){
 'use strict';
 
-var BraintreeBus = require(164);
-var constants = require(197);
-var iFramer = require(91);
+var BraintreeBus = require(163);
+var constants = require(200);
+var iFramer = require(90);
 
 // TODO: move to shared and deduplicate from src/internal/util/dropin-util.js
 var TRANSITION_END_EVENT_NAMES = {
@@ -11120,11 +11502,11 @@ function FrameContainer(endpoint, name, braintreeBus) {
 
 module.exports = FrameContainer;
 
-},{"164":164,"197":197,"91":91}],195:[function(require,module,exports){
+},{"163":163,"200":200,"90":90}],198:[function(require,module,exports){
 'use strict';
 
-var bind = require(96);
-var FormNapper = require(89);
+var bind = require(95);
+var FormNapper = require(88);
 
 function MerchantFormManager(options) {
   this.formNapper = new FormNapper(options.form);
@@ -11226,12 +11608,12 @@ MerchantFormManager.prototype.teardown = function () {
 
 module.exports = MerchantFormManager;
 
-},{"89":89,"96":96}],196:[function(require,module,exports){
+},{"88":88,"95":95}],199:[function(require,module,exports){
 'use strict';
 
-module.exports = require(193);
+module.exports = require(196);
 
-},{"193":193}],197:[function(require,module,exports){
+},{"196":196}],200:[function(require,module,exports){
 module.exports={
   "PAYPAL_INTEGRATION_NAME": "PayPal",
   "INLINE_FRAME_NAME": "braintree-dropin-frame",
@@ -11255,11 +11637,11 @@ module.exports={
   "MODAL_FRAME_TEARDOWN_EVENT": "dropin:TEARDOWN_MODAL_FRAME"
 }
 
-},{}],198:[function(require,module,exports){
+},{}],201:[function(require,module,exports){
 'use strict';
 
-var Form = require(200);
-var validateAnnotations = require(203);
+var Form = require(203);
+var validateAnnotations = require(206);
 
 function setup(apiClient, configuration) {
   var merchantConfiguration = configuration.merchantConfiguration || {};
@@ -11279,7 +11661,7 @@ function setup(apiClient, configuration) {
 
 module.exports = {setup: setup};
 
-},{"200":200,"203":203}],199:[function(require,module,exports){
+},{"203":203,"206":206}],202:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -11336,17 +11718,17 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],200:[function(require,module,exports){
+},{}],203:[function(require,module,exports){
 (function (global){
 'use strict';
 
-var bind = require(96);
-var util = require(82);
-var fields = require(199);
-var Destructor = require(86);
-var Bus = require(164);
-var PaymentMethodModel = require(202);
-var getNonceInput = require(201);
+var bind = require(95);
+var util = require(81);
+var fields = require(202);
+var Destructor = require(85);
+var Bus = require(163);
+var PaymentMethodModel = require(205);
+var getNonceInput = require(204);
 var ERROR_PAYLOAD = {
   message: 'Unable to process payments at this time',
   type: 'IMMEDIATE'
@@ -11483,7 +11865,7 @@ Form.prototype.teardown = function () {
 module.exports = Form;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"164":164,"199":199,"201":201,"202":202,"82":82,"86":86,"96":96}],201:[function(require,module,exports){
+},{"163":163,"202":202,"204":204,"205":205,"81":81,"85":85,"95":95}],204:[function(require,module,exports){
 'use strict';
 
 module.exports = function getNonceInput(paymentMethodNonceInputField) {
@@ -11506,7 +11888,7 @@ module.exports = function getNonceInput(paymentMethodNonceInputField) {
   return nonceInput;
 };
 
-},{}],202:[function(require,module,exports){
+},{}],205:[function(require,module,exports){
 'use strict';
 
 function PaymentMethodModel() {
@@ -11527,7 +11909,7 @@ PaymentMethodModel.prototype.reset = function () {
 
 module.exports = PaymentMethodModel;
 
-},{}],203:[function(require,module,exports){
+},{}],206:[function(require,module,exports){
 'use strict';
 
 module.exports = function validateAnnotations(htmlForm) {
@@ -11563,12 +11945,12 @@ module.exports = function validateAnnotations(htmlForm) {
   }
 };
 
-},{}],204:[function(require,module,exports){
+},{}],207:[function(require,module,exports){
 'use strict';
 
-var HostedFields = require(206);
-var events = require(208).events;
-var VERSION = "2.15.2";
+var HostedFields = require(209);
+var events = require(211).events;
+var VERSION = "2.17.1";
 
 module.exports = {
   create: function (configuration) {
@@ -11578,10 +11960,10 @@ module.exports = {
   VERSION: VERSION
 };
 
-},{"206":206,"208":208}],205:[function(require,module,exports){
+},{"209":209,"211":211}],208:[function(require,module,exports){
 'use strict';
 
-var constants = require(208);
+var constants = require(211);
 
 module.exports = function composeUrl(assetsUrl, channel) {
   return assetsUrl +
@@ -11591,19 +11973,19 @@ module.exports = function composeUrl(assetsUrl, channel) {
     channel;
 };
 
-},{"208":208}],206:[function(require,module,exports){
+},{"211":211}],209:[function(require,module,exports){
 'use strict';
 
-var Destructor = require(86);
-var classListManager = require(83);
-var iFramer = require(91);
-var Bus = require(164);
-var composeUrl = require(205);
-var constants = require(208);
-var nodeListToArray = require(163);
-var utils = require(82);
-var findParentTags = require(209);
-var shouldUseLabelFocus = require(207);
+var Destructor = require(85);
+var classListManager = require(82);
+var iFramer = require(90);
+var Bus = require(163);
+var composeUrl = require(208);
+var constants = require(211);
+var nodeListToArray = require(162);
+var utils = require(81);
+var findParentTags = require(212);
+var shouldUseLabelFocus = require(210);
 var events = constants.events;
 
 function injectFrame(frame, container) {
@@ -11782,18 +12164,18 @@ HostedFieldsIntegration.prototype.teardown = function (done) {
 
 module.exports = HostedFieldsIntegration;
 
-},{"163":163,"164":164,"205":205,"207":207,"208":208,"209":209,"82":82,"83":83,"86":86,"91":91}],207:[function(require,module,exports){
+},{"162":162,"163":163,"208":208,"210":210,"211":211,"212":212,"81":81,"82":82,"85":85,"90":90}],210:[function(require,module,exports){
 'use strict';
 
 module.exports = function shouldUseLabelFocus() {
   return !/(iPad|iPhone|iPod)/i.test(navigator.userAgent);
 };
 
-},{}],208:[function(require,module,exports){
+},{}],211:[function(require,module,exports){
 'use strict';
 /* eslint-disable no-reserved-keys */
 
-var VERSION = "2.15.2";
+var VERSION = "2.17.1";
 
 module.exports = {
   VERSION: VERSION,
@@ -11882,7 +12264,7 @@ module.exports = {
   }
 };
 
-},{}],209:[function(require,module,exports){
+},{}],212:[function(require,module,exports){
 'use strict';
 
 function findParentTags(element, tag) {
@@ -11902,54 +12284,44 @@ function findParentTags(element, tag) {
 
 module.exports = findParentTags;
 
-},{}],210:[function(require,module,exports){
+},{}],213:[function(require,module,exports){
 'use strict';
 
-module.exports = require(212);
+module.exports = require(215);
 
-},{"212":212}],211:[function(require,module,exports){
+},{"215":215}],214:[function(require,module,exports){
 (function (global){
 'use strict';
 
-var braintreeUtil = require(82);
-var bind = require(96);
-var isFunction = require(152);
-var Destructor = require(86);
-var Bus = require(164);
-var AppView = require(214);
-var LoggedInView = require(216);
-var LoggedOutView = require(217);
-var OverlayView = require(220);
-var MerchantPageView = require(218);
-var PaymentMethodNonceInputFieldView = require(221);
-var BridgeIframeView = require(215);
-var browser = require(231);
-var constants = require(223);
-var util = require(233);
-var bindAll = require(97);
+var braintreeUtil = require(81);
+var bind = require(95);
+var isFunction = require(151);
+var Destructor = require(85);
+var Bus = require(163);
+var AppView = require(217);
+var LoggedInView = require(219);
+var LoggedOutView = require(220);
+var OverlayView = require(223);
+var MerchantPageView = require(221);
+var PaymentMethodNonceInputFieldView = require(224);
+var BridgeIframeView = require(218);
+var browser = require(234);
+var constants = require(226);
+var util = require(236);
+var bindAll = require(96);
 
-function Client(clientToken, options, channel) {
-  options = options || {};
-
-  this._clientToken = clientToken;
-  this._clientOptions = options;
-
-  this._clientToken.correlationId = util.generateUid();
+function Client(configuration) {
+  this.configuration = configuration;
 
   this.destructor = new Destructor();
 
-  this.channel = channel;
   this.bus = new Bus({
     merchantUrl: global.location.href,
-    channel: this.channel
+    channel: this.configuration.channel
   });
 
-  this.container = braintreeUtil.normalizeElement(options.container || document.body);
-  this.paymentMethodNonceInputField = options.paymentMethodNonceInputField;
+  this.container = braintreeUtil.normalizeElement(this.configuration.merchantConfiguration.paypal.container || document.body);
 
-  this.insertFrameFunction = options.insertFrame;
-  this.onSuccess = options.onSuccess;
-  this.onCancelled = options.onCancelled;
   this.loggedInView = null;
   this.loggedOutView = null;
   this.appView = null;
@@ -11957,8 +12329,6 @@ function Client(clientToken, options, channel) {
   this.paymentMethodNonceInputFieldView = null;
   this.overlayView = null;
   this.bridgeIframeView = null;
-  this.headless = options.headless;
-  this.isDropin = options.isDropin;
 
   bindAll(this, ['initAuthFlow', 'closeAuthFlow']);
 }
@@ -11969,21 +12339,11 @@ Client.prototype.initialize = function () {
   this._createViews();
 
   this.bus.on(
-    constants.events.GET_CLIENT_TOKEN,
-    bind(this._handleGetClientToken, this)
-  );
-
-  this.bus.on(
-    constants.events.GET_CLIENT_OPTIONS,
-    bind(this._handleGetClientOptions, this)
-  );
-
-  this.bus.on(
     Bus.events.PAYMENT_METHOD_CANCELLED,
     bind(this._handlePaymentMethodCancelled, this)
   );
 
-  if (!this.isDropin) {
+  if (this.configuration.integrationType !== 'dropin') {
     this.bus.on(
       Bus.events.PAYMENT_METHOD_GENERATED,
       bind(this._handlePaymentMethodGenerated, this)
@@ -12001,65 +12361,66 @@ Client.prototype._createViews = function () {
   var i;
   var views = [];
   var self = this;
+  var isDropin = this.configuration.integrationType === 'dropin';
 
   if (browser.isBridgeIframeRequired()) {
     this.bridgeIframeView = new BridgeIframeView({
       container: this.container,
-      paypalAssetsUrl: this._clientToken.paypal.assetsUrl,
-      channel: this.channel
+      paypalAssetsUrl: this.configuration.gatewayConfiguration.paypal.assetsUrl,
+      channel: this.configuration.channel
     });
     views.push(this.bridgeIframeView);
   }
 
   this.appView = new AppView({
-    insertFrameFunction: this.insertFrameFunction,
-    paypalAssetsUrl: this._clientToken.paypal.assetsUrl,
-    isHermes: util.isHermesConfiguration(this._clientToken, this._clientOptions),
-    isDropin: this.isDropin,
-    channel: this.channel
+    insertFrameFunction: this.configuration.merchantConfiguration.paypal.insertFrameFunction,
+    paypalAssetsUrl: this.configuration.gatewayConfiguration.paypal.assetsUrl,
+    isHermes: util.isHermesConfiguration(this.configuration),
+    isDropin: isDropin,
+    channel: this.configuration.channel
   });
   views.push(this.appView);
 
-  if (!this.isDropin) {
+  if (!isDropin) {
     this.merchantPageView = new MerchantPageView({
-      channel: this.channel
+      channel: this.configuration.channel
     });
     views.push(this.merchantPageView);
 
     if (browser.isPopupSupported() && browser.isOverlaySupported()) {
       this.overlayView = new OverlayView({
-        paypalAssetsUrl: this._clientToken.paypal.assetsUrl,
+        paypalAssetsUrl: this.configuration.gatewayConfiguration.paypal.assetsUrl,
         onFocus: function () { self.bus.emit(constants.events.FOCUS_APP); },
         onClose: function () { self.bus.emit(constants.events.CLOSE_APP); },
-        locale: this._clientOptions.locale,
-        channel: this.channel
+        locale: this.configuration.merchantConfiguration.paypal.locale,
+        channel: this.configuration.channel
       });
       views.push(this.overlayView);
     }
   }
 
-  if (!(this.isDropin || this.headless)) {
+  if (!(isDropin || this.configuration.merchantConfiguration.paypal.headless)) {
     this.paymentMethodNonceInputFieldView = new PaymentMethodNonceInputFieldView({
       container: this.container,
-      el: this.paymentMethodNonceInputField,
-      channel: this.channel
+      el: this.configuration.merchantConfiguration.paypal.paymentMethodNonceInputField,
+      channel: this.configuration.channel
     });
     views.push(this.paymentMethodNonceInputFieldView);
 
     this.loggedInView = new LoggedInView({
-      paypalAssetsUrl: this._clientToken.paypal.assetsUrl,
+      paypalAssetsUrl: this.configuration.gatewayConfiguration.paypal.assetsUrl,
       container: this.container,
-      locale: this._clientOptions.locale,
-      channel: this.channel
+      locale: this.configuration.merchantConfiguration.paypal.locale,
+      channel: this.configuration.channel
     });
     views.push(this.loggedInView);
 
     this.loggedOutView = new LoggedOutView({
-      paypalAssetsUrl: this._clientToken.paypal.assetsUrl,
+      paypalAssetsUrl: this.configuration.gatewayConfiguration.paypal.assetsUrl,
       container: this.container,
-      enablePayPalButton: util.isOnetimeHermesConfiguration(this._clientToken, this._clientOptions),
-      locale: this._clientOptions.locale,
-      channel: this.channel
+      enablePayPalButton: util.isOnetimeHermesConfiguration(this.configuration),
+      locale: this.configuration.merchantConfiguration.paypal.locale,
+      channel: this.configuration.channel
     });
     views.push(this.loggedOutView);
   }
@@ -12097,66 +12458,26 @@ Client.prototype.closeAuthFlow = function () {
 
 Client.prototype._isButton = function (node) {
   var isPayPalButton = node.id === 'braintree-paypal-button';
-  var isHermesButton = util.isOnetimeHermesConfiguration(this._clientToken, this._clientOptions) &&
+  var isHermesButton = util.isOnetimeHermesConfiguration(this.configuration) &&
     node.className.match(/paypal-button(?!-widget)/);
 
   return isPayPalButton || isHermesButton;
 };
 
 Client.prototype._handlePaymentMethodGenerated = function (bundle) {
-  if (bundle.type === constants.NONCE_TYPE && isFunction(this.onSuccess)) {
-    this.onSuccess(bundle);
+  var onSuccess = this.configuration.merchantConfiguration.paypal.onSuccess;
+
+  if (bundle.type === constants.NONCE_TYPE && isFunction(onSuccess)) {
+    onSuccess(bundle);
   }
 };
 
 Client.prototype._handlePaymentMethodCancelled = function (payload) {
-  if (payload.source === constants.PAYPAL_INTEGRATION_NAME && isFunction(this.onCancelled)) {
-    this.onCancelled();
+  var onCancelled = this.configuration.merchantConfiguration.paypal.onCancelled;
+
+  if (payload.source === constants.PAYPAL_INTEGRATION_NAME && isFunction(onCancelled)) {
+    onCancelled();
   }
-};
-
-Client.prototype._clientTokenData = function () {
-  return {
-    analyticsUrl: this._clientToken.analytics ?
-      this._clientToken.analytics.url : null,
-    authorizationFingerprint: this._clientToken.authorizationFingerprint,
-    clientApiUrl: this._clientToken.clientApiUrl,
-    displayName: this._clientOptions.displayName || this._clientToken.paypal.displayName,
-    paypalAssetsUrl: this._clientToken.paypal.assetsUrl,
-    paypalClientId: this._clientToken.paypal.clientId,
-    paypalPrivacyUrl: this._clientToken.paypal.privacyUrl,
-    paypalUserAgreementUrl: this._clientToken.paypal.userAgreementUrl,
-    billingAgreementsEnabled: this._clientToken.paypal.billingAgreementsEnabled,
-    unvettedMerchant: this._clientToken.paypal.unvettedMerchant,
-    payeeEmail: this._clientToken.paypal.payeeEmail,
-    correlationId: this._clientToken.correlationId,
-    offline: this._clientOptions.offline || this._clientToken.paypal.environmentNoNetwork,
-    sdkVersion: this._clientToken.sdkVersion,
-    merchantAppId: this._clientToken.merchantAppId
-  };
-};
-
-Client.prototype._handleGetClientToken = function (callback) {
-  callback(this._clientTokenData());
-};
-
-Client.prototype._clientOptionsData = function () {
-  return {
-    locale: this._clientOptions.locale || 'en_us',
-    onetime: this._clientOptions.singleUse || false,
-    integration: this._clientOptions.integration || 'paypal',
-    enableShippingAddress: this._clientOptions.enableShippingAddress || false,
-    enableBillingAddress: this._clientOptions.enableBillingAddress || false,
-    enableHermes: util.isHermesConfiguration(this._clientToken, this._clientOptions),
-    amount: this._clientOptions.amount || null,
-    currency: this._clientOptions.currency || null,
-    shippingAddressOverride: this._clientOptions.shippingAddressOverride || null,
-    enableCORS: this._clientOptions.enableCORS
-  };
-};
-
-Client.prototype._handleGetClientOptions = function (callback) {
-  callback(this._clientOptionsData());
 };
 
 Client.prototype.teardown = function () {
@@ -12170,24 +12491,21 @@ Client.prototype.teardown = function () {
 module.exports = Client;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"152":152,"164":164,"214":214,"215":215,"216":216,"217":217,"218":218,"220":220,"221":221,"223":223,"231":231,"233":233,"82":82,"86":86,"96":96,"97":97}],212:[function(require,module,exports){
+},{"151":151,"163":163,"217":217,"218":218,"219":219,"220":220,"221":221,"223":223,"224":224,"226":226,"234":234,"236":236,"81":81,"85":85,"95":95,"96":96}],215:[function(require,module,exports){
 'use strict';
 
-var Client = require(211);
-var browser = require(231);
-var constants = require(223);
-var getLocale = require(225);
-var isHermesConfiguration = require(233).isHermesConfiguration;
-var isOnetimeHermesConfiguration = require(233).isOnetimeHermesConfiguration;
-var VERSION = "2.15.2";
-var braintreeUtil = require(82);
-var braintreeApi = require(15);
+var Client = require(214);
+var browser = require(234);
+var constants = require(226);
+var getLocale = require(228);
+var util = require(236);
+var VERSION = "2.17.1";
+var braintreeUtil = require(81);
 
-function create(clientToken, options, channel) {
+function create(configuration) {
   var client, onUnsupported;
 
-  options = options || {};
-  onUnsupported = options.onUnsupported;
+  onUnsupported = configuration.merchantConfiguration.onUnsupported;
 
   if (typeof onUnsupported !== 'function') {
     onUnsupported = function (error) {
@@ -12197,14 +12515,7 @@ function create(clientToken, options, channel) {
     };
   }
 
-  if (!clientToken) {
-    onUnsupported(new Error('Parameter "clientToken" cannot be null'));
-    return null;
-  }
-
-  clientToken = braintreeApi.parseClientToken(clientToken);
-
-  if (!clientToken.paypalEnabled) {
+  if (!configuration.gatewayConfiguration.paypalEnabled) {
     onUnsupported(new Error('PayPal is not enabled'));
     return null;
   }
@@ -12214,41 +12525,41 @@ function create(clientToken, options, channel) {
     return null;
   }
 
-  if (!options.container && !options.headless) {
+  if (!configuration.merchantConfiguration.paypal.container && !configuration.merchantConfiguration.paypal.headless) {
     onUnsupported(new Error('Please supply a container for the PayPal button to be appended to'));
     return null;
   }
 
-  if (!isBrowserSecure(clientToken, options)) {
+  if (!isBrowserSecure(configuration)) {
     onUnsupported(new Error('unsupported protocol detected'));
     return null;
   }
 
-  if (isMisconfiguredUnvettedMerchant(clientToken, options)) {
+  if (isMisconfiguredUnvettedMerchant(configuration)) {
     onUnsupported(new Error('Unvetted merchant client token does not include a payee email'));
     return null;
   }
 
-  if (isHermesConfiguration(clientToken, options)) {
-    if (!isHermesSupportedCountry(options.locale)) {
+  if (util.isHermesConfiguration(configuration)) {
+    if (!isHermesSupportedCountry(configuration.merchantConfiguration.paypal.locale)) {
       onUnsupported(new Error('This PayPal integration does not support this country'));
       return null;
     }
   }
 
-  if (isOnetimeHermesConfiguration(clientToken, options)) {
-    if (!isHermesSupportedCurrency(options.currency)) {
+  if (util.isOnetimeHermesConfiguration(configuration)) {
+    if (!isHermesSupportedCurrency(configuration.merchantConfiguration.paypal.currency)) {
       onUnsupported(new Error('This PayPal integration does not support this currency'));
       return null;
     }
 
-    if (!isValidAmount(options.amount)) {
+    if (!isValidAmount(configuration.merchantConfiguration.paypal.amount)) {
       onUnsupported(new Error('Amount must be a number'));
       return null;
     }
   }
 
-  client = new Client(clientToken, options, channel);
+  client = new Client(configuration);
   client.initialize();
 
   return client;
@@ -12281,14 +12592,14 @@ function isValidAmount(amount) {
   return typeof amount === 'number' && !isNaN(amount) && amount >= 0;
 }
 
-function isMisconfiguredUnvettedMerchant(clientToken, options) {
-  return clientToken.paypal.unvettedMerchant && (!isHermesConfiguration(clientToken, options) || !clientToken.paypal.payeeEmail);
+function isMisconfiguredUnvettedMerchant(configuration) {
+  return configuration.gatewayConfiguration.paypal.unvettedMerchant && (!util.isHermesConfiguration(configuration) || !configuration.gatewayConfiguration.paypal.payeeEmail);
 }
 
-function isBrowserSecure(clientToken, options) {
-  if (clientToken.paypal.allowHttp) { return true; }
+function isBrowserSecure(configuration) {
+  if (configuration.gatewayConfiguration.paypal.allowHttp) { return true; }
   if (browser.isPopupSupported()) { return true; }
-  if ('merchantHttps' in options) { return options.merchantHttps; }
+  if ('isMerchantPageHttps' in configuration) { return configuration.isMerchantPageHttps; }
 
   return braintreeUtil.isBrowserHttps();
 }
@@ -12298,7 +12609,7 @@ module.exports = {
   VERSION: VERSION
 };
 
-},{"15":15,"211":211,"223":223,"225":225,"231":231,"233":233,"82":82}],213:[function(require,module,exports){
+},{"214":214,"226":226,"228":228,"234":234,"236":236,"81":81}],216:[function(require,module,exports){
 module.exports={
   "en_us": {
     "cancel": "Cancel",
@@ -12427,18 +12738,18 @@ module.exports={
   }
 }
 
-},{}],214:[function(require,module,exports){
+},{}],217:[function(require,module,exports){
 (function (global){
 'use strict';
 
-var bind = require(96);
-var isFunction = require(152);
-var browser = require(231);
-var Destructor = require(86);
-var Bus = require(164);
-var constants = require(223);
-var PopupView = require(222);
-var ModalView = require(219);
+var bind = require(95);
+var isFunction = require(151);
+var browser = require(234);
+var Destructor = require(85);
+var Bus = require(163);
+var constants = require(226);
+var PopupView = require(225);
+var ModalView = require(222);
 
 function AppView(options) {
   var self = this;
@@ -12562,11 +12873,11 @@ AppView.prototype.teardown = function () {
 module.exports = AppView;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"152":152,"164":164,"219":219,"222":222,"223":223,"231":231,"86":86,"96":96}],215:[function(require,module,exports){
+},{"151":151,"163":163,"222":222,"225":225,"226":226,"234":234,"85":85,"95":95}],218:[function(require,module,exports){
 'use strict';
 
-var constants = require(223);
-var iframer = require(91);
+var constants = require(226);
+var iframer = require(90);
 
 function BridgeIframeView(options) {
   this.options = options || {};
@@ -12609,19 +12920,19 @@ BridgeIframeView.prototype.teardown = function () {
 
 module.exports = BridgeIframeView;
 
-},{"223":223,"91":91}],216:[function(require,module,exports){
+},{"226":226,"90":90}],219:[function(require,module,exports){
 (function (global){
 'use strict';
 
-var braintreeUtil = require(82);
-var bind = require(96);
-var Destructor = require(86);
-var Bus = require(164);
-var util = require(233);
-var dom = require(232);
-var constants = require(223);
-var getLocalizationData = require(226);
-var translations = require(213);
+var braintreeUtil = require(81);
+var bind = require(95);
+var Destructor = require(85);
+var Bus = require(163);
+var util = require(236);
+var dom = require(235);
+var constants = require(226);
+var getLocalizationData = require(229);
+var translations = require(216);
 
 function LoggedInView(options) {
   var localizationData;
@@ -12789,14 +13100,14 @@ LoggedInView.prototype.teardown = function () {
 module.exports = LoggedInView;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"164":164,"213":213,"223":223,"226":226,"232":232,"233":233,"82":82,"86":86,"96":96}],217:[function(require,module,exports){
+},{"163":163,"216":216,"226":226,"229":229,"235":235,"236":236,"81":81,"85":85,"95":95}],220:[function(require,module,exports){
 (function (global){
 'use strict';
 
-var bind = require(96);
-var Bus = require(164);
-var constants = require(223);
-var getLocale = require(225);
+var bind = require(95);
+var Bus = require(163);
+var constants = require(226);
+var getLocale = require(228);
 
 function LoggedOutView(options) {
   this.options = options;
@@ -12912,13 +13223,13 @@ LoggedOutView.prototype.teardown = function () {
 module.exports = LoggedOutView;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"164":164,"223":223,"225":225,"96":96}],218:[function(require,module,exports){
+},{"163":163,"226":226,"228":228,"95":95}],221:[function(require,module,exports){
 (function (global){
 'use strict';
 
-var Bus = require(164);
-var bind = require(96);
-var constants = require(223);
+var Bus = require(163);
+var bind = require(95);
+var constants = require(226);
 
 function MerchantPageView(options) {
   this.options = options;
@@ -12992,16 +13303,16 @@ function getMerchantPageDefaultStyles() {
 module.exports = MerchantPageView;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"164":164,"223":223,"96":96}],219:[function(require,module,exports){
+},{"163":163,"226":226,"95":95}],222:[function(require,module,exports){
 (function (global){
 'use strict';
 
-var bind = require(96);
-var isFunction = require(152);
-var browser = require(231);
-var constants = require(223);
-var Bus = require(164);
-var iframer = require(91);
+var bind = require(95);
+var isFunction = require(151);
+var browser = require(234);
+var constants = require(226);
+var Bus = require(163);
+var iframer = require(90);
 
 function ModalView(options) {
   this.options = options || {};
@@ -13088,18 +13399,18 @@ ModalView.prototype.teardown = function () {
 module.exports = ModalView;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"152":152,"164":164,"223":223,"231":231,"91":91,"96":96}],220:[function(require,module,exports){
+},{"151":151,"163":163,"226":226,"234":234,"90":90,"95":95}],223:[function(require,module,exports){
 (function (global){
 'use strict';
 
-var braintreeUtil = require(82);
-var bind = require(96);
-var isFunction = require(152);
-var Destructor = require(86);
-var Bus = require(164);
-var constants = require(223);
-var getLocalizationData = require(226);
-var translations = require(213);
+var braintreeUtil = require(81);
+var bind = require(95);
+var isFunction = require(151);
+var Destructor = require(85);
+var Bus = require(163);
+var constants = require(226);
+var getLocalizationData = require(229);
+var translations = require(216);
 
 function OverlayView(options) {
   var localizationData;
@@ -13295,16 +13606,16 @@ OverlayView.prototype.teardown = function () {
 module.exports = OverlayView;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"152":152,"164":164,"213":213,"223":223,"226":226,"82":82,"86":86,"96":96}],221:[function(require,module,exports){
+},{"151":151,"163":163,"216":216,"226":226,"229":229,"81":81,"85":85,"95":95}],224:[function(require,module,exports){
 (function (global){
 'use strict';
 
-var braintreeUtil = require(82);
-var bind = require(96);
-var isFunction = require(152);
-var Destructor = require(86);
-var Bus = require(164);
-var constants = require(223);
+var braintreeUtil = require(81);
+var bind = require(95);
+var isFunction = require(151);
+var Destructor = require(85);
+var Bus = require(163);
+var constants = require(226);
 
 function PaymentMethodNonceInputFieldView(options) {
   this.options = options || {};
@@ -13387,13 +13698,13 @@ PaymentMethodNonceInputFieldView.prototype.teardown = function () {
 module.exports = PaymentMethodNonceInputFieldView;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"152":152,"164":164,"223":223,"82":82,"86":86,"96":96}],222:[function(require,module,exports){
+},{"151":151,"163":163,"226":226,"81":81,"85":85,"95":95}],225:[function(require,module,exports){
 (function (global){
 'use strict';
 
-var constants = require(223);
-var Bus = require(164);
-var browser = require(227);
+var constants = require(226);
+var Bus = require(163);
+var browser = require(230);
 
 function PopupView(options) {
   this.options = options;
@@ -13481,11 +13792,11 @@ PopupView.prototype.teardown = function () {
 module.exports = PopupView;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"164":164,"223":223,"227":227}],223:[function(require,module,exports){
+},{"163":163,"226":226,"230":230}],226:[function(require,module,exports){
 'use strict';
 
 var i;
-var version = "2.15.2";
+var version = "2.17.1";
 var events = [
   'GET_CLIENT_TOKEN',
   'GET_CLIENT_OPTIONS',
@@ -13527,7 +13838,7 @@ for (i = 0; i < events.length; i++) {
   exports.events[events[i]] = 'paypal:' + events[i];
 }
 
-},{}],224:[function(require,module,exports){
+},{}],227:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -13559,10 +13870,10 @@ module.exports = {
   ru: 'ru_ru'
 };
 
-},{}],225:[function(require,module,exports){
+},{}],228:[function(require,module,exports){
 'use strict';
 
-var countryCodeLookupTable = require(224);
+var countryCodeLookupTable = require(227);
 
 function isFormatted(code) {
   return code.indexOf('_') !== -1 && code.length === 5;
@@ -13602,11 +13913,11 @@ function getLocale(code) {
 
 module.exports = getLocale;
 
-},{"224":224}],226:[function(require,module,exports){
+},{"227":227}],229:[function(require,module,exports){
 'use strict';
 
-var countryCodeLookupTable = require(224);
-var getLocale = require(225);
+var countryCodeLookupTable = require(227);
+var getLocale = require(228);
 
 function getCountry(code) {
   var country = code ? code.toLowerCase().replace(/-/g, '_') : 'us';
@@ -13644,11 +13955,11 @@ function getLocalizationData(code, translations) {
 
 module.exports = getLocalizationData;
 
-},{"224":224,"225":225}],227:[function(require,module,exports){
+},{"227":227,"228":228}],230:[function(require,module,exports){
 'use strict';
 
-var userAgent = require(230);
-var platform = require(229);
+var userAgent = require(233);
+var platform = require(232);
 
 function isAndroid() {
   return userAgent.matchUserAgent('Android') && !isChrome();
@@ -13705,11 +14016,11 @@ module.exports = {
   isAndroidWebView: isAndroidWebView
 };
 
-},{"229":229,"230":230}],228:[function(require,module,exports){
+},{"232":232,"233":233}],231:[function(require,module,exports){
 'use strict';
 
-var userAgent = require(230);
-var platform = require(229);
+var userAgent = require(233);
+var platform = require(232);
 
 function isMobile() {
   return !isTablet() &&
@@ -13732,10 +14043,10 @@ module.exports = {
   isDesktop: isDesktop
 };
 
-},{"229":229,"230":230}],229:[function(require,module,exports){
+},{"232":232,"233":233}],232:[function(require,module,exports){
 'use strict';
 
-var userAgent = require(230);
+var userAgent = require(233);
 
 function isAndroid() {
   return userAgent.matchUserAgent('Android');
@@ -13765,7 +14076,7 @@ module.exports = {
   isIos: isIos
 };
 
-},{"230":230}],230:[function(require,module,exports){
+},{"233":233}],233:[function(require,module,exports){
 'use strict';
 
 var nativeUserAgent = window.navigator.userAgent;
@@ -13787,14 +14098,14 @@ function matchUserAgent(pattern) {
 exports.getNativeUserAgent = getNativeUserAgent;
 exports.matchUserAgent = matchUserAgent;
 
-},{}],231:[function(require,module,exports){
+},{}],234:[function(require,module,exports){
 'use strict';
 /* globals ActiveXObject */
 
-var browser = require(227);
-var device = require(228);
-var platform = require(229);
-var userAgent = require(230);
+var browser = require(230);
+var device = require(231);
+var platform = require(232);
+var userAgent = require(233);
 
 var uaString = window.navigator.userAgent;
 var mobileRe = /[Mm]obi|tablet|iOS|Android|IEMobile|Windows\sPhone/;
@@ -13904,7 +14215,7 @@ module.exports = {
   isMetroBrowser: isMetroBrowser
 };
 
-},{"227":227,"228":228,"229":229,"230":230}],232:[function(require,module,exports){
+},{"230":230,"231":231,"232":232,"233":233}],235:[function(require,module,exports){
 'use strict';
 
 function setTextContent(element, content) {
@@ -13922,10 +14233,10 @@ module.exports = {
   setTextContent: setTextContent
 };
 
-},{}],233:[function(require,module,exports){
+},{}],236:[function(require,module,exports){
 'use strict';
 
-var constants = require(223);
+var constants = require(226);
 
 var trim = typeof String.prototype.trim === 'function' ?
   function (str) { return str.trim(); } :
@@ -14029,10 +14340,10 @@ function preventDefault(event) {
   }
 }
 
-function getOnetimeConfigurationType(merchantConfiguration) {
+function getOnetimeConfigurationType(configuration) {
   var configurationType;
 
-  if (Boolean(merchantConfiguration.amount) && Boolean(merchantConfiguration.currency)) {
+  if (Boolean(configuration.merchantConfiguration.paypal.amount) && Boolean(configuration.merchantConfiguration.paypal.currency)) {
     configurationType = constants.CONFIGURATION_TYPES.HERMES_ONETIME;
   } else {
     configurationType = constants.CONFIGURATION_TYPES.LEGACY_ONETIME;
@@ -14041,10 +14352,10 @@ function getOnetimeConfigurationType(merchantConfiguration) {
   return configurationType;
 }
 
-function getFuturePaymentsConfigurationType(gatewayConfiguration) {
+function getFuturePaymentsConfigurationType(configuration) {
   var configurationType;
 
-  if (Boolean(gatewayConfiguration.paypal.billingAgreementsEnabled)) {
+  if (Boolean(configuration.gatewayConfiguration.paypal.billingAgreementsEnabled)) {
     configurationType = constants.CONFIGURATION_TYPES.HERMES_BILLING_AGREEMENTS;
   } else {
     configurationType = constants.CONFIGURATION_TYPES.LEGACY_FUTURE_PAYMENTS;
@@ -14053,26 +14364,26 @@ function getFuturePaymentsConfigurationType(gatewayConfiguration) {
   return configurationType;
 }
 
-function getConfigurationType(gatewayConfiguration, merchantConfiguration) {
+function getConfigurationType(configuration) {
   var configurationType;
 
-  if (Boolean(merchantConfiguration.singleUse)) {
-    configurationType = getOnetimeConfigurationType(merchantConfiguration);
+  if (Boolean(configuration.merchantConfiguration.paypal.singleUse)) {
+    configurationType = getOnetimeConfigurationType(configuration);
   } else {
-    configurationType = getFuturePaymentsConfigurationType(gatewayConfiguration);
+    configurationType = getFuturePaymentsConfigurationType(configuration);
   }
 
   return configurationType;
 }
 
-function isHermesConfiguration(gatewayConfiguration, merchantConfiguration) {
-  var configurationType = getConfigurationType(gatewayConfiguration, merchantConfiguration);
+function isHermesConfiguration(configuration) {
+  var configurationType = getConfigurationType(configuration);
 
   return configurationType === constants.CONFIGURATION_TYPES.HERMES_ONETIME || configurationType === constants.CONFIGURATION_TYPES.HERMES_BILLING_AGREEMENTS;
 }
 
-function isOnetimeHermesConfiguration(gatewayConfiguration, merchantConfiguration) {
-  var configurationType = getConfigurationType(gatewayConfiguration, merchantConfiguration);
+function isOnetimeHermesConfiguration(configuration) {
+  var configurationType = getConfigurationType(configuration);
 
   return configurationType === constants.CONFIGURATION_TYPES.HERMES_ONETIME;
 }
@@ -14090,5 +14401,5 @@ module.exports = {
   getConfigurationType: getConfigurationType
 };
 
-},{"223":223}]},{},[1])(1)
+},{"226":226}]},{},[179])(179)
 });
